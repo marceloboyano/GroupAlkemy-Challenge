@@ -17,7 +17,7 @@ namespace AlkemyWallet.Repositories
         }
         /// <summary>
         /// Esta clase implementa un CRUD básico para cualquier entidad de Entity Framework
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
             return entities.AsEnumerable();
         }
@@ -62,6 +62,5 @@ namespace AlkemyWallet.Repositories
                 await dbContext.SaveChangesAsync();    
             
         }
-        
     }
 }
