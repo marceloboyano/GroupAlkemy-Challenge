@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using AlkemyWallet.Core.Models;
+using AlkemyWallet.Entities;
 
-public class WalletDbContext:IdentityDbContext<ApplicationUser>
-    {
+public class WalletDbContext : IdentityDbContext<ApplicationUser>
+{
     public WalletDbContext(DbContextOptions<WalletDbContext> options) : base(options)
     {
     }
@@ -23,9 +23,9 @@ public class WalletDbContext:IdentityDbContext<ApplicationUser>
 
 
         base.OnModelCreating(modelBuilder);
-        foreach(var foreingKey in modelBuilder.Model.GetEntityTypes().SelectMany(e=>e.GetForeignKeys()))
+        foreach (var foreingKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
-            foreingKey.DeleteBehavior=DeleteBehavior.Restrict;
+            foreingKey.DeleteBehavior = DeleteBehavior.Restrict;
         }
 
 
@@ -52,7 +52,7 @@ public class WalletDbContext:IdentityDbContext<ApplicationUser>
 
 
         ///////////Usuarios////////////
-        
+
         modelBuilder.Entity<User>().HasData(
         new User
         {
@@ -135,6 +135,7 @@ public class WalletDbContext:IdentityDbContext<ApplicationUser>
         });
 
 
+        //en construccion
         ///////////////////////
         modelBuilder.Entity<Role>().ToTable("Role");
         modelBuilder.Entity<User>().ToTable("User");
@@ -147,4 +148,3 @@ public class WalletDbContext:IdentityDbContext<ApplicationUser>
     }
 
 }
-

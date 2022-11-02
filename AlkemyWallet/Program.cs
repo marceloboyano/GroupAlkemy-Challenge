@@ -2,7 +2,7 @@ using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-
+using AutoMapper;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Repositories.Interfaces;
 using AlkemyWallet.Repositories;
@@ -29,18 +29,19 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IFixedTermDepositRepository, FixedTermDepositRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
-// Agrego los servicios
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ICatalogueService, CatalogueService>();
-builder.Services.AddScoped<IAccountsService, AccountsService>();
 
 //MAPPER
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
 var app = builder.Build();
+
+
+
+//utilizar los comandos de abajo para crear una Migracion ,recordar borrar la carpeta migration entre cada creacion y tambien la Database(Wallet)
+//EntityFrameworkCore\Add-Migration Migrations
+//EntityFrameworkCore\Update - database
 
 using (var scope = app.Services.CreateScope())
 {

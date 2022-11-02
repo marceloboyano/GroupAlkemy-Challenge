@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using AlkemyWallet.Core.Models;
 
 namespace AlkemyWallet.Entities
 {
@@ -10,6 +9,10 @@ namespace AlkemyWallet.Entities
     {   
             public void Configure(EntityTypeBuilder<User> builder)
             {
+
+            builder.ToTable("User");
+            builder.Property(s => s.Id).IsRequired();
+
             builder.HasKey(x => x.Id);
             builder.HasData(
                  new User
