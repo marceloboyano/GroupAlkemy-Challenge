@@ -2,7 +2,7 @@
 
 namespace AlkemyWallet.Core.Models.DTO
 {
-    public class LoginDTO
+    public class Login
     {
         [Key]
         public string Email { get; set; }
