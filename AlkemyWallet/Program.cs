@@ -30,10 +30,6 @@ builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IFixedTermDepositRepository, FixedTermDepositRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-// Agrego los servicios
-builder.Services.AddScoped<IUserService, UserService>();
-//builder.Services.AddScoped<ICatalogueService, CatalogueService>(); propiedad de su dueño ,no los poseo
-//builder.Services.AddScoped<IAccountsService, AccountsService>();
 
 //MAPPER
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

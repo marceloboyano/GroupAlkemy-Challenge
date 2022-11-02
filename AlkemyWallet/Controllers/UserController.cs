@@ -1,4 +1,5 @@
 using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
@@ -9,11 +10,11 @@ namespace AlkemyWallet.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUserService userService;
+        private readonly IUserService _userService;
 
-        public UserController(IUserService _userService)
+        public UserController(IUserService userService)
         {
-            userService = _userService;
+            _userService = userService;
         }
 
         [HttpGet]
