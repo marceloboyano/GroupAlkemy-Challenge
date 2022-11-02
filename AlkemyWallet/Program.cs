@@ -15,14 +15,30 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped(typeof(IRepositoryBase<>),typeof(RepositoryBase<>));
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 builder.Services.AddDbContext<WalletDbContext>
     (options => { options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseContext")); });
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                   .AddEntityFrameworkStores<WalletDbContext>()
                   .AddDefaultTokenProviders();
+
+// Agrego los repositorios
+builder.Services.AddScoped<ICatalogueRepository, CatalogueRepository>();
+builder.Services.AddScoped<IRoleRepository, RoleRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
+builder.Services.AddScoped<IFixedTermDepositRepository, FixedTermDepositRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+
+// Agrego los servicios
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICatalogueService, CatalogueService>();
+builder.Services.AddScoped<IAccountsService, AccountsService>();
+
+//MAPPER
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 var app = builder.Build();
 

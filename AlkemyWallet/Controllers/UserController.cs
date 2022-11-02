@@ -10,11 +10,11 @@ namespace AlkemyWallet.Controllers
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IUnitOfWork unitOfWork;
+        private readonly IUserService _userService;
 
-        public UserController(IUnitOfWork unitOfWork)
+        public UserController(IUserService userService)
         {
-            this.unitOfWork = unitOfWork;
+            _userService = userService;
         }
 
         [HttpGet]
