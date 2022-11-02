@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AlkemyWallet.Core.Models
+namespace AlkemyWallet.Entities
 {
     [Table("Transaction")]
     public class Transaction

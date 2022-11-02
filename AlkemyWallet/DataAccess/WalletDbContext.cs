@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using AlkemyWallet.Core.Models;
+using AlkemyWallet.Entities;
 
 public class WalletDbContext : IdentityDbContext<ApplicationUser>
 {

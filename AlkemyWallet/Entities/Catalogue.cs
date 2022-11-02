@@ -1,23 +1,22 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AlkemyWallet.Core.Models
+namespace AlkemyWallet.Entities
 {
-    [Table("Role")]
-    public class Role
+
+    [Table("Catalogue")]
+    public class Catalogue
     {
         [Key]
         public int Id { get; set; }
 
+        [Required(ErrorMessage = "el campo es requerido")]
+        public string Product_description { get; set; }
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public string Name { get; set; }
-
+        public string Image { get; set; }
 
         [Required(ErrorMessage = "el campo es requerido")]
-
-        public string Description { get; set; }
-        
-        public ICollection<User> User { get; set; }
+        public int Points { get; set; }
     }
 }

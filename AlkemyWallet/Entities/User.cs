@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AlkemyWallet.Core.Models
+namespace AlkemyWallet.Entities
 {
     [Table("User")]
     public class User
@@ -33,7 +33,7 @@ namespace AlkemyWallet.Core.Models
         public Role Role { get; set; }
 
 
-        public ICollection<Account> Account {get; set;}
+        public ICollection<Account> Account { get; set; }
 
         public ICollection<Transaction> Transaction { get; set; }
 

@@ -1,5 +1,6 @@
 ﻿using AlkemyWallet.Core.Models;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Entities;
 using AutoMapper;
 
 namespace AlkemyWallet.Core.Mapper
