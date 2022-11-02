@@ -8,7 +8,7 @@ using System.Data;
 namespace AlkemyWallet.Controllers
 {
     [ApiController]
-    [Route("[transaction]")]
+    [Route("[transactions]")]
 
     public class TransactionsController: ControllerBase
     {
@@ -21,6 +21,17 @@ namespace AlkemyWallet.Controllers
             _mapper = mapper;
         }
 
-       
+        [HttpGet()]
+        public async Task<IActionResult> GetTransactions()
+        {
+            return BadRequest();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetTransactionsById(int id)
+        {
+            return BadRequest();
+        }
     }
 }
+
