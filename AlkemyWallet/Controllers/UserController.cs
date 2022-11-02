@@ -1,4 +1,5 @@
 using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
