@@ -133,6 +133,24 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
             Points = 300,
 
         });
+        modelBuilder.Entity<Catalogue>().HasData(
+      new Catalogue
+      {
+          Id = 2,
+          Product_description = "heladera",
+          Image = "",
+          Points = 1000,
+
+      });
+        modelBuilder.Entity<Catalogue>().HasData(
+      new Catalogue
+      {
+          Id = 3,
+          Product_description = "freezer",
+          Image = "",
+          Points = 500,
+
+      });
 
 
         //en construccion

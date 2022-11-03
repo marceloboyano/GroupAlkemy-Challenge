@@ -26,10 +26,10 @@ namespace AlkemyWallet.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCatalogue()
         {
-            var catalogues = await _catalogueService.GetCatalogues();        
+            var catalogues = await _catalogueService.GetCatalogues();
 
-            
-            return Ok(catalogues);
+            var catalogueForShow = _mapper.Map<IEnumerable<CatalogueDTO>>(catalogues);
+            return Ok(catalogueForShow);
         }
 
         [HttpGet("{id}")]
@@ -42,6 +42,7 @@ namespace AlkemyWallet.Controllers
                 return NotFound("No existe ningún catalogo con el id especificado");
             }
 
+           
             return Ok(catalogue);
         }
     }
