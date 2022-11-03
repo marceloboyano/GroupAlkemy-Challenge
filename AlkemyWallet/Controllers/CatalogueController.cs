@@ -1,6 +1,7 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Services;
 using AlkemyWallet.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -44,6 +45,27 @@ namespace AlkemyWallet.Controllers
 
            
             return Ok(catalogue);
+        }
+        //[Authorize]
+        [HttpPost]
+        public async Task<ActionResult> PostCatalogue([FromForm] CatalogueForCreationDTO catalogueDTO)
+        {
+
+            await _catalogueService.InsertCatalogue(catalogueDTO);
+            return Ok("Se ha creado el Personaje exitosamente");
+
+        }
+
+        //[Authorize]
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteCatalogue(int id)
+        {
+            var result = await _catalogueService.DeleteCatalogue(id);
+
+            if (!result)
+                return BadRequest("no se encontro la pelicula");
+
+            return Ok("la pelicula ha sido eliminada");
         }
     }
 }

@@ -96,6 +96,20 @@ namespace AlkemyWallet.Migrations
                             Image = "",
                             Points = 300,
                             Product_description = "cocina"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Image = "",
+                            Points = 1000,
+                            Product_description = "heladera"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Image = "",
+                            Points = 500,
+                            Product_description = "freezer"
                         });
                 });
 
