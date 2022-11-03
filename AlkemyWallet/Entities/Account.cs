@@ -14,7 +14,7 @@ namespace AlkemyWallet.Entities
         public DateTime CreationDate { get; set; }
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public float Money { get; set; }
+        public float Money { get; set; } = 0f;
 
         [Required(ErrorMessage = "el campo es requerido")]
 
@@ -22,8 +22,9 @@ namespace AlkemyWallet.Entities
 
         public int User_id { get; set; }
         [ForeignKey("User_id")]
-        public User User { get; set; }
+        public User? User { get; set; }
 
-        public ICollection<FixedTermDeposit> FixedTermDeposit { get; set; }
+        public ICollection<FixedTermDeposit>? FixedTermDeposit { get; set; }
+        public ICollection<Transaction>? Transaction { get; set; }
     }
 }

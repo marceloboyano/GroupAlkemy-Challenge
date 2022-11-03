@@ -11,16 +11,16 @@ namespace AlkemyWallet.Core.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public string First_name { get; set; }
+        public string First_name { get; set; }= string.Empty;
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public string Last_name { get; set; }
+        public string Last_name { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public string Email { get; set; }
+        public string Email { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public string Password { get; set; }
+        public string Password { get; set; } = string.Empty;
 
 
         [Required(ErrorMessage = "el campo es requerido")]
@@ -31,14 +31,14 @@ namespace AlkemyWallet.Core.Models
         public int Rol_id { get; set; }
 
         [ForeignKey("Rol_id")]
-        public Role Role { get; set; }
+        public Role? Role { get; set; }
 
 
-        public ICollection<AccountDTO> Account {get; set;}
+        public ICollection<AccountDTO>? Account {get; set;}
 
-        public ICollection<TransactionDTO> Transaction { get; set; }
+        public ICollection<TransactionDTO>? Transaction { get; set; }
 
-        public ICollection<FixedTermDepositDTO> FixedTermDeposit { get; set; }
+        public ICollection<FixedTermDepositDTO>? FixedTermDeposit { get; set; }
 
     }
 }

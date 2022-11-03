@@ -11,13 +11,13 @@ namespace AlkemyWallet.Entities
 
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
 
         [Required(ErrorMessage = "el campo es requerido")]
 
-        public string Description { get; set; }
+        public string Description { get; set; } = string.Empty;
 
-        public ICollection<User> User { get; set; }
+        public ICollection<User>? User { get; set; }
     }
 }

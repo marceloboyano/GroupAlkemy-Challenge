@@ -23,6 +23,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                   .AddEntityFrameworkStores<WalletDbContext>()
                   .AddDefaultTokenProviders();
 
+// Agrego los servicios
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICatalogueService, CatalogueService>();
+builder.Services.AddScoped<IAccountsService, AccountsService>();
+
 // Agrego los repositorios
 builder.Services.AddScoped<ICatalogueRepository, CatalogueRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
