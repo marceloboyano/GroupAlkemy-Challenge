@@ -12,7 +12,7 @@ namespace AlkemyWallet.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    
+
     public class CatalogueController : ControllerBase
     {
         private readonly ICatalogueService _catalogueService;
@@ -43,7 +43,7 @@ namespace AlkemyWallet.Controllers
                 return NotFound("No existe ningún catalogo con el id especificado");
             }
 
-           
+
             return Ok(catalogue);
         }
         //[Authorize]
