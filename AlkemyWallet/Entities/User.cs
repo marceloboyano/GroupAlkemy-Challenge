@@ -9,24 +9,32 @@ namespace AlkemyWallet.Entities
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "el campo es requerido")]
+        [Required(ErrorMessage = "The First name should have at least 1 letter")]
+        [MaxLength(100)]
+        [MinLength(1)]
         public string First_name { get; set; }
 
-        [Required(ErrorMessage = "el campo es requerido")]
+        [MaxLength(100)]
+        [MinLength(1)]
+        [Required(ErrorMessage = "The Last name should have at least 1 letter")]
         public string Last_name { get; set; }
 
-        [Required(ErrorMessage = "el campo es requerido")]
+        [MaxLength(150)]
+        [MinLength(7)]
+        [Required(ErrorMessage = "The Email Should be Between 4 and 20 Characters")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "el campo es requerido")]
+        [MaxLength(20)]
+        [MinLength(4)]
+        [Required(ErrorMessage = "The Password should be between 4 and 20 Characters ")]
         public string Password { get; set; }
 
-
-        [Required(ErrorMessage = "el campo es requerido")]
+        [MaxLength(50)]
+        [Required(ErrorMessage = "Insert the Value")]
         public int Points { get; set; }
 
-
-        [Required(ErrorMessage = "el campo es requerido")]
+        [MaxLength(100)]
+        [Required(ErrorMessage = "A Role id its required")]
         public int Rol_id { get; set; }
 
         [ForeignKey("Rol_id")]

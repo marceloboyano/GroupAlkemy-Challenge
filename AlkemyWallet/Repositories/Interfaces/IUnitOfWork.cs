@@ -1,4 +1,5 @@
 ﻿using AlkemyWallet.Core.Models;
+using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Repositories.Interfaces
 {
