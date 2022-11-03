@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using AlkemyWallet.Entities;
+using Seeder;
 
 public class WalletDbContext : IdentityDbContext<ApplicationUser>
 {
@@ -27,7 +28,8 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
         {
             foreingKey.DeleteBehavior = DeleteBehavior.Restrict;
         }
-
+        base.OnModelCreating(modelBuilder);
+        new DbInitializer(modelBuilder).Seed();
 
         //en construccion
         ///////////////////////
