@@ -1,5 +1,4 @@
 ﻿using AlkemyWallet.Repositories.Interfaces;
-using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 using EntityState = Microsoft.EntityFrameworkCore.EntityState;
 
@@ -9,7 +8,7 @@ namespace AlkemyWallet.Repositories
     {
 
         private readonly WalletDbContext dbContext;
-        protected readonly Microsoft.EntityFrameworkCore.DbSet<T> entities;
+        protected readonly DbSet<T> entities;
         public RepositoryBase(WalletDbContext dbContext)
         {
             this.dbContext = dbContext;
@@ -17,9 +16,9 @@ namespace AlkemyWallet.Repositories
         }
         /// <summary>
         /// Esta clase implementa un CRUD básico para cualquier entidad de Entity Framework
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return entities.AsEnumerable();
+            return await Task.FromResult(entities.AsEnumerable());
         }
         public async Task<T> GetById(int id)
         {

@@ -5,26 +5,26 @@ using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Core.Services
 {
-    public class CatalogueService : ICatalogueService
+    public class CatalogueService //:ICatalogueService
     { 
-        private readonly ICatalogueRepository _repo;
+        //private readonly ICatalogueRepository _repo;
 
-        public CatalogueService(ICatalogueRepository repo)
-        {
-            _repo = repo;
+        //public CatalogueService(ICatalogueRepository repo)
+        //{
+        //    _repo = repo;
 
-        }
-        public async Task<Catalogue> GetCatalogueById(int id)
-        {
-            var catalogue = await _repo.GetById(id);            
-            return catalogue;
-        }
+        //}
+        //public async Task<Catalogue> GetCatalogueById(int id)
+        //{
+        //    var catalogue = await _repo.GetById(id);            
+        //    return catalogue;
+        //}
 
-        public async Task<IEnumerable<Catalogue>> GetCatalogues()
-        {
-            var catalogues = await _repo.GetAll();
-            catalogues = catalogues.OrderBy(x => x.Points);
-            return catalogues;
-        }
+        //public async Task<IEnumerable<Catalogue>> GetCatalogues()
+        //{
+        //    var catalogues =  _repo.GetAll();
+        //    catalogues = catalogues.OrderBy(x => x.Points);
+        //    return catalogues;
+        //}
     }
 }
