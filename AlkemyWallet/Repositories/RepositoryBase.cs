@@ -27,11 +27,11 @@ namespace AlkemyWallet.Repositories
           
                 return result;
         }
-        public async Task<T> Insert(T entity)
+        public async Task Insert(T entity)
         {
             _entities.Add(entity);
             await _context.SaveChangesAsync();
-            return entity;
+            
         }
         public async Task<bool> Update(T entity)
         {
