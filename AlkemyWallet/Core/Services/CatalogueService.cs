@@ -1,5 +1,5 @@
 ﻿using AlkemyWallet.Core.Interfaces;
-using AlkemyWallet.Core.Models;
+using AlkemyWallet.Entities;
 using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Repositories.Interfaces;
 
