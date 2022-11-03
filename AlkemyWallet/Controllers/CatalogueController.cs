@@ -52,7 +52,7 @@ namespace AlkemyWallet.Controllers
         {
 
             await _catalogueService.InsertCatalogue(catalogueDTO);
-            return Ok("Se ha creado el Personaje exitosamente");
+            return Ok("Se ha creado el Catalogo exitosamente");
 
         }
 
@@ -63,9 +63,19 @@ namespace AlkemyWallet.Controllers
             var result = await _catalogueService.DeleteCatalogue(id);
 
             if (!result)
-                return BadRequest("no se encontro la pelicula");
+                return BadRequest("no se encontro el catalogo");
 
-            return Ok("la pelicula ha sido eliminada");
+            return Ok("el catalogo ha sido eliminada");
+        }
+
+       // [Authorize]
+        [HttpPut("{id}")]
+        public async Task<ActionResult> PutCatalogue(int id, [FromForm] CatalogueForUpdateDTO catalogueDTO)
+        {
+            var result = await _catalogueService.UpdateCatalogues(id, catalogueDTO);
+            if (!result) return NotFound("Catalogo No Encontrado");
+            return Ok("Catalogo Modificado con exito");
+
         }
     }
 }

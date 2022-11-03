@@ -55,5 +55,35 @@ namespace AlkemyWallet.Core.Services
             return await _unitOfWork.CatalogueRepository.Delete(id);
 
         }
+
+        public async Task<bool> UpdateCatalogues(int id, CatalogueForUpdateDTO CatalogueDTO)
+        {
+            var catalogueEntity = await _unitOfWork.CatalogueRepository.GetById(id);
+
+            if (catalogueEntity is null)
+                return false;
+
+            if (CatalogueDTO.Points is not null)
+            {
+                catalogueEntity.Points = CatalogueDTO.Points.Value;
+            }
+
+            if (CatalogueDTO.ImageFile is not null)
+            {
+                var path = await _imageService.StoreImage(CatalogueDTO.ImageFile, ImageType.Catalogue);
+
+                catalogueEntity.Image = path;
+            }
+
+            if (CatalogueDTO.Product_description is not null)
+            {
+                catalogueEntity.Product_description = CatalogueDTO.Product_description;
+            }
+
+
+            return await _unitOfWork.CatalogueRepository.Update(catalogueEntity);
+
+        }
+
     }
 }

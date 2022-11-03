@@ -23,5 +23,14 @@ namespace AlkemyWallet.Core.Models
         [Range(0, 9999)]
         public int Points { get; set; }
     }
-    
+
+    public class CatalogueForUpdateDTO
+    {
+        
+        [StringLength(100, MinimumLength = 2)]
+        public string? Product_description { get; set; }        
+        public IFormFile? ImageFile { get; set; }     
+        [Range(0, 9999)]
+        public int? Points { get; set; }
+    }
 }
