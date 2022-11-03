@@ -28,9 +28,7 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
             foreingKey.DeleteBehavior = DeleteBehavior.Restrict;
         }
 
-        base.OnModelCreating(modelBuilder);
-        new DbInitializer(modelBuilder).Seed();
-   
+
         //en construccion
         ///////////////////////
         modelBuilder.Entity<Role>().ToTable("Role");

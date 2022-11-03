@@ -9,6 +9,7 @@ namespace AlkemyWallet.Entities
         [Key]
         public int Id { get; set; }
 
+
         [Required(ErrorMessage = "The First name should have at least 1 letter")]
         [MaxLength(100)]
         [MinLength(1)]
@@ -35,6 +36,8 @@ namespace AlkemyWallet.Entities
 
         [MaxLength(100)]
         [Required(ErrorMessage = "A Role id its required")]
+
+
         public int Rol_id { get; set; }
 
         [ForeignKey("Rol_id")]

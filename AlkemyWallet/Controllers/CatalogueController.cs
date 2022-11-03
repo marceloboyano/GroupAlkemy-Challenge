@@ -1,6 +1,7 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,10 +26,10 @@ namespace AlkemyWallet.Controllers
         [HttpGet]
         public async Task<IActionResult> GetCatalogue()
         {
-            var catalogues = await _catalogueService.GetCatalogues();        
+            var catalogues = await _catalogueService.GetCatalogues();
 
-            
-            return Ok();
+            var catalogueForShow = _mapper.Map<IEnumerable<CatalogueDTO>>(catalogues);
+            return Ok(catalogueForShow);
         }
 
         [HttpGet("{id}")]
@@ -41,7 +42,8 @@ namespace AlkemyWallet.Controllers
                 return NotFound("No existe ningún catalogo con el id especificado");
             }
 
-            return Ok();
+           
+            return Ok(catalogue);
         }
     }
 }
