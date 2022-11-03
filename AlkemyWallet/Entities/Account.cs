@@ -25,5 +25,6 @@ namespace AlkemyWallet.Entities
         public User? User { get; set; }
 
         public ICollection<FixedTermDeposit>? FixedTermDeposit { get; set; }
+        public ICollection<Transaction>? Transaction { get; set; }
     }
 }
