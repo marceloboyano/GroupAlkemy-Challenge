@@ -11,5 +11,6 @@ namespace AlkemyWallet.Core.Interfaces
         Task<IEnumerable<Catalogue>> GetCatalogues();
         Task<Catalogue> GetCatalogueById(int id);
         Task InsertCatalogue(CatalogueForCreationDTO catalogue);
+        Task<bool> UpdateCatalogues(int id, CatalogueForUpdateDTO CatalogueDTO);
     }
 }
