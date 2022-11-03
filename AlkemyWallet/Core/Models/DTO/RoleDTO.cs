@@ -11,13 +11,13 @@ namespace AlkemyWallet.Core.Models
 
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
 
         [Required(ErrorMessage = "el campo es requerido")]
 
-        public string Description { get; set; }
-        
-        public ICollection<UserDTO> User { get; set; }
+        public string Description { get; set; } = string.Empty;
+
+        public ICollection<UserDTO>? User { get; set; }
     }
 }

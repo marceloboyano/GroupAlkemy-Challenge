@@ -1,6 +1,7 @@
 ﻿using AlkemyWallet.Entities;
 using Microsoft.EntityFrameworkCore;
 
+namespace Seeder { 
 public class DbInitializer
 {
     private readonly ModelBuilder _modelBuilder;
@@ -126,4 +127,5 @@ public class DbInitializer
         });
       
     }
+}
 }

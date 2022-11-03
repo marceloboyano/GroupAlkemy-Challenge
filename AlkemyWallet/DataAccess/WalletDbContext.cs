@@ -8,8 +8,8 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
     {
     }
 
-    public DbSet<Role> Roles { get; set; }
-    public DbSet<User> Users { get; set; }
+    public new DbSet<Role> Roles { get; set; }
+    public new DbSet<User> Users { get; set; }
     public DbSet<Account> Accounts { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<FixedTermDeposit> FixedTermDeposits { get; set; }

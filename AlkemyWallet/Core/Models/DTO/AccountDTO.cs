@@ -23,8 +23,8 @@ namespace AlkemyWallet.Core.Models
 
         public int User_id { get; set; }
         [ForeignKey("User_id")]
-        public User User { get; set; }
+        public User? User { get; set; }
 
-        public ICollection<FixedTermDepositDTO> FixedTermDeposit { get; set; }
+        public ICollection<FixedTermDepositDTO>? FixedTermDeposit { get; set; }
     }
 }

@@ -14,13 +14,13 @@ namespace AlkemyWallet.Entities
         [Required(ErrorMessage = "el campo es requerido")]
         public int User_id { get; set; }
         [ForeignKey("User_id")]
-        public User User { get; set; }
+        public User? User { get; set; }
 
 
         [Required(ErrorMessage = "el campo es requerido")]
         public int Account_id { get; set; }
         [ForeignKey("Account_id")]
-        public Account Account { get; set; }
+        public Account? Account { get; set; }
 
 
         [Required(ErrorMessage = "el campo es requerido")]
