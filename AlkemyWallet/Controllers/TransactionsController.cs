@@ -12,7 +12,7 @@ namespace AlkemyWallet.Controllers
 
     public class TransactionsController: ControllerBase
     {
-        /*
+        
         private readonly ITransactionsService _transactionsService;
         private readonly IMapper _mapper;
 
@@ -33,7 +33,7 @@ namespace AlkemyWallet.Controllers
         {
             return BadRequest();
         }
-        */
+        
     }
 }
 
