@@ -21,7 +21,7 @@ namespace AlkemyWallet.Controllers
         [HttpGet]
         public async Task<ActionResult<List<User>>> GetUsers()
         {
-            var list = _userService.GetAllUser();
+            var list = await _userService.GetAllUser();
             return Ok(list);
         }
         [HttpGet("{id}")]
