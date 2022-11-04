@@ -20,7 +20,7 @@ namespace AlkemyWallet.Entities
         [Required(ErrorMessage = "A Date is Required")]
         //si solo se requiere year month day [StringLength(10)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        public DateTime Date { get; set; }=DateTime.Now;
+        public DateTime Date { get; set; }
 
         [MaxLength(100)]
         [Required(ErrorMessage = "Choose Transaction Type")]
@@ -28,7 +28,7 @@ namespace AlkemyWallet.Entities
 
 
         [Required(ErrorMessage = "User Id is Required")]
-        public int User_id { get; set; }=0;
+        public int User_id { get; set; } = 0;
 
         [ForeignKey("User_id")]
         public User? User { get; set; }
