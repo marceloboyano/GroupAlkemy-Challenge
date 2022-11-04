@@ -36,8 +36,6 @@ namespace AlkemyWallet.Entities
 
         [MaxLength(100)]
         [Required(ErrorMessage = "A Role id its required")]
-
-
         public int Rol_id { get; set; } = 0;
 
         [ForeignKey("Rol_id")]
