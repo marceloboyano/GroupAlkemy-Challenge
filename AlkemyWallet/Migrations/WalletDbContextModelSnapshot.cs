@@ -167,13 +167,19 @@ namespace AlkemyWallet.Migrations
                         {
                             Id = 1,
                             Description = "Admin",
-                            Name = "vice presidente junior"
+                            Name = "Administrador"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "usuario",
-                            Name = "usuario standard"
+                            Description = "Usuario con algunos permisos de escritura",
+                            Name = "Standard"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Solo permisos de lectura",
+                            Name = "Invitado"
                         });
                 });
 
@@ -272,7 +278,7 @@ namespace AlkemyWallet.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "clint@eastwood.com ",
+                            Email = "clint@eastwood.com",
                             First_name = "Clint",
                             Last_name = "Eastwood",
                             Password = "Clint",
@@ -282,12 +288,22 @@ namespace AlkemyWallet.Migrations
                         new
                         {
                             Id = 2,
-                            Email = "ArnoldSG@Skynet.com ",
+                            Email = "arnoldsg@skynet.com",
                             First_name = "Arnold",
                             Last_name = "Schwarzenegger",
                             Password = "Arnold",
                             Points = 2000,
                             Rol_id = 1
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Email = "sylvesters@hollywood.com",
+                            First_name = "Sylvester",
+                            Last_name = "Stallone",
+                            Password = "Sylvester",
+                            Points = 2000,
+                            Rol_id = 3
                         });
                 });
 
