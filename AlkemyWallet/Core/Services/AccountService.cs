@@ -5,14 +5,14 @@ using AutoMapper;
 
 namespace AlkemyWallet.Core.Services
 {
-    public class UserService : IUserService
+    public class AccountService : IAccountService
     {
-
+        
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IImageService _imageService;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService)
+        public AccountService(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -20,17 +20,17 @@ namespace AlkemyWallet.Core.Services
 
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<IEnumerable<Account>> GetAccounts()
         {
-            var users = await _unitOfWork.UserRepository.GetAll();
-            return users;
-        }
-
-        public async Task<User> GetUserById(int id)
-        {
-            var user = await _unitOfWork.UserRepository.GetById(id);
-            return user;
+            var accounts = await _unitOfWork.AccountRepository.GetAll();
+            return accounts;
         }
         
+        public async Task<Account> GetAccountById(int id)
+        {
+            var account = await _unitOfWork.AccountRepository.GetById(id);
+            return account;
+        }
+
     }
 }

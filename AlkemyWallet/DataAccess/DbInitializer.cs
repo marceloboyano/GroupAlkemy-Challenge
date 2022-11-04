@@ -20,17 +20,24 @@ public class DbInitializer
                 new Role
                 {
                     Id = 1,
-                    Name = "vice presidente junior",
+                    Name = "Administrador",
                     Description = "Admin",
                 },
                 new Role
                 {
                     Id = 2,
-                    Name = "usuario standard",
-                    Description = "usuario",
+                    Name = "Standard",
+                    Description = "Usuario con algunos permisos de escritura",
+                },
+                new Role
+                {
+                    Id = 3,
+                    Name = "Invitado",
+                    Description = "Solo permisos de lectura",
                 }
             );        
         });
+
         ///////////Usuarios////////////
         _modelBuilder.Entity<User>(p => {
         p.HasData(
@@ -39,7 +46,7 @@ public class DbInitializer
                     Id = 1,
                     First_name = "Clint",
                     Last_name = "Eastwood",
-                    Email = "clint@eastwood.com ",
+                    Email = "clint@eastwood.com",
                     Password = "Clint",
                     Points = 30,
                     Rol_id = 2
@@ -49,10 +56,20 @@ public class DbInitializer
                     Id = 2,
                     First_name = "Arnold",
                     Last_name = "Schwarzenegger",
-                    Email = "ArnoldSG@Skynet.com ",
+                    Email = "arnoldsg@skynet.com",
                     Password = "Arnold",
                     Points = 2000,
                     Rol_id = 1
+                },
+                new User
+                {
+                    Id = 3,
+                    First_name = "Sylvester",
+                    Last_name = "Stallone",
+                    Email = "sylvesters@hollywood.com",
+                    Password = "Sylvester",
+                    Points = 2000,
+                    Rol_id = 3
                 }
             );
         });
