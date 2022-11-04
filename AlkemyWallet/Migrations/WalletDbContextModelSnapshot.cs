@@ -96,20 +96,6 @@ namespace AlkemyWallet.Migrations
                             Image = "",
                             Points = 300,
                             Product_description = "cocina"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Image = "",
-                            Points = 1000,
-                            Product_description = "heladera"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Image = "",
-                            Points = 500,
-                            Product_description = "freezer"
                         });
                 });
 
@@ -250,24 +236,30 @@ namespace AlkemyWallet.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("First_name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Last_name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<int>("Points")
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     b.Property<int>("Rol_id")
+                        .HasMaxLength(100)
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -530,7 +522,7 @@ namespace AlkemyWallet.Migrations
             modelBuilder.Entity("AlkemyWallet.Entities.Transaction", b =>
                 {
                     b.HasOne("AlkemyWallet.Entities.Account", "Account")
-                        .WithMany()
+                        .WithMany("Transaction")
                         .HasForeignKey("Account_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -611,6 +603,8 @@ namespace AlkemyWallet.Migrations
             modelBuilder.Entity("AlkemyWallet.Entities.Account", b =>
                 {
                     b.Navigation("FixedTermDeposit");
+
+                    b.Navigation("Transaction");
                 });
 
             modelBuilder.Entity("AlkemyWallet.Entities.Role", b =>

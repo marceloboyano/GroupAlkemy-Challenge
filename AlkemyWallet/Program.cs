@@ -27,7 +27,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 // Agrego los servicios
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICatalogueService, CatalogueService>();
-builder.Services.AddScoped<IAccountsService, AccountsService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 
 // Agrego los repositorios
