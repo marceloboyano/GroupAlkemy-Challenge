@@ -20,9 +20,15 @@ namespace AlkemyWallet.Core.Services
         }
         public async Task<IEnumerable<Transaction>> GetTransactions(int userId)
         {
-             var transactions = await _unitOfWork.TransactionRepository.GetByUser(userId);
+            var transactions = await _unitOfWork.TransactionRepository.GetByUser(userId);
             return transactions;
         }
 
+        public async Task<Transaction> GetTransactionsById(int id, int userId)
+        {
+            var tran = await _unitOfWork.TransactionRepository.GetById(id);
+            if ((tran == null) || (tran.User_id != userId)) return null;
+            return tran;
+        }
     }
 }
