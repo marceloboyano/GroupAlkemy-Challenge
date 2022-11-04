@@ -9,28 +9,32 @@ namespace AlkemyWallet.Entities
         [Key]
         public int Transaction_id { get; set; }
 
+        [MaxLength (100)]
+        [Required(ErrorMessage = "An Amount its Required")]
+        public int Amount { get; set; }=0;
 
-        [Required(ErrorMessage = "el campo es requerido")]
-        public int Amount { get; set; }
-
-        [Required(ErrorMessage = "el campo es requerido")]
+        [MaxLength(100)]
+        [Required(ErrorMessage = "Enter a Payment Details")]
         public string Concept { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "el campo es requerido")]
-        public DateTime Date { get; set; }
+        [Required(ErrorMessage = "A Date is Required")]
+        //si solo se requiere year month day [StringLength(10)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime Date { get; set; }=DateTime.Now;
 
-        [Required(ErrorMessage = "el campo es requerido")]
+        [MaxLength(100)]
+        [Required(ErrorMessage = "Choose Transaction Type")]
         public string Type { get; set; }= string.Empty;
 
-        [Required(ErrorMessage = "el campo es requerido")]
-        public int User_id { get; set; }
+
+        [Required(ErrorMessage = "User Id is Required")]
+        public int User_id { get; set; }=0;
 
         [ForeignKey("User_id")]
         public User? User { get; set; }
+        [Required(ErrorMessage = "Account Id is Required")]
 
-        [Required(ErrorMessage = "el campo es requerido")]
-
-        public int Account_id { get; set; }
+        public int Account_id { get; set; } = 0;
         [ForeignKey("Account_id")]
 
         public Account? Account { get; set; }

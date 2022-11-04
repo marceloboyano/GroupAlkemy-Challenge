@@ -46,7 +46,7 @@ var app = builder.Build();
 
 //utilizar los comandos de abajo para crear una Migracion ,recordar borrar la carpeta migration entre cada creacion y tambien la Database(Wallet)
 //EntityFrameworkCore\Add-Migration Migrations
-//EntityFrameworkCore\Update - database
+//EntityFrameworkCore\Update-Database
 
 using (var scope = app.Services.CreateScope())
 {

@@ -10,13 +10,16 @@ namespace AlkemyWallet.Entities
         [Key]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "el campo es requerido")]
+        [MaxLength(50)]
+        [Required(ErrorMessage = "Product name or description is required")]
         public string Product_description { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "el campo es requerido")]
+        [MaxLength(255)]
+        [Required(ErrorMessage = "A Valid Image is Required,The Name its too Long or the File its Too Big")]
         public string Image { get; set; } = string.Empty;
-
-        [Required(ErrorMessage = "el campo es requerido")]
+        
+        [MaxLength(100)]
+        [Required(ErrorMessage = "The Amount of Points are Required")]
         public int Points { get; set; }
     }
 }
