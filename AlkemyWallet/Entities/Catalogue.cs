@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace AlkemyWallet.Core.Models
+namespace AlkemyWallet.Entities
 {
 
     [Table("Catalogue")]
@@ -11,10 +11,10 @@ namespace AlkemyWallet.Core.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public string Product_description { get; set; }
+        public string Product_description { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public string Image { get; set; }
+        public string Image { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "el campo es requerido")]
         public int Points { get; set; }

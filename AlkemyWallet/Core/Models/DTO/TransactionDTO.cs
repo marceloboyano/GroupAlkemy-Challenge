@@ -14,25 +14,25 @@ namespace AlkemyWallet.Core.Models
         public int Amount { get; set; }
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public string Concept { get; set; }
+        public string Concept { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "el campo es requerido")]
         public DateTime Date { get; set; }
 
         [Required(ErrorMessage = "el campo es requerido")]
-        public string Type { get; set; }
+        public string Type { get; set; } = string.Empty;
 
         [Required(ErrorMessage = "el campo es requerido")]
         public int User_id { get; set; }
 
         [ForeignKey("User_id")]
-        public UserDTO User { get; set; }
+        public UserDTO? User { get; set; }
 
         [Required(ErrorMessage = "el campo es requerido")]
 
         public int Account_id { get; set; }
         [ForeignKey("Account_id")]
 
-        public AccountDTO Account { get; set; }
+        public AccountDTO? Account { get; set; }
     }
 }

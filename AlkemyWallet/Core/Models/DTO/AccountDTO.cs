@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Core.Models
 {
@@ -22,8 +23,8 @@ namespace AlkemyWallet.Core.Models
 
         public int User_id { get; set; }
         [ForeignKey("User_id")]
-        public User User { get; set; }
+        public User? User { get; set; }
 
-        public ICollection<FixedTermDepositDTO> FixedTermDeposit { get; set; }
+        public ICollection<FixedTermDepositDTO>? FixedTermDeposit { get; set; }
     }
 }

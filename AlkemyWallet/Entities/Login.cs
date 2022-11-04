@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AlkemyWallet.Core.Models.DTO
+namespace AlkemyWallet.Entities
 {
-    public class LoginDTO
+    public class Login
     {
         [Key]
         public string Email { get; set; } = string.Empty;

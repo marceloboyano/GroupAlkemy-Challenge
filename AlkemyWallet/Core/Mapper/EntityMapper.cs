@@ -1,33 +1,26 @@
 ﻿using AlkemyWallet.Core.Models;
 using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Entities;
 using AutoMapper;
 
 namespace AlkemyWallet.Core.Mapper
+
 {
-    public class EntityMapper
+
+    public class AutomapperProfile : Profile
     {
 
-
-        public static MapperConfiguration MapperConfiguration()
+        public AutomapperProfile()
         {
-            return new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Role, RoleDTO>();
-                cfg.CreateMap<RoleDTO, Role>();
-                cfg.CreateMap<User, UserDTO>();
-                cfg.CreateMap<UserDTO, User>();
-                cfg.CreateMap<Account,AccountDTO>();
-                cfg.CreateMap<AccountDTO,Account>();
-                cfg.CreateMap<Transaction,TransactionDTO>();
-                cfg.CreateMap<TransactionDTO,Transaction>();
-                cfg.CreateMap<FixedTermDeposit,FixedTermDepositDTO>();
-                cfg.CreateMap<FixedTermDepositDTO,FixedTermDeposit>();
-                cfg.CreateMap<Catalogue,CatalogueDTO>();
-                cfg.CreateMap<CatalogueDTO,Catalogue>();
-                cfg.CreateMap<Login, LoginDTO>();
-                cfg.CreateMap<LoginDTO, Login>();
-            });
+
+            CreateMap<Catalogue, CatalogueDTO>().ReverseMap();
+            CreateMap<Catalogue, CatalogueForCreationDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, UserByIdDTO>().ReverseMap();
+            CreateMap<User, UserForCreatoionDto>().ReverseMap();
+
 
         }
     }
 }
+
