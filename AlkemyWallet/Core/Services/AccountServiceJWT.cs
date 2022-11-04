@@ -34,7 +34,13 @@ namespace AlkemyWallet.Core.Services
 
         public async Task<Response<AuthenticationResponseDTO>> AuthenticateAsync(AuthenticationRequestDTO request)
         {
+            AuthenticationResponseDTO responseSinAutenticar = new();
             var user = _iUserRepository.GetAll().Result.ToList().Where(u => u.Email.Equals(request.Email)).FirstOrDefault();
+
+            if (user is null)
+            {
+                return new Response<AuthenticationResponseDTO>(responseSinAutenticar, $"No hay registrada una cuenta con el email {request.Email}");
+            }
 
             var userIdentity = new ApplicationUser()
             {
@@ -42,11 +48,6 @@ namespace AlkemyWallet.Core.Services
                 Id = user.Id.ToString(),
                 UserName = user.First_name
             };
-
-            if (user is null)
-            {
-                throw new ApiException($"No hay registrada una cuenta con el email {request.Email}");
-            }
 
             if (user.Rol_id.Equals(1) || user.Rol_id.Equals(2))
             {
@@ -76,7 +77,6 @@ namespace AlkemyWallet.Core.Services
             }
             else
             {
-                AuthenticationResponseDTO responseSinAutenticar = new();
                 return new Response<AuthenticationResponseDTO>(responseSinAutenticar, $"El usuario no se puede autenticar {user.First_name}");
             }
 
