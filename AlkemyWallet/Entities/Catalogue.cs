@@ -10,7 +10,8 @@ namespace AlkemyWallet.Entities
         [Key]
         public int Id { get; set; }
 
-        [MaxLength(50)]
+        [MaxLength(100)]
+        [MinLength(2)]
         [Required(ErrorMessage = "Product name or description is required")]
         public string Product_description { get; set; } = string.Empty;
 
