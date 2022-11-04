@@ -42,14 +42,6 @@ namespace AlkemyWallet.Core.Services
                 };
                 o.Events = new JwtBearerEvents()
                 {
-                    //OnAuthenticationFailed = c =>
-                    //{
-                    //    c.NoResult();
-                    //    c.Response.StatusCode = 500;
-                    //    c.Response.ContentType = "text/plain";
-
-                    //    return c.Response.WriteAsync(c.Exception.ToString());
-                    //},
                     OnChallenge = context =>
                     {
                         context.HandleResponse();

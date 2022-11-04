@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.Text;
 using System.Security.Cryptography;
+using Microsoft.Extensions.Options;
 
 namespace AlkemyWallet.Core.Services
 {
@@ -22,25 +23,32 @@ namespace AlkemyWallet.Core.Services
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JWTSettings _jWTSettings;
 
-        public AccountServiceJWT(IUserRepository iUserRepository, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, JWTSettings jWTSettings)
+        public AccountServiceJWT(IUserRepository iUserRepository, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, IOptions<JWTSettings> jWTSettings)
         {
             _iUserRepository = iUserRepository;
             _userManager = userManager;
             _roleManager = roleManager;
             _signInManager = signInManager;
-            _jWTSettings = jWTSettings;
+            _jWTSettings = jWTSettings.Value;
         }
 
         public async Task<Response<AuthenticationResponseDTO>> AuthenticateAsync(AuthenticationRequestDTO request)
         {
             var user = _iUserRepository.GetAll().Result.ToList().Where(u => u.Email.Equals(request.Email)).FirstOrDefault();
 
+            var userIdentity = new ApplicationUser()
+            {
+                Email = user.Email,
+                Id = user.Id.ToString(),
+                UserName = user.First_name
+            };
+
             if (user is null)
             {
                 throw new ApiException($"No hay registrada una cuenta con el email {request.Email}");
             }
 
-            if (user.Rol_id.Equals(1))
+            if (user.Rol_id.Equals(1) || user.Rol_id.Equals(2))
             {
                 var result = _iUserRepository.GetAll().Result.ToList().Where(u => u.Password.Equals(request.Password)).FirstOrDefault();
                 if (result is null)
@@ -48,7 +56,7 @@ namespace AlkemyWallet.Core.Services
                     throw new ApiException($"Las credenciales no son válidas {request.Email}");
                 }
 
-                JwtSecurityToken jwtSecurityToken = await GenerateJWTToken(user);
+                JwtSecurityToken jwtSecurityToken = await GenerateJWTToken(userIdentity);
                 AuthenticationResponseDTO response = new();
                 response.Id = user.Id.ToString();
                 response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
@@ -74,7 +82,7 @@ namespace AlkemyWallet.Core.Services
 
         }
 
-        private async Task<JwtSecurityToken> GenerateJWTToken(User user)
+        private async Task<JwtSecurityToken> GenerateJWTToken(ApplicationUser user)
         {
             IList<Claim> userClaims = await _userManager.GetClaimsAsync(user);
             IList<string> roles = await _userManager.GetRolesAsync(user);
@@ -90,7 +98,7 @@ namespace AlkemyWallet.Core.Services
 
             var claims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.First_name),
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                 new Claim("uid", user.Id.ToString()),
