@@ -21,11 +21,7 @@ namespace AlkemyWallet.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.Account", b =>
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.Account", b =>
->>>>>>> dev
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -70,11 +66,7 @@ namespace AlkemyWallet.Migrations
                         });
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.Catalogue", b =>
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.Catalogue", b =>
->>>>>>> dev
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -107,11 +99,7 @@ namespace AlkemyWallet.Migrations
                         });
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.FixedTermDeposit", b =>
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.FixedTermDeposit", b =>
->>>>>>> dev
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -154,11 +142,7 @@ namespace AlkemyWallet.Migrations
                         });
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.Role", b =>
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.Role", b =>
->>>>>>> dev
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -193,11 +177,7 @@ namespace AlkemyWallet.Migrations
                         });
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.Transaction", b =>
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.Transaction", b =>
->>>>>>> dev
                 {
                     b.Property<int>("Transaction_id")
                         .ValueGeneratedOnAdd()
@@ -246,11 +226,7 @@ namespace AlkemyWallet.Migrations
                         });
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.User", b =>
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.User", b =>
->>>>>>> dev
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -260,26 +236,6 @@ namespace AlkemyWallet.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-<<<<<<< HEAD
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("First_name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Last_name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Points")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Rol_id")
-=======
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
@@ -304,7 +260,6 @@ namespace AlkemyWallet.Migrations
 
                     b.Property<int>("Rol_id")
                         .HasMaxLength(100)
->>>>>>> dev
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -534,15 +489,9 @@ namespace AlkemyWallet.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.Account", b =>
-                {
-                    b.HasOne("AlkemyWallet.Core.Models.User", "User")
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.Account", b =>
                 {
                     b.HasOne("AlkemyWallet.Entities.User", "User")
->>>>>>> dev
                         .WithMany("Account")
                         .HasForeignKey("User_id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -551,25 +500,15 @@ namespace AlkemyWallet.Migrations
                     b.Navigation("User");
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.FixedTermDeposit", b =>
-                {
-                    b.HasOne("AlkemyWallet.Core.Models.Account", "Account")
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.FixedTermDeposit", b =>
                 {
                     b.HasOne("AlkemyWallet.Entities.Account", "Account")
->>>>>>> dev
                         .WithMany("FixedTermDeposit")
                         .HasForeignKey("Account_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-<<<<<<< HEAD
-                    b.HasOne("AlkemyWallet.Core.Models.User", "User")
-=======
                     b.HasOne("AlkemyWallet.Entities.User", "User")
->>>>>>> dev
                         .WithMany("FixedTermDeposit")
                         .HasForeignKey("User_id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -580,26 +519,15 @@ namespace AlkemyWallet.Migrations
                     b.Navigation("User");
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.Transaction", b =>
-                {
-                    b.HasOne("AlkemyWallet.Core.Models.Account", "Account")
-                        .WithMany()
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.Transaction", b =>
                 {
                     b.HasOne("AlkemyWallet.Entities.Account", "Account")
                         .WithMany("Transaction")
->>>>>>> dev
                         .HasForeignKey("Account_id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-<<<<<<< HEAD
-                    b.HasOne("AlkemyWallet.Core.Models.User", "User")
-=======
                     b.HasOne("AlkemyWallet.Entities.User", "User")
->>>>>>> dev
                         .WithMany("Transaction")
                         .HasForeignKey("User_id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -610,15 +538,9 @@ namespace AlkemyWallet.Migrations
                     b.Navigation("User");
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.User", b =>
-                {
-                    b.HasOne("AlkemyWallet.Core.Models.Role", "Role")
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.User", b =>
                 {
                     b.HasOne("AlkemyWallet.Entities.Role", "Role")
->>>>>>> dev
                         .WithMany("User")
                         .HasForeignKey("Rol_id")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -678,14 +600,6 @@ namespace AlkemyWallet.Migrations
                         .IsRequired();
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.Account", b =>
-                {
-                    b.Navigation("FixedTermDeposit");
-                });
-
-            modelBuilder.Entity("AlkemyWallet.Core.Models.Role", b =>
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.Account", b =>
                 {
                     b.Navigation("FixedTermDeposit");
@@ -694,16 +608,11 @@ namespace AlkemyWallet.Migrations
                 });
 
             modelBuilder.Entity("AlkemyWallet.Entities.Role", b =>
->>>>>>> dev
                 {
                     b.Navigation("User");
                 });
 
-<<<<<<< HEAD
-            modelBuilder.Entity("AlkemyWallet.Core.Models.User", b =>
-=======
             modelBuilder.Entity("AlkemyWallet.Entities.User", b =>
->>>>>>> dev
                 {
                     b.Navigation("Account");
 

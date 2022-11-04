@@ -1,39 +1,14 @@
 ﻿using AlkemyWallet.Core.Interfaces;
-using AlkemyWallet.Entities;
-using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
-using AlkemyWallet.Repositories;
-using AlkemyWallet.Core.Models;
 using AutoMapper;
 using static challenge.Services.ImageService;
-using challenge.Services;
 
 namespace AlkemyWallet.Core.Services
 {
-    public class CatalogueService //:ICatalogueService
+    public class CatalogueService :ICatalogueService
     { 
-<<<<<<< HEAD
-        //private readonly ICatalogueRepository _repo;
-
-        //public CatalogueService(ICatalogueRepository repo)
-        //{
-        //    _repo = repo;
-
-        //}
-        //public async Task<Catalogue> GetCatalogueById(int id)
-        //{
-        //    var catalogue = await _repo.GetById(id);            
-        //    return catalogue;
-        //}
-
-        //public async Task<IEnumerable<Catalogue>> GetCatalogues()
-        //{
-        //    var catalogues =  _repo.GetAll();
-        //    catalogues = catalogues.OrderBy(x => x.Points);
-        //    return catalogues;
-        //}
-=======
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IImageService _imageService;
@@ -106,6 +81,5 @@ namespace AlkemyWallet.Core.Services
 
         }
 
->>>>>>> dev
     }
 }

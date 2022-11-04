@@ -1,8 +1,5 @@
 ﻿using AlkemyWallet.Core.Models;
-<<<<<<< HEAD
-=======
 using AlkemyWallet.Entities;
->>>>>>> dev
 
 namespace AlkemyWallet.Core.Interfaces
 {
@@ -10,14 +7,8 @@ namespace AlkemyWallet.Core.Interfaces
     {
         Task<IEnumerable<User>> GetAllUser();
         Task<User> GetById(int id);
-<<<<<<< HEAD
-        Task<User> AddUser(User user);
-        Task<User> UpdateUser(User user);
-        Task DeleteUser(int id);
-=======
         Task AddUser(UserForCreatoionDto userDTO);
         Task<bool> UpdateUser(int id, UserForUpdateDto userDTO);
         Task<bool> DeleteUser(int id);
->>>>>>> dev
     }
 }

@@ -6,15 +6,9 @@ namespace AlkemyWallet.Repositories
     public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
 
-<<<<<<< HEAD
-        private readonly WalletDbContext dbContext;
-        protected readonly DbSet<T> entities;
-        public RepositoryBase(WalletDbContext dbContext)
-=======
         private readonly WalletDbContext _context;
-        private Microsoft.EntityFrameworkCore.DbSet<T> _entities;
+        private DbSet<T> _entities;
         public RepositoryBase(WalletDbContext context)
->>>>>>> dev
         {
             _context = context;
             _entities = context.Set<T>();
@@ -23,11 +17,7 @@ namespace AlkemyWallet.Repositories
         /// Esta clase implementa un CRUD básico para cualquier entidad de Entity Framework
         public async Task<IEnumerable<T>> GetAll()
         {
-<<<<<<< HEAD
-            return await Task.FromResult(entities.AsEnumerable());
-=======
             return await Task.FromResult(_entities.AsEnumerable());
->>>>>>> dev
         }
         public async Task<T> GetById(int id)
         {

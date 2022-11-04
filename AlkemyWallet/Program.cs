@@ -37,20 +37,11 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IFixedTermDepositRepository, FixedTermDepositRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-<<<<<<< HEAD
 builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));  
 
-// Agrego los servicios
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IUserService, UserService>();
-//builder.Services.AddScoped<ICatalogueService, CatalogueService>();
-builder.Services.AddScoped<IAccountsService, AccountsService>();
-=======
 
 // Agrego los servicios
 builder.Services.AddScoped<IUserService, UserService>();
-
->>>>>>> dev
 
 //MAPPER
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
