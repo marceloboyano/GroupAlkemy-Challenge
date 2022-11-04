@@ -1,5 +1,7 @@
 using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models;
 using AlkemyWallet.Core.Services;
+using AlkemyWallet.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,19 +15,23 @@ namespace AlkemyWallet.Controllers
     public class TransactionsController: ControllerBase
     {
         
-        private readonly ITransactionsService _transactionsService;
+        private readonly ITransactionService _transactionService;
         private readonly IMapper _mapper;
 
-        public TransactionsController(ITransactionsService transactionsService, IMapper mapper)
+        public TransactionsController(ITransactionService transactionService, IMapper mapper)
         {
-            _transactionsService = transactionsService;
+            _transactionService = transactionService;
             _mapper = mapper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetTransactions()
         {
-            return BadRequest();
+            int userId = 2;
+            var transactions = await _transactionService.GetTransactions(userId);
+            //var transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions);
+            //return Ok(transactionsForShow);
+            return Ok(transactions);
         }
 
         [HttpGet("{id}")]

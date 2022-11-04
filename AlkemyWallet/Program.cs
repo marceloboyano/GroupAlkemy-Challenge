@@ -29,6 +29,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICatalogueService, CatalogueService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IImageService, ImageService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 // Agrego los repositorios
 builder.Services.AddScoped<ICatalogueRepository, CatalogueRepository>();
@@ -44,11 +45,14 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
-
-
 //utilizar los comandos de abajo para crear una Migracion ,recordar borrar la carpeta migration entre cada creacion y tambien la Database(Wallet)
+//Visual Studio
 //EntityFrameworkCore\Add-Migration Migrations
-//EntityFrameworkCore\Update-Database
+//EntityFrameworkCore\Update - database
+
+//Visual Code - CLI:
+//dotnet ef migrations add Migra
+//dotnet ef database update
 
 using (var scope = app.Services.CreateScope())
 {
