@@ -7,7 +7,7 @@ namespace AlkemyWallet.Repositories
     public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
 
-        private readonly WalletDbContext _context;
+        protected readonly WalletDbContext _context;
         private Microsoft.EntityFrameworkCore.DbSet<T> _entities;
         public RepositoryBase(WalletDbContext context)
         {
