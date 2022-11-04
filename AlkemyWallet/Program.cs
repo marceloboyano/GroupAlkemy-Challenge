@@ -37,6 +37,9 @@ builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IFixedTermDepositRepository, FixedTermDepositRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+// Agrego los servicios
+builder.Services.AddScoped<IUserService, UserService>();
+
 
 //MAPPER
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
