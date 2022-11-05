@@ -14,10 +14,13 @@ namespace AlkemyWallet.Core.Mapper
         {
             CreateMap<Catalogue, CatalogueDTO>().ReverseMap();
             CreateMap<Catalogue, CatalogueForCreationDTO>().ReverseMap();
+
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<User, UserByIdDTO>().ReverseMap();
             CreateMap<User, UserForCreatoionDto>().ReverseMap();
             CreateMap<User, UserForUpdateDto>().ReverseMap();
+            
+            CreateMap<Transaction, TransactionDTO>().ReverseMap();
         }
     }
 }

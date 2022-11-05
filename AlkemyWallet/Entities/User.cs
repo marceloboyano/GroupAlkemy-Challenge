@@ -6,6 +6,14 @@ namespace AlkemyWallet.Entities
     [Table("User")]
     public class User
     {
+
+        public User()
+        {
+            Account = new HashSet<Account>();
+            Transaction=new HashSet<Transaction>();
+            FixedTermDeposit=new HashSet<FixedTermDeposit>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -36,19 +44,17 @@ namespace AlkemyWallet.Entities
 
         [MaxLength(100)]
         [Required(ErrorMessage = "A Role id its required")]
-
-
         public int Rol_id { get; set; } = 0;
 
         [ForeignKey("Rol_id")]
         public Role? Role { get; set; }
 
 
-        public ICollection<Account>? Account { get; set; }
+        public ICollection<Account> Account { get; set; }
 
-        public ICollection<Transaction>? Transaction { get; set; }
+        public ICollection<Transaction> Transaction { get; set; }
 
-        public ICollection<FixedTermDeposit>? FixedTermDeposit { get; set; }
+        public ICollection<FixedTermDeposit> FixedTermDeposit { get; set; }
 
     }
 }
