@@ -22,21 +22,8 @@ namespace AlkemyWallet.Controllers
             return Ok(await _iAccountsServiceJwt.AuthenticateAsync(new AuthenticationRequestDTO
             {
                 Email = request.Email,
-                Password = request.Password,
-                Address = GenerateIPAddress()
+                Password = request.Password
             }));
-        }
-
-        private string GenerateIPAddress()
-        {
-            if (Request.Headers.ContainsKey("X-Forwared-For"))
-            {
-                return Request.Headers["X-Forwared-For"];
-            }
-            else
-            {
-                return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-            }
         }
     }
 }

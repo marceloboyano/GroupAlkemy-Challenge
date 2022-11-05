@@ -14,6 +14,13 @@
             Data = data;
         }
 
+        public Response(T data, bool unsuccessful = false, string message = null)
+        {
+            Succeeded = unsuccessful;
+            Message = message;
+            Data = data;
+        }
+
         public Response(string message)
         {
             Succeeded = false;
