@@ -39,7 +39,7 @@ namespace AlkemyWallet.Core.Services
 
             if (user is null)
             {
-                return new Response<AuthenticationResponseDTO>(responseSinAutenticar, $"No hay registrada una cuenta con el email {request.Email}");
+                return new Response<AuthenticationResponseDTO>(responseSinAutenticar, false, $"No hay registrada una cuenta con el email {request.Email}");
             }
 
             var userIdentity = new ApplicationUser()
@@ -54,7 +54,7 @@ namespace AlkemyWallet.Core.Services
                 var result = _iUserRepository.GetAll().Result.ToList().Where(u => u.Password.Equals(request.Password)).FirstOrDefault();
                 if (result is null)
                 {
-                    throw new ApiException($"Las credenciales no son válidas {request.Email}");
+                    return new Response<AuthenticationResponseDTO>(responseSinAutenticar, false, $"Las credenciales no son válidas para {request.Email}");
                 }
 
                 JwtSecurityToken jwtSecurityToken = await GenerateJWTToken(userIdentity);
@@ -69,15 +69,11 @@ namespace AlkemyWallet.Core.Services
                 response.Roles = rolesList.ToList();
                 response.IsVerified = true;
 
-                RefreshTokenDTO refreshToken = GenerateRefreshToken(request.Address);
-
-                response.RefreshToken = refreshToken.Token;
-
                 return new Response<AuthenticationResponseDTO>(response, $"Usuario autenticado {user.First_name}");
             }
             else
             {
-                return new Response<AuthenticationResponseDTO>(responseSinAutenticar, $"El usuario no se puede autenticar {user.First_name}");
+                return new Response<AuthenticationResponseDTO>(responseSinAutenticar, false, $"El usuario {user.First_name} no se puede autenticar");
             }
 
         }
