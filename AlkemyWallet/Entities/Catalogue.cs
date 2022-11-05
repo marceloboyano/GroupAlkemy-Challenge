@@ -18,9 +18,9 @@ namespace AlkemyWallet.Entities
         [MaxLength(255)]
         [Required(ErrorMessage = "A Valid Image is Required,The Name its too Long or the File its Too Big")]
         public string Image { get; set; } = string.Empty;
-        
-        [MaxLength(100)]
+
+        [Range(0, 9999)]
         [Required(ErrorMessage = "The Amount of Points are Required")]
-        public int Points { get; set; }
+        public int Points { get; set; } = 0;
     }
 }

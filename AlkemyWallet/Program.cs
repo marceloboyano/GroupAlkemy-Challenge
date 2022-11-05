@@ -50,6 +50,8 @@ var app = builder.Build();
 //EntityFrameworkCore\Add-Migration Migrations
 //EntityFrameworkCore\Update-Database
 
+
+
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<WalletDbContext>();
