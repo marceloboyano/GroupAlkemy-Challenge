@@ -6,7 +6,7 @@ namespace AlkemyWallet.Repositories.Interfaces
        
             IRepositoryBase<User> UserRepository { get; }
             IRepositoryBase<Account> AccountRepository { get; }
-            IRepositoryBase<Transaction> TransactionRepository { get; }
+            ITransactionRepository TransactionRepository { get; }
             IRepositoryBase<FixedTermDeposit> FixedTermDepositRepository { get; }
             IRepositoryBase<Role> RoleRepository { get; }
             IRepositoryBase<Catalogue> CatalogueRepository { get; }
