@@ -3,18 +3,19 @@ using Microsoft.EntityFrameworkCore;
 using AlkemyWallet.Entities;
 using Seeder;
 
+
 public class WalletDbContext : IdentityDbContext<ApplicationUser>
 {
     public WalletDbContext(DbContextOptions<WalletDbContext> options) : base(options)
     {
     }
 
-    public new DbSet<Role> Roles { get; set; }
-    public new DbSet<User> Users { get; set; }
-    public DbSet<Account> Accounts { get; set; }
-    public DbSet<Transaction> Transactions { get; set; }
-    public DbSet<FixedTermDeposit> FixedTermDeposits { get; set; }
-    public DbSet<Catalogue> Catalogues { get; set; }
+    public new DbSet<Role>? Roles { get; set; }
+    public new DbSet<User>? Users { get; set; }
+    public DbSet<Account>? Accounts { get; set; }
+    public DbSet<Transaction>? Transactions { get; set; }
+    public DbSet<FixedTermDeposit>? FixedTermDeposits { get; set; }
+    public DbSet<Catalogue>? Catalogues { get; set; }
 
 
 

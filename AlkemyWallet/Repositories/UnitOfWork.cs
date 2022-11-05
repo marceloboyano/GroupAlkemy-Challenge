@@ -15,7 +15,7 @@ namespace AlkemyWallet.Repositories
         private readonly WalletDbContext _dbContext;
         private readonly IRepositoryBase<User> userRepository;
         private readonly IRepositoryBase<Account> accountRepository;
-        private readonly IRepositoryBase<Transaction> transactionRepository;
+        private readonly ITransactionRepository transactionRepository;
         private readonly IRepositoryBase<FixedTermDeposit> fixedTermDepositRepository;
         private readonly IRepositoryBase<Role> roleRepository;
         private readonly IRepositoryBase<Catalogue> catalogueRepository;
@@ -27,7 +27,7 @@ namespace AlkemyWallet.Repositories
 
         public IRepositoryBase<Account> AccountRepository => accountRepository ?? new RepositoryBase<Account>(_dbContext);
 
-        public IRepositoryBase<Transaction> TransactionRepository => transactionRepository ?? new RepositoryBase<Transaction>(_dbContext);
+        public ITransactionRepository TransactionRepository => transactionRepository ?? new TransactionRepository(_dbContext);
 
         public IRepositoryBase<FixedTermDeposit> FixedTermDepositRepository => fixedTermDepositRepository ?? new RepositoryBase<FixedTermDeposit>(_dbContext);
 

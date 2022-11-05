@@ -25,14 +25,10 @@ namespace AlkemyWallet.Core.Models
         [Required(ErrorMessage = "el campo es requerido")]
         public int User_id { get; set; }
 
-        [ForeignKey("User_id")]
-        public UserDTO? User { get; set; }
-
         [Required(ErrorMessage = "el campo es requerido")]
 
         public int Account_id { get; set; }
-        [ForeignKey("Account_id")]
+        
 
-        public AccountDTO? Account { get; set; }
     }
 }
