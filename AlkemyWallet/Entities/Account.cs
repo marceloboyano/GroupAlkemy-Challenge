@@ -6,6 +6,11 @@ namespace AlkemyWallet.Entities
     [Table("Account")]
     public class Account
     {
+        public Account()
+        {
+            Transaction = new HashSet<Transaction>();
+            FixedTermDeposit = new HashSet<FixedTermDeposit>();
+        }
 
         [Key]
         public int Id { get; set; }
@@ -21,7 +26,7 @@ namespace AlkemyWallet.Entities
 
 
         [Required(ErrorMessage = "Set The Account Status")]
-        public bool IsBlocked { get; set; }
+        public bool IsBlocked { get; set; }=false;
 
 
         [Required(ErrorMessage = "User Id is Required")]
@@ -29,7 +34,7 @@ namespace AlkemyWallet.Entities
         [ForeignKey("User_id")]
         public User? User { get; set; }
 
-        public ICollection<FixedTermDeposit>? FixedTermDeposit { get; set; }
-        public ICollection<Transaction>? Transaction { get; set; }
+        public ICollection<FixedTermDeposit> FixedTermDeposit { get; set; }
+        public ICollection<Transaction> Transaction { get; set; }
     }
 }

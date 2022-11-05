@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using AlkemyWallet.Entities;
 using Seeder;
 
+
 public class WalletDbContext : IdentityDbContext<ApplicationUser>
 {
     public WalletDbContext(DbContextOptions<WalletDbContext> options) : base(options)

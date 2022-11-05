@@ -58,6 +58,8 @@ var app = builder.Build();
 //dotnet ef migrations add Migra
 //dotnet ef database update
 
+
+
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<WalletDbContext>();
