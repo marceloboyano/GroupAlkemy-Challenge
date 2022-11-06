@@ -7,4 +7,4 @@ namespace AlkemyWallet.Core.Interfaces
         Task<IEnumerable<Transaction>> GetTransactions(int userId);
         Task<Transaction> GetTransactionsById(int id, int userId);
     }
-}
+} 
