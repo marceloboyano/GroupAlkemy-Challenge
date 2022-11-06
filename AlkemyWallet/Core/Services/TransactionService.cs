@@ -21,7 +21,7 @@ namespace AlkemyWallet.Core.Services
         public async Task<IEnumerable<Transaction>> GetTransactions(int userId)
         {
             var transactions = await _unitOfWork.TransactionRepository.GetByUser(userId);
-            return transactions;
+            return transactions.OrderBy(x=>x.Date);
         }
 
         public async Task<Transaction> GetTransactionById(int id, int userId)
