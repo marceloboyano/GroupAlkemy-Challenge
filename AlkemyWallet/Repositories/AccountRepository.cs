@@ -1,5 +1,6 @@
 ﻿using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AlkemyWallet.Repositories
 {
@@ -10,7 +11,9 @@ namespace AlkemyWallet.Repositories
         {
 
         }
-
+        public async Task<Account?> GetByIdWithDetail(int id) => await _context.Accounts
+          .Include(a => a.User)
+          .FirstOrDefaultAsync(m => m.User_id == id);
 
     }
 }

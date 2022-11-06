@@ -5,8 +5,10 @@ namespace AlkemyWallet.Repositories.Interfaces
     {
        
             IRepositoryBase<User> UserRepository { get; }
+            IUserRepository UserDetailsRepository { get; }
             IRepositoryBase<Account> AccountRepository { get; }
-            ITransactionRepository TransactionRepository { get; }
+             IAccountRepository AccountWithDetails { get; }
+             ITransactionRepository TransactionRepository { get; }
             IRepositoryBase<FixedTermDeposit> FixedTermDepositRepository { get; }
             IRepositoryBase<Role> RoleRepository { get; }
             IRepositoryBase<Catalogue> CatalogueRepository { get; }
