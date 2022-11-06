@@ -11,9 +11,11 @@ namespace AlkemyWallet.Repositories
         {
 
         }
-        public async Task<Account?> GetByIdWithDetail(int id) => await _context.Accounts
+        public async Task<Account?> GetByIdWithDetail(int accountId) => await _context.Accounts
           .Include(a => a.User)
-          .FirstOrDefaultAsync(m => m.User_id == id);
+          .FirstOrDefaultAsync(m => m.Id == accountId);
+        
+        
 
     }
 }
