@@ -35,12 +35,10 @@ namespace AlkemyWallet.Core.Services
         public async Task<Response<AuthenticationResponseDTO>> AuthenticateAsync(AuthenticationRequestDTO request)
         {
             AuthenticationResponseDTO responseSinAutenticar = new();
-            var user = _iUserRepository.GetAll().Result.ToList().Where(u => u.Email.Equals(request.Email)).FirstOrDefault();
+            User? user = await _iUserRepository.GetUserByEmail(request.Email, request.Password);
 
             if (user is null)
-            {
-                return new Response<AuthenticationResponseDTO>(responseSinAutenticar, false, $"No hay registrada una cuenta con el email {request.Email}");
-            }
+                return new Response<AuthenticationResponseDTO>(responseSinAutenticar, false, $"El email o la contraseña no coinciden con lo registrado en la base de datos");
 
             var userIdentity = new ApplicationUser()
             {
@@ -51,12 +49,6 @@ namespace AlkemyWallet.Core.Services
 
             if (user.Rol_id.Equals(1) || user.Rol_id.Equals(2))
             {
-                var result = _iUserRepository.GetAll().Result.ToList().Where(u => u.Password.Equals(request.Password)).FirstOrDefault();
-                if (result is null)
-                {
-                    return new Response<AuthenticationResponseDTO>(responseSinAutenticar, false, $"Las credenciales no son válidas para {request.Email}");
-                }
-
                 JwtSecurityToken jwtSecurityToken = await GenerateJWTToken(userIdentity);
                 AuthenticationResponseDTO response = new();
                 response.Id = user.Id.ToString();

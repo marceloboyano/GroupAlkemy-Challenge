@@ -24,7 +24,7 @@ namespace AlkemyWallet.Core.Services
         }
         public async Task<User> GetById(int id)
         {
-            var user = await _unitOfWork.UserRepository.GetById(id);
+            var user = await _unitOfWork.UserDetailsRepository.GetById(id);
             return user;
         }
         public async Task AddUser(UserForCreatoionDto userDTO)

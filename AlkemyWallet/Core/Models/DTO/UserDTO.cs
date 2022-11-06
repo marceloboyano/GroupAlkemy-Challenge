@@ -7,6 +7,7 @@ namespace AlkemyWallet.Core.Models
 
     public class UserDTO
     {
+        public int Id { get; set; }
         [Required(ErrorMessage = "el campo es requerido")]
         public string First_name { get; set; } = string.Empty;
 
