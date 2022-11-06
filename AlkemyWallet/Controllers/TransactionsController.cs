@@ -13,7 +13,7 @@ public class TransactionsController : ControllerBase
     private readonly IMapper _mapper;
     private readonly ITransactionService _transactionService;
     
-    public TransactionsController(ITransactionService transactionService, IMapper mapper, IUserService userService)
+    public TransactionsController(ITransactionService transactionService, IMapper mapper)
     {
         _transactionService = transactionService;
         _mapper = mapper;
@@ -32,7 +32,7 @@ public class TransactionsController : ControllerBase
 
     [HttpGet("{id}")]
     [Authorize]
-    public async Task<IActionResult> GetTransactionsById(int id)
+    public async Task<IActionResult> GetTransactionById(int id)
     {
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
         var trans = await _transactionService.GetTransactionById(id, userId);
