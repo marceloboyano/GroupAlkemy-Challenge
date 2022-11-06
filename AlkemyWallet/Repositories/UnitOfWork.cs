@@ -14,10 +14,12 @@ public class UnitOfWork : IUnitOfWork
     private readonly WalletDbContext _dbContext;
 
     private readonly IRepositoryBase<Account> accountRepository;
+    private readonly IAccountRepository accountWithDetails;
     private readonly IRepositoryBase<Catalogue> catalogueRepository;
     private readonly IRepositoryBase<FixedTermDeposit> fixedTermDepositRepository;
     private readonly IRepositoryBase<Role> roleRepository;
     private readonly ITransactionRepository transactionRepository;
+    private readonly IUserRepository userDetailsRepository;
     private readonly IRepositoryBase<User> userRepository;
 
     public UnitOfWork(WalletDbContext dbContext)
@@ -27,10 +29,15 @@ public class UnitOfWork : IUnitOfWork
 
     public IRepositoryBase<User> UserRepository => userRepository ?? new RepositoryBase<User>(_dbContext);
 
+    public IUserRepository UserDetailsRepository => userDetailsRepository ?? new UserRepository(_dbContext);
+
     public IRepositoryBase<Account> AccountRepository => accountRepository ?? new RepositoryBase<Account>(_dbContext);
+
+    public IAccountRepository AccountWithDetails => accountWithDetails ?? new AccountRepository(_dbContext);
 
     public ITransactionRepository TransactionRepository =>
         transactionRepository ?? new TransactionRepository(_dbContext);
+
 
     public IRepositoryBase<FixedTermDeposit> FixedTermDepositRepository =>
         fixedTermDepositRepository ?? new RepositoryBase<FixedTermDeposit>(_dbContext);
@@ -39,6 +46,7 @@ public class UnitOfWork : IUnitOfWork
 
     public IRepositoryBase<Catalogue> CatalogueRepository =>
         catalogueRepository ?? new RepositoryBase<Catalogue>(_dbContext);
+
 
     public void Dispose()
     {
