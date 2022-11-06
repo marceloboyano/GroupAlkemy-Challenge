@@ -12,11 +12,12 @@ namespace AlkemyWallet.Repositories
         /// https://www.youtube.com/watch?v=GdRBFc_KKKM este video de la tutoria les permitira tener un ejemplo de en que momento usar
         /// la sincronizacion.(tambien para ver como initiliazar el context en con el unit of work en los endpoints).
         /// </summary>
-        private readonly WalletDbContext _dbContext;
+        protected readonly WalletDbContext _dbContext;
         private readonly IRepositoryBase<User> userRepository;
         private readonly IRepositoryBase<Account> accountRepository;
         private readonly IAccountRepository accountWithDetails;
         private readonly ITransactionRepository transactionRepository;
+        private readonly IUserRepository userDetailsRepository;
         private readonly IRepositoryBase<FixedTermDeposit> fixedTermDepositRepository;
         private readonly IRepositoryBase<Role> roleRepository;
         private readonly IRepositoryBase<Catalogue> catalogueRepository;
@@ -25,6 +26,8 @@ namespace AlkemyWallet.Repositories
             _dbContext = dbContext;
         }
         public IRepositoryBase<User> UserRepository => userRepository ?? new RepositoryBase<User>(_dbContext);
+
+        public IUserRepository UserDetailsRepository => userDetailsRepository ?? new UserRepository(_dbContext);
 
         public IRepositoryBase<Account> AccountRepository => accountRepository ?? new RepositoryBase<Account>(_dbContext);
         public IAccountRepository AccountWithDetails => accountWithDetails ?? new AccountRepository(_dbContext);

@@ -17,6 +17,12 @@ namespace AlkemyWallet.Repositories
             User? user = await _context.Users!.FirstOrDefaultAsync(u => u.Email.Equals(email) && u.Password.Equals(password))!;
             return user;
         }
+        public async Task<IEnumerable<User>> GetUserWithDetails(int id)
+        {
+            return await Task.FromResult(_context.Set<User>().Where(t => t.Id == id)
+           .Include(a => a.Account)
+           .AsEnumerable());
+        }
     }
 }
 
