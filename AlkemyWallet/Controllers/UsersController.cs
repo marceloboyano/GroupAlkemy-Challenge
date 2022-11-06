@@ -11,13 +11,13 @@ using System.Data;
 namespace AlkemyWallet.Controllers
 {
     [ApiController]
-    [Route("users")]
-    public class UserController : ControllerBase
+    [Route("[controller]")]
+    public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public UserController(IUserService userService, IMapper mapper)
+        public UsersController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
@@ -25,7 +25,8 @@ namespace AlkemyWallet.Controllers
 
         // Get all users
         [HttpGet]
-        public async Task<ActionResult<User>> GetUsers()
+        [Authorize]
+        public async Task<ActionResult<UserDTO>> GetUsers()
         {
             var users = await _userService.GetAllUser();
             var usersForShow = _mapper.Map<IEnumerable<UserDTO>>(users);
@@ -33,6 +34,7 @@ namespace AlkemyWallet.Controllers
         }
         //Get user by id
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _userService.GetById(id);

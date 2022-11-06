@@ -2,34 +2,37 @@
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlkemyWallet.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class RoleController : ControllerBase
+    [Route("[controller]")]
+    public class RolesController : ControllerBase
     {
         private readonly IRoleService _roleService;
         private readonly IMapper _mapper;
-        public RoleController(IRoleService roleService, IMapper mapper)
+        public RolesController(IRoleService roleService, IMapper mapper)
         {
             _roleService = roleService;
             _mapper = mapper;
         }
 
-        // Get all users
+        // Get all roles
         [HttpGet]
-        public async Task<ActionResult<Role>> GetRoles()
+        [Authorize]
+        public async Task<ActionResult<RolesDTO>> GetRoles()
         {
             var roles = await _roleService.GetAllRoles();
             var rolesForShow = _mapper.Map<IEnumerable<RolesDTO>>(roles);
             return Ok(rolesForShow);
 
         }
-        //Get user by id
+        //Get rol by id
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetRoleById(int id)
         {
             var roles = await _roleService.GetRoleById(id);
