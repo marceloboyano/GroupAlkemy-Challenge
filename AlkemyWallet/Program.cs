@@ -7,22 +7,54 @@ using AlkemyWallet.Core.Models;
 using AlkemyWallet.Repositories.Interfaces;
 using AlkemyWallet.Repositories;
 using challenge.Services;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+//Inyecta el servicio de JWT
+builder.Services.AddIdentityJwt(builder.Configuration);
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Alkemy Wallet", Version = "v1"});
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "Jwt Authorization",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
+});
 
 builder.Services.AddDbContext<WalletDbContext>
     (options => { options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseContext")); });
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-                  .AddEntityFrameworkStores<WalletDbContext>()
-                  .AddDefaultTokenProviders();
+//builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+//                  .AddEntityFrameworkStores<WalletDbContext>()
+//                  .AddDefaultTokenProviders();
 
 // Agrego los servicios
 builder.Services.AddScoped<IUserService, UserService>();
@@ -33,11 +65,16 @@ builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 // Agrego los repositorios
 builder.Services.AddScoped<ICatalogueRepository, CatalogueRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IFixedTermDepositRepository, FixedTermDepositRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));  
 
+
+// Agrego los servicios
+builder.Services.AddScoped<IUserService, UserService>();
 
 //MAPPER
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -54,6 +91,8 @@ var app = builder.Build();
 //dotnet ef migrations add Migra
 //dotnet ef database update
 
+
+
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<WalletDbContext>();
@@ -67,6 +106,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

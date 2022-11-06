@@ -1,17 +1,13 @@
 ﻿using AlkemyWallet.Core.Interfaces;
-using AlkemyWallet.Entities;
-using AlkemyWallet.Core.Models.DTO;
+using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
-using AlkemyWallet.Repositories;
-using AlkemyWallet.Core.Models;
 using AutoMapper;
 using static challenge.Services.ImageService;
-using challenge.Services;
 
 namespace AlkemyWallet.Core.Services
 {
-    public class CatalogueService : ICatalogueService
+    public class CatalogueService :ICatalogueService
     { 
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

@@ -1,5 +1,4 @@
 ﻿using AlkemyWallet.Repositories.Interfaces;
-using System.Data.Entity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AlkemyWallet.Repositories
@@ -8,7 +7,7 @@ namespace AlkemyWallet.Repositories
     {
 
         protected readonly WalletDbContext _context;
-        private Microsoft.EntityFrameworkCore.DbSet<T> _entities;
+        private DbSet<T> _entities;
         public RepositoryBase(WalletDbContext context)
         {
             _context = context;

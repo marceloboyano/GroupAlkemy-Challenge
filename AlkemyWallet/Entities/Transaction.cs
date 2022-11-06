@@ -6,6 +6,7 @@ namespace AlkemyWallet.Entities
     [Table("Transaction")]
     public class Transaction
     {
+
         [Key]
         public int Transaction_id { get; set; }
 
@@ -34,9 +35,12 @@ namespace AlkemyWallet.Entities
         public User? User { get; set; }
         [Required(ErrorMessage = "Account Id is Required")]
 
+        public int To_Account { get; set; } = 0;
+
         public int Account_id { get; set; } = 0;
         [ForeignKey("Account_id")]
-
         public Account? Account { get; set; }
+
+       
     }
 }

@@ -6,6 +6,11 @@ namespace AlkemyWallet.Entities
     [Table("Role")]
     public class Role
     {
+        public Role()
+        {
+            User = new HashSet<User>();
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -18,6 +23,6 @@ namespace AlkemyWallet.Entities
         [Required(ErrorMessage = "The Role its Required")]
         public string Description { get; set; } = string.Empty;
 
-        public ICollection<User>? User { get; set; }
+        public ICollection<User> User { get; set; }
     }
 }
