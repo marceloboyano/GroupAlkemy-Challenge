@@ -26,6 +26,7 @@ namespace AlkemyWallet.Controllers
             var roles = await _roleService.GetAllRoles();
             var rolesForShow = _mapper.Map<IEnumerable<RolesDTO>>(roles);
             return Ok(rolesForShow);
+
         }
         //Get user by id
         [HttpGet("{id}")]
