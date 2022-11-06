@@ -7,7 +7,7 @@ namespace AlkemyWallet.Core.Services
 {
     public class AccountService : IAccountService
     {
-        
+
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IImageService _imageService;
@@ -25,7 +25,7 @@ namespace AlkemyWallet.Core.Services
             var accounts = await _unitOfWork.AccountRepository.GetAll();
             return accounts;
         }
-        
+
         public async Task<Account> GetAccountById(int id)
         {
             var account = await _unitOfWork.AccountRepository.GetById(id);

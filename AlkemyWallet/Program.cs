@@ -1,12 +1,10 @@
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using AutoMapper;
-using AlkemyWallet.Core.Models;
-using AlkemyWallet.Repositories.Interfaces;
+using AlkemyWallet.DataAccess;
 using AlkemyWallet.Repositories;
+using AlkemyWallet.Repositories.Interfaces;
 using challenge.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,7 +20,7 @@ builder.Services.AddIdentityJwt(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Alkemy Wallet", Version = "v1"});
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Alkemy Wallet", Version = "v1" });
 
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -44,7 +42,7 @@ builder.Services.AddSwaggerGen(c =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            new string[] { }
         }
     });
 });
@@ -70,7 +68,7 @@ builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<IFixedTermDepositRepository, FixedTermDepositRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));  
+builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
 
 // Agrego los servicios
@@ -92,12 +90,12 @@ var app = builder.Build();
 //dotnet ef database update
 
 
-
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<WalletDbContext>();
     context.Database.Migrate();
 }
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

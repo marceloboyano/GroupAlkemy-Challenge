@@ -18,7 +18,7 @@ namespace AlkemyWallet.Entities
         [Required(ErrorMessage = "Enter a Payment Details")]
         public string Concept { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "A Date is Required")]
+        [Required(ErrorMessage = "A Creation Date is Required")]
         //si solo se requiere year month day [StringLength(10)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }

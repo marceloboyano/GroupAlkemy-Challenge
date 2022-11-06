@@ -1,7 +1,8 @@
 ﻿using AlkemyWallet.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Seeder { 
+namespace AlkemyWallet.DataAccess;
+
 public class DbInitializer
 {
     private readonly ModelBuilder _modelBuilder;
@@ -16,31 +17,32 @@ public class DbInitializer
         ///////////Rol////////////
         _modelBuilder.Entity<Role>(p =>
         {
-           p.HasData(
+            p.HasData(
                 new Role
                 {
                     Id = 1,
                     Name = "Administrador",
-                    Description = "Admin",
+                    Description = "Admin"
                 },
                 new Role
                 {
                     Id = 2,
                     Name = "Standard",
-                    Description = "Usuario con algunos permisos de escritura",
+                    Description = "Usuario con algunos permisos de escritura"
                 },
                 new Role
                 {
                     Id = 3,
                     Name = "Invitado",
-                    Description = "Solo permisos de lectura",
+                    Description = "Solo permisos de lectura"
                 }
-            );        
+            );
         });
 
         ///////////Usuarios////////////
-        _modelBuilder.Entity<User>(p => {
-        p.HasData(
+        _modelBuilder.Entity<User>(p =>
+        {
+            p.HasData(
                 new User
                 {
                     Id = 1,
@@ -75,15 +77,16 @@ public class DbInitializer
         });
 
         ///////////Accounts////////////
-        _modelBuilder.Entity<Account>(p => {
-        p.HasData(
+        _modelBuilder.Entity<Account>(p =>
+        {
+            p.HasData(
                 new Account
                 {
                     Id = 1,
                     CreationDate = new DateTime(1995, 11, 19),
                     Money = 150000,
                     IsBlocked = false,
-                    User_id = 1,
+                    User_id = 1
                 },
                 new Account
                 {
@@ -91,31 +94,92 @@ public class DbInitializer
                     CreationDate = new DateTime(1995, 11, 19),
                     Money = 50,
                     IsBlocked = true,
-                    User_id = 1,
+                    User_id = 1
                 }
-              );
+            );
         });
 
         ///////////Transaction(transferencias)////////////
-        _modelBuilder.Entity<Transaction>(p => {
-        p.HasData(
+        _modelBuilder.Entity<Transaction>(p =>
+        {
+            p.HasData(
                 new Transaction
                 {
                     Transaction_id = 1,
-                    Amount = 2000,
+                    Amount = 15155,
                     Concept = "crédito",
                     Date = new DateTime(2020, 01, 25),
                     Type = "Efectivo",
                     Account_id = 1,
-                    User_id = 2,
+                    User_id = 2
+                },
+                new Transaction
+                {
+                    Transaction_id = 2,
+                    Amount = 4922,
+                    Concept = "Efectivo",
+                    Date = new DateTime(1999, 04, 14),
+                    Type = "Debito",
+                    Account_id = 2,
+                    User_id = 2
+                },
+                new Transaction
+                {
+                    Transaction_id = 3,
+                    Amount = 9340,
+                    Concept = "Prestamo",
+                    Date = new DateTime(2002, 03, 04),
+                    Type = "crédito",
+                    Account_id = 1,
+                    User_id = 1
+                },
+                new Transaction
+                {
+                    Transaction_id = 4,
+                    Amount = 3211,
+                    Concept = "Sueldo",
+                    Date = new DateTime(2013, 05, 25),
+                    Type = "Efectivo",
+                    Account_id = 1,
+                    User_id = 1
+                },
+                new Transaction
+                {
+                    Transaction_id = 5,
+                    Amount = 55552,
+                    Concept = "crédito",
+                    Date = new DateTime(2022, 02, 18),
+                    Type = "Efectivo",
+                    Account_id = 2,
+                    User_id = 2
+                },
+                new Transaction
+                {
+                    Transaction_id = 6,
+                    Amount = 224,
+                    Concept = "Reintegro",
+                    Date = new DateTime(1980, 08, 12),
+                    Type = "Debito",
+                    Account_id = 1,
+                    User_id = 2
+                },
+                new Transaction
+                {
+                    Transaction_id = 7,
+                    Amount = 202300,
+                    Concept = "Pago",
+                    Date = new DateTime(1990, 11, 22),
+                    Type = "Efectivo",
+                    Account_id = 1,
+                    User_id = 1
                 }
-              
-              );
+            );
         });
 
         ///////////FixedTermDeposit(plazo fijo etc.)////////////
-        _modelBuilder.Entity<FixedTermDeposit>(p => {
-        p.HasData(
+        _modelBuilder.Entity<FixedTermDeposit>(p =>
+        {
+            p.HasData(
                 new FixedTermDeposit
                 {
                     Id = 1,
@@ -125,87 +189,85 @@ public class DbInitializer
                     Amount = 23000,
                     Closing_date = new DateTime(2021, 03, 22)
                 }
-               
-              );
+            );
         });
 
         ///////////Catalogue(catalogo de productos?,puede ser prestamo personal a tienda de electrodomesticos tmb, hay que consultar.)////////////
 
-        _modelBuilder.Entity<Catalogue>(p => {
-        p.HasData(
-                 new Catalogue
-                 {
-                     Id = 1,
-                     Product_description = "cocina",
-                     Image = "",
-                     Points = 300,
-                 },
+        _modelBuilder.Entity<Catalogue>(p =>
+        {
+            p.HasData(
+                new Catalogue
+                {
+                    Id = 1,
+                    Product_description = "cocina",
+                    Image = "",
+                    Points = 300
+                },
                 new Catalogue
                 {
                     Id = 2,
                     Product_description = "Lavarropas",
                     Image = "",
-                    Points = 500,
+                    Points = 500
                 },
                 new Catalogue
                 {
                     Id = 3,
                     Product_description = "Heladera",
                     Image = "",
-                    Points = 700,
+                    Points = 700
                 },
                 new Catalogue
                 {
                     Id = 4,
                     Product_description = "Lavavajillas",
                     Image = "",
-                    Points = 400,
+                    Points = 400
                 },
                 new Catalogue
                 {
                     Id = 5,
                     Product_description = "Freezer",
                     Image = "",
-                    Points = 600,
+                    Points = 600
                 },
                 new Catalogue
                 {
                     Id = 6,
                     Product_description = "Microondas",
                     Image = "",
-                    Points = 200,
+                    Points = 200
                 },
                 new Catalogue
                 {
                     Id = 7,
                     Product_description = "Horno Electrico",
                     Image = "",
-                    Points = 400,
+                    Points = 400
                 },
                 new Catalogue
                 {
                     Id = 8,
                     Product_description = "Horno Grande",
                     Image = "",
-                    Points = 500,
+                    Points = 500
                 },
                 new Catalogue
                 {
                     Id = 9,
                     Product_description = "Panificadora",
                     Image = "",
-                    Points = 200,
+                    Points = 200
                 },
                 new Catalogue
                 {
                     Id = 10,
                     Product_description = "Cepillo Electrico",
                     Image = "",
-                    Points = 100,
+                    Points = 100
                 }
-              );
+            );
         });
-      
     }
-}
 }

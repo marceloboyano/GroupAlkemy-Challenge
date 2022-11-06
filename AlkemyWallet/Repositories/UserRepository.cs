@@ -1,17 +1,13 @@
-﻿using AlkemyWallet.Entities;
+﻿using AlkemyWallet.DataAccess;
+using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 
-namespace AlkemyWallet.Repositories
+namespace AlkemyWallet.Repositories;
+
+public class UserRepository : RepositoryBase<User>, IUserRepository
 {
-    public class UserRepository : RepositoryBase<User>, IUserRepository
-        {
-            public UserRepository(WalletDbContext context)
-                : base(context)
-            {
-
-            }
-
-
-        }
+    public UserRepository(WalletDbContext context)
+        : base(context)
+    {
+    }
 }
-
