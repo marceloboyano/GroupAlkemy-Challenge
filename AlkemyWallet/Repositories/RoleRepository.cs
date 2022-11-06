@@ -1,16 +1,13 @@
-﻿using AlkemyWallet.Entities;
+﻿using AlkemyWallet.DataAccess;
+using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 
-namespace AlkemyWallet.Repositories
+namespace AlkemyWallet.Repositories;
+
+public class RoleRepository : RepositoryBase<Role>, IRoleRepository
 {
-    public class RoleRepository : RepositoryBase<Role>, IRoleRepository
+    public RoleRepository(WalletDbContext context)
+        : base(context)
     {
-        public RoleRepository(WalletDbContext context)
-            : base(context)
-        {
-
-        }
-
-
     }
 }

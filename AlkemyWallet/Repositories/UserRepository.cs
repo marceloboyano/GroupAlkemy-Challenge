@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Entities;
+﻿using AlkemyWallet.DataAccess;
+using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,4 +26,3 @@ namespace AlkemyWallet.Repositories
         }
     }
 }
-

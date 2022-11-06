@@ -3,6 +3,7 @@ using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Entities.JWT;
 using AlkemyWallet.Repositories;
 using AlkemyWallet.Repositories.Interfaces;
+using AlkemyWallet.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
