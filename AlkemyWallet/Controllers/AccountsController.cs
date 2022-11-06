@@ -54,16 +54,31 @@ namespace AlkemyWallet.Controllers
 
         }
 
-        //[Authorize]
+     //   [Authorize(Roles = "standar")]
         [HttpPost("{id}/deposit")]
         public async Task<ActionResult> PostDeposit(int id, int amount)
         {
             var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
-            if (!(Int32.Parse(userIdFromToken) == id))
+            if (Int32.Parse(userIdFromToken) != id)
                 return BadRequest("El id de cuenta ingresado no coincide con el id de usuario registrado en el sistema");
 
             var result = await _accountsService.Deposit(id, amount);
-            if(result)
+            if(result.Success)
+                return Ok(" transaccion exitosa");
+            return BadRequest("El importe ingresado no es correcto debe ser mayor a 0");
+
+
+        }
+      //  [Authorize(Roles = "standar")]
+        [HttpPost("{id}/transfer")]
+        public async Task<ActionResult> PostTransfer(int id, int amount, int toAccountId)
+        {
+            var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
+            if (Int32.Parse(userIdFromToken) != id)
+                return BadRequest("El id de cuenta ingresado no coincide con el id de usuario registrado en el sistema");
+
+            var result = await _accountsService.Transfer(id, amount, toAccountId);
+            if (result.Success)
                 return Ok(" transaccion exitosa");
             return BadRequest("El importe ingresado no es correcto debe ser mayor a 0");
 
