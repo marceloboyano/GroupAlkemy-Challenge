@@ -7,16 +7,16 @@ namespace AlkemyWallet.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class LoginController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly IAccountServiceJWT _iAccountsServiceJwt;
 
-        public LoginController(IAccountServiceJWT iAccountsServiceJwt)
+        public AuthController(IAccountServiceJWT iAccountsServiceJwt)
         {
             _iAccountsServiceJwt = iAccountsServiceJwt;
         }
 
-        [HttpPost()]
+        [HttpPost("login")]
         public async Task<IActionResult> AuthenticateAsync(AuthenticationRequestDTO request)
         {
             return Ok(await _iAccountsServiceJwt.AuthenticateAsync(new AuthenticationRequestDTO
