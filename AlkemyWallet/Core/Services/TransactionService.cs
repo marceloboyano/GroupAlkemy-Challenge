@@ -24,10 +24,12 @@ namespace AlkemyWallet.Core.Services
             return transactions;
         }
 
-        public async Task<Transaction> GetTransactionsById(int id, int userId)
+        public async Task<Transaction> GetTransactionById(int id, int userId)
         {
             var tran = await _unitOfWork.TransactionRepository.GetById(id);
+#pragma warning disable CS8603 // Possible null reference return.
             if ((tran == null) || (tran.User_id != userId)) return null;
+#pragma warning restore CS8603 // Possible null reference return.
             return tran;
         }
     }
