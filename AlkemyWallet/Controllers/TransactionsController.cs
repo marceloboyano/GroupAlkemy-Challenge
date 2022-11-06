@@ -12,13 +12,11 @@ public class TransactionsController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly ITransactionService _transactionService;
-    private readonly IUserService _userService;
-
+    
     public TransactionsController(ITransactionService transactionService, IMapper mapper, IUserService userService)
     {
         _transactionService = transactionService;
         _mapper = mapper;
-        _userService = userService;
     }
 
     [HttpGet]
