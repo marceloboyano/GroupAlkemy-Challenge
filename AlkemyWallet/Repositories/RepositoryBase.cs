@@ -1,6 +1,6 @@
 ﻿using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
-
+using AlkemyWallet.DataAccess;
 namespace AlkemyWallet.Repositories
 {
     public class RepositoryBase<T> : IRepositoryBase<T> where T : class

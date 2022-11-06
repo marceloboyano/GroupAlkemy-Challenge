@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities;
-using Seeder;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
+namespace AlkemyWallet.DataAccess
+{
+    
 
 public class WalletDbContext : IdentityDbContext<ApplicationUser>
 {
@@ -20,28 +23,29 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
 
 
     //en caso de usar CodeFirst a Sql
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
 
 
-        base.OnModelCreating(modelBuilder);
-        foreach (var foreingKey in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+        base.OnModelCreating(builder);
+        foreach (var foreingKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
         {
             foreingKey.DeleteBehavior = DeleteBehavior.Restrict;
         }
-        base.OnModelCreating(modelBuilder);
-        new DbInitializer(modelBuilder).Seed();
+        base.OnModelCreating(builder);
+        new DbInitializer(builder).Seed();
 
         //en construccion
         ///////////////////////
-        modelBuilder.Entity<Role>().ToTable("Role");
-        modelBuilder.Entity<User>().ToTable("User");
-        modelBuilder.Entity<Account>().ToTable("Account");
-        modelBuilder.Entity<Transaction>().ToTable("Transaction");
-        modelBuilder.Entity<FixedTermDeposit>().ToTable("FixedTermDeposit");
-        modelBuilder.Entity<Catalogue>().ToTable("Catalogue");
-        base.OnModelCreating(modelBuilder);
+        builder.Entity<Role>().ToTable("Role");
+        builder.Entity<User>().ToTable("User");
+        builder.Entity<Account>().ToTable("Account");
+        builder.Entity<Transaction>().ToTable("Transaction");
+        builder.Entity<FixedTermDeposit>().ToTable("FixedTermDeposit");
+        builder.Entity<Catalogue>().ToTable("Catalogue");
+        base.OnModelCreating(builder);
 
     }
 
+}
 }
