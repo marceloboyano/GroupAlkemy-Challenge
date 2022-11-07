@@ -1,12 +1,9 @@
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
-using AlkemyWallet.Core.Services;
 using AlkemyWallet.Entities;
-using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
 namespace AlkemyWallet.Controllers
 {
@@ -25,7 +22,7 @@ namespace AlkemyWallet.Controllers
 
         // Get all users
         [HttpGet]
-        [Authorize]
+        [Authorize(Roles = "Administrador")]
         public async Task<ActionResult<UserDTO>> GetUsers()
         {
             var users = await _userService.GetAllUser();
@@ -34,7 +31,7 @@ namespace AlkemyWallet.Controllers
         }
         //Get user by id
         [HttpGet("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Standard")]
         public async Task<IActionResult> GetUserById(int id)
         {
             var user = await _userService.GetById(id);
