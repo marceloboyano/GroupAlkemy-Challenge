@@ -18,7 +18,7 @@ public class FixedTermDepositDTO
     [Required(ErrorMessage = "el campo es requerido")]
     public int Account_id { get; set; }
 
-    [ForeignKey("Account_id")] public AccountDTO? Account { get; set; }
+    [ForeignKey("Account_id")] public AccountForShowDTO? Account { get; set; }
 
 
     [Required(ErrorMessage = "el campo es requerido")]

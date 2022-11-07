@@ -19,7 +19,7 @@ public class Account
     [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
     public DateTime CreationDate { get; set; }
 
-    [MaxLength(255)]
+    [Range(0, 9999999999999)]
     [Required(ErrorMessage = "An Amount its Required")]
     public float Money { get; set; } = 0f;
 

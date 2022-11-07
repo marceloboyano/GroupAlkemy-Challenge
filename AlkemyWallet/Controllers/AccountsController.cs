@@ -1,4 +1,6 @@
 ﻿using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models;
+using AlkemyWallet.Core.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +21,7 @@ public class AccountsController : ControllerBase
     }
 
     //Get all accounts
+    [Authorize(Roles = "Administrador")]
     [HttpGet]
     public async Task<IActionResult> GetAccounts()
     {
@@ -28,6 +31,7 @@ public class AccountsController : ControllerBase
     }
 
     //Get account by id
+    [Authorize(Roles = "Administrador")]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetAccountById(int id)
     {
@@ -36,16 +40,17 @@ public class AccountsController : ControllerBase
         if (account is null) return NotFound("No existe ninguna cuenta con el id especificado");
 
         return Ok(account);
-    }
+    }    
 
-    //[Authorize]
-    [HttpPost("{id}")]
-    public ActionResult PostAccountById(int id)
+    [Authorize(Roles = "Standard")]
+    [HttpPost]
+    public async Task<ActionResult> PostAccount([FromForm] AccountForCreationDTO accountDTO)
     {
-        return Ok(" transaccion exitosa");
+        await _accountsService.InsertAccounts(accountDTO);
+        return Ok("Se ha creado la cuenta exitosamente");
     }
 
-   // [Authorize(Roles = "standard")]
+    [Authorize(Roles = "Standard")]
     [HttpPost("{id}/deposit")]
     public async Task<ActionResult> PostDeposit(int id, int amount)
     {
@@ -62,7 +67,7 @@ public class AccountsController : ControllerBase
 
     }
 
-   // [Authorize(Roles = "standard")]
+   [Authorize(Roles = "Standard")]
     [HttpPost("{id}/transfer")]
     public async Task<ActionResult> PostTransfer(int id, int amount, int toAccountId)
     {

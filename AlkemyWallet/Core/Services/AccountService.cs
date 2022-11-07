@@ -1,7 +1,9 @@
 ﻿using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
+using static challenge.Services.ImageService;
 
 namespace AlkemyWallet.Core.Services;
 
@@ -30,6 +32,15 @@ public class AccountService : IAccountService
         var account = await _unitOfWork.AccountRepository.GetById(id);
         return account;
     }
+
+    public async Task InsertAccounts(AccountForCreationDTO accountDTO)
+    {
+        
+             
+        var account = _mapper.Map<Account>(accountDTO);  
+        await _unitOfWork.AccountRepository!.Insert(account);
+    }
+
 
     public async Task<(bool Success, string Message)> Deposit(int id, int amount)
     {
