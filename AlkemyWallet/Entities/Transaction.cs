@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlkemyWallet.Entities
@@ -30,13 +30,6 @@ namespace AlkemyWallet.Entities
         public string? Type { get; set; }
 
 
-        [MaxLength(100)]
-        [Column("Type", TypeName = "varchar")]
-        [Required(ErrorMessage = "Choose Transaction Type")]
-        public string? Type { get; set; }
-
-
-
         [Required(ErrorMessage = "User Id is Required")]
         public int User_id { get; set; } = 0;
 
@@ -53,4 +46,3 @@ namespace AlkemyWallet.Entities
        
     }
 }
-
