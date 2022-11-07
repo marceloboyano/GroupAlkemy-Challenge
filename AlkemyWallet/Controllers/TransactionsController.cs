@@ -33,7 +33,7 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize(Roles = "Administrador")]
+    [Authorize]
     public async Task<IActionResult> GetTransactions()
     {
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
