@@ -1,17 +1,15 @@
 ﻿using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO.UserLogin;
-using AlkemyWallet.Entities.JWT;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Entities.JWT;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using AlkemyWallet.Core.Helper.ExceptionGenerics;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Security.Cryptography;
-using Microsoft.Extensions.Options;
 
 namespace AlkemyWallet.Core.Services
 {
@@ -19,17 +17,15 @@ namespace AlkemyWallet.Core.Services
     {
         private readonly IUserRepository _iUserRepository;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly JWTSettings _jWTSettings;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AccountServiceJWT(IUserRepository iUserRepository, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, SignInManager<ApplicationUser> signInManager, IOptions<JWTSettings> jWTSettings)
+        public AccountServiceJWT(IUserRepository iUserRepository, UserManager<ApplicationUser> userManager, IOptions<JWTSettings> jWTSettings, IUnitOfWork unitOfWork)
         {
             _iUserRepository = iUserRepository;
             _userManager = userManager;
-            _roleManager = roleManager;
-            _signInManager = signInManager;
             _jWTSettings = jWTSettings.Value;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Response<AuthenticationResponseDTO>> AuthenticateAsync(AuthenticationRequestDTO request)
@@ -40,47 +36,38 @@ namespace AlkemyWallet.Core.Services
             if (user is null)
                 return new Response<AuthenticationResponseDTO>(responseSinAutenticar, false, $"El email o la contraseña no coinciden con lo registrado en la base de datos");
 
-            var userIdentity = new ApplicationUser()
+            ApplicationUser userIdentity = new()
             {
                 Email = user.Email,
                 Id = user.Id.ToString(),
-                UserName = user.First_name
+                UserName = user.First_name,
+                RolId = user.Rol_id
             };
 
-            if (user.Rol_id.Equals(1) || user.Rol_id.Equals(2))
-            {
-                JwtSecurityToken jwtSecurityToken = await GenerateJWTToken(userIdentity);
-                AuthenticationResponseDTO response = new();
-                response.Id = user.Id.ToString();
-                response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-                response.Email = user.Email;
-                response.Name = user.First_name;
+            JwtSecurityToken jwtSecurityToken = await GenerateJWTToken(userIdentity);
+            AuthenticationResponseDTO response = new();
+            response.Id = user.Id.ToString();
+            response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
+            response.Email = user.Email;
+            response.Name = user.First_name;
 
-                List<string> rolesList = new();
-                rolesList.Add(user.Rol_id.ToString());
-                response.Roles = rolesList.ToList();
-                response.IsVerified = true;
+            List<string> rolesList = new();
+            rolesList.Add(user.Rol_id.ToString());
+            response.Roles = rolesList.ToList();
+            response.IsVerified = true;
 
-                return new Response<AuthenticationResponseDTO>(response, $"Usuario autenticado {user.First_name}");
-            }
-            else
-            {
-                return new Response<AuthenticationResponseDTO>(responseSinAutenticar, false, $"El usuario {user.First_name} no se puede autenticar");
-            }
-
+            return new Response<AuthenticationResponseDTO>(response, $"Usuario autenticado {user.First_name}");
         }
 
         private async Task<JwtSecurityToken> GenerateJWTToken(ApplicationUser user)
         {
             IList<Claim> userClaims = await _userManager.GetClaimsAsync(user);
-            IList<string> roles = await _userManager.GetRolesAsync(user);
+            Role rol = await _unitOfWork.RoleRepository.GetById(user.RolId);
+            List<string> roles = new() { rol.Name };
 
             List<Claim> roleClaims = new();
 
-            for (int i = 0; i < roles.Count; i++)
-            {
-                roleClaims.Add(new Claim("roles", roles[i]));
-            }
+            roleClaims.Add(new Claim("roles", roles[0]));
 
             string ipAddress = ApiHelper.GetIpAddress();
 
@@ -107,26 +94,6 @@ namespace AlkemyWallet.Core.Services
                 );
 
             return jwtSecurityToken;
-        }
-
-        private RefreshTokenDTO GenerateRefreshToken(string ipAddress)
-        {
-            return new RefreshTokenDTO
-            {
-                Token = RamdomTokenString(),
-                Expires = DateTime.Now.AddDays(7),
-                Created = DateTime.Now,
-                CreatedByIp = ipAddress
-            };
-        }
-
-        private string RamdomTokenString()
-        {
-            using RNGCryptoServiceProvider rngCryptoServiceProvider = new();
-            Byte[] ramdomBytes = new Byte[40];
-            rngCryptoServiceProvider.GetBytes(ramdomBytes);
-
-            return BitConverter.ToString(ramdomBytes).Replace("-", "");
         }
     }
 }
