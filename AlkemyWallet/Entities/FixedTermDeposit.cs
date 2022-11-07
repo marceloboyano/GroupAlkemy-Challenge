@@ -22,6 +22,7 @@ public class FixedTermDeposit
 
 
     [MaxLength(255)]
+    [Column(TypeName = "decimal(18,4)")]
     [Required(ErrorMessage = "An Amount its Required")]
     public float Amount { get; set; } = 0;
 
