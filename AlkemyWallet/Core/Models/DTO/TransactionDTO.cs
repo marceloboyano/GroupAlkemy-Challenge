@@ -30,4 +30,6 @@ namespace AlkemyWallet.Core.Models
 
 
     }
+
 }
+

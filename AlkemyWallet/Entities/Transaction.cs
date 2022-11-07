@@ -10,9 +10,9 @@ namespace AlkemyWallet.Entities
         [Key]
         public int Transaction_id { get; set; }
 
-        [MaxLength(100)]
+        [MaxLength (100)]
         [Required(ErrorMessage = "An Amount its Required")]
-        public int Amount { get; set; } = 0;
+        public int Amount { get; set; }=0;
 
         [Required(ErrorMessage = "Enter a Payment Details")]
         [Column("Concept", TypeName = "varchar")]
@@ -30,6 +30,13 @@ namespace AlkemyWallet.Entities
         public string? Type { get; set; }
 
 
+        [MaxLength(100)]
+        [Column("Type", TypeName = "varchar")]
+        [Required(ErrorMessage = "Choose Transaction Type")]
+        public string? Type { get; set; }
+
+
+
         [Required(ErrorMessage = "User Id is Required")]
         public int User_id { get; set; } = 0;
 
@@ -43,6 +50,7 @@ namespace AlkemyWallet.Entities
         [ForeignKey("Account_id")]
         public Account? Account { get; set; }
 
-
+       
     }
 }
+

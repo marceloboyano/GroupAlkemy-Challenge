@@ -99,17 +99,18 @@ public class DbInitializer
                 new Account
                 {
                     Id = 3,
-                    CreationDate = new DateTime(1999, 02, 05),
-                    Money = 5000,
+                    CreationDate = new DateTime(1995, 11, 19),
+                    Money = 10050,
                     IsBlocked = false,
-                    User_id = 1
-                }, new Account
+                    User_id = 3
+                },
+                new Account
                 {
                     Id = 4,
-                    CreationDate = new DateTime(2010, 04, 10),
-                    Money = 10034,
+                    CreationDate = new DateTime(1995, 11, 19),
+                    Money = 502221,
                     IsBlocked = false,
-                    User_id = 2
+                    User_id = 3
                 },
                 new Account
                 {
