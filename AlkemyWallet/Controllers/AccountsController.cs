@@ -1,88 +1,74 @@
 ﻿using AlkemyWallet.Core.Interfaces;
-using AlkemyWallet.Core.Services;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Data;
 
-namespace AlkemyWallet.Controllers
+namespace AlkemyWallet.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class AccountsController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
+    private readonly IAccountService _accountsService;
+    private readonly IMapper _mapper;
 
-    public class AccountsController: ControllerBase
+    public AccountsController(IAccountService accountsService, IMapper mapper)
     {
-        private readonly IAccountService _accountsService;
-        private readonly IMapper _mapper;
+        _accountsService = accountsService;
+        _mapper = mapper;
+    }
 
-        public AccountsController(IAccountService accountsService, IMapper mapper)
-        {
-            _accountsService = accountsService;
-            _mapper = mapper;
-        }
+    //Get all accounts
+    [HttpGet]
+    public async Task<IActionResult> GetAccounts()
+    {
+        var accounts = await _accountsService.GetAccounts();
 
-        //Get all accounts
-        [HttpGet]
-        public async Task<IActionResult> GetAccounts()
-        {
-            var accounts = await _accountsService.GetAccounts();
+        return Ok(accounts);
+    }
 
-            return Ok(accounts);
-        }
+    //Get account by id
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetAccountById(int id)
+    {
+        var account = await _accountsService.GetAccountById(id);
 
-        //Get account by id
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetAccountById(int id)
-        {
-            var account = await _accountsService.GetAccountById(id);
+        if (account is null) return NotFound("No existe ninguna cuenta con el id especificado");
 
-            if (account is null)
-            {
-                return NotFound("No existe ninguna cuenta con el id especificado");
-            }
+        return Ok(account);
+    }
 
-            return Ok(account);
-        }
+    //[Authorize]
+    [HttpPost("{id}")]
+    public async Task<ActionResult> PostAccountById(int id)
+    {
+        return Ok(" transaccion exitosa");
+    }
 
-        //[Authorize]
-        [HttpPost("{id}")]
-        public async Task<ActionResult> PostAccountById(int id)
-        {
+    //   [Authorize(Roles = "standar")]
+    [HttpPost("{id}/deposit")]
+    public async Task<ActionResult> PostDeposit(int id, int amount)
+    {
+        var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
+        if (int.Parse(userIdFromToken) != id)
+            return BadRequest("El id de cuenta ingresado no coincide con el id de usuario registrado en el sistema");
 
-       
+        var result = await _accountsService.Deposit(id, amount);
+        if (result.Success)
             return Ok(" transaccion exitosa");
+        return BadRequest("El importe ingresado no es correcto debe ser mayor a 0");
+    }
 
-        }
+    //  [Authorize(Roles = "standar")]
+    [HttpPost("{id}/transfer")]
+    public async Task<ActionResult> PostTransfer(int id, int amount, int toAccountId)
+    {
+        var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
+        if (int.Parse(userIdFromToken) != id)
+            return BadRequest("El id de cuenta ingresado no coincide con el id de usuario registrado en el sistema");
 
-     //   [Authorize(Roles = "standar")]
-        [HttpPost("{id}/deposit")]
-        public async Task<ActionResult> PostDeposit(int id, int amount)
-        {
-            var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
-            if (Int32.Parse(userIdFromToken) != id)
-                return BadRequest("El id de cuenta ingresado no coincide con el id de usuario registrado en el sistema");
-
-            var result = await _accountsService.Deposit(id, amount);
-            if(result.Success)
-                return Ok(" transaccion exitosa");
-            return BadRequest("El importe ingresado no es correcto debe ser mayor a 0");
-
-
-        }
-      //  [Authorize(Roles = "standar")]
-        [HttpPost("{id}/transfer")]
-        public async Task<ActionResult> PostTransfer(int id, int amount, int toAccountId)
-        {
-            var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
-            if (Int32.Parse(userIdFromToken) != id)
-                return BadRequest("El id de cuenta ingresado no coincide con el id de usuario registrado en el sistema");
-
-            var result = await _accountsService.Transfer(id, amount, toAccountId);
-            if (result.Success)
-                return Ok(" transaccion exitosa");
-            return BadRequest("El importe ingresado no es correcto debe ser mayor a 0");
-
-
-        }
+        var result = await _accountsService.Transfer(id, amount, toAccountId);
+        if (result.Success)
+            return Ok(" transaccion exitosa");
+        return BadRequest("El importe ingresado no es correcto debe ser mayor a 0");
     }
 }

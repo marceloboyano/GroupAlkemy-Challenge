@@ -1,10 +1,7 @@
 ﻿using AlkemyWallet.Entities;
 
-namespace AlkemyWallet.Repositories.Interfaces
+namespace AlkemyWallet.Repositories.Interfaces;
+
+public interface ICatalogueRepository : IRepositoryBase<Catalogue>
 {
-
-    public interface ICatalogueRepository : IRepositoryBase<Catalogue>
-    {
-
-    }
 }
