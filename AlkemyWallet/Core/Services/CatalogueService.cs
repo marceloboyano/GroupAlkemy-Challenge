@@ -22,13 +22,13 @@ public class CatalogueService : ICatalogueService
 
     public async Task<Catalogue> GetCatalogueById(int id)
     {
-        var catalogue = await _unitOfWork.CatalogueRepository.GetById(id);
+        var catalogue = await _unitOfWork.CatalogueRepository!.GetById(id);
         return catalogue;
     }
 
     public async Task<IEnumerable<Catalogue>> GetCatalogues()
     {
-        var catalogues = await _unitOfWork.CatalogueRepository.GetAll();
+        var catalogues = await _unitOfWork.CatalogueRepository!.GetAll();
         catalogues = catalogues.OrderBy(x => x.Points);
         return catalogues;
     }
@@ -43,17 +43,17 @@ public class CatalogueService : ICatalogueService
         var catalogue = _mapper.Map<Catalogue>(catalogueDTO);
         catalogue.Image = path;
 
-        await _unitOfWork.CatalogueRepository.Insert(catalogue);
+        await _unitOfWork.CatalogueRepository!.Insert(catalogue);
     }
 
     public async Task<bool> DeleteCatalogue(int id)
     {
-        return await _unitOfWork.CatalogueRepository.Delete(id);
+        return await _unitOfWork.CatalogueRepository!.Delete(id);
     }
 
     public async Task<bool> UpdateCatalogues(int id, CatalogueForUpdateDTO CatalogueDTO)
     {
-        var catalogueEntity = await _unitOfWork.CatalogueRepository.GetById(id);
+        var catalogueEntity = await _unitOfWork.CatalogueRepository!.GetById(id);
 
         if (catalogueEntity is null)
             return false;
