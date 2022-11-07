@@ -59,13 +59,13 @@ public class UserForCreatoionDto
 
 
     [Required(ErrorMessage = "el campo es requerido")]
-    public int Points { get; set; } = 0;
+    public int Points { get; } = 2;
 
 
-    [Required(ErrorMessage = "el campo es requerido")]
-    public int Rol_id { get; set; } = 0;
+    //[Required(ErrorMessage = "el campo es requerido")]
+    //public int Rol_id { get; set; } = 2;
 
-    [ForeignKey("Rol_id")] public Role? Role { get; set; }
+    //[ForeignKey("Rol_id")] public Role? Role { get; set; }
 }
 
 public class UserForUpdateDto

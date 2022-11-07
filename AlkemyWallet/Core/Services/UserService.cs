@@ -33,6 +33,7 @@ public class UserService : IUserService
     public async Task AddUser(UserForCreatoionDto userDTO)
     {
         var user = _mapper.Map<User>(userDTO);
+        user.Rol_id = 2;
         await _unitOfWork.UserRepository.Insert(user);
     }
 
