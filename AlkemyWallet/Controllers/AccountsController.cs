@@ -39,7 +39,7 @@ public class AccountsController : ControllerBase
 
     //[Authorize]
     [HttpPost("{id}")]
-    public async Task<ActionResult> PostAccountById(int id)
+    public ActionResult PostAccountById(int id)
     {
         return Ok(" transaccion exitosa");
     }
