@@ -12,20 +12,17 @@ namespace AlkemyWallet.Controllers;
 [Route("[controller]")]
 public class TransactionsController : ControllerBase
 {
-
+    #region Messages
     private const string TRAN_NOT_EXISTS = "No existe una transacción con el id proporcionado asociada al usuario";
     private const string TRAN_DELETED = "La transacción ha sido eliminada";
     private const string TRAN_NOT_FOUND = "No se encontró la transacción";
     private const string TRAN_UPDATED = "Transacción modificada con éxito";
 
-
     #endregion
 
     private readonly IMapper _mapper;
     private readonly ITransactionService _transactionService;
-
     
-
     public TransactionsController(ITransactionService transactionService, IMapper mapper)
     {
         _transactionService = transactionService;
