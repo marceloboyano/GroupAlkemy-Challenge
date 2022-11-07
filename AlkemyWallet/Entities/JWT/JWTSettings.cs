@@ -1,10 +1,9 @@
-﻿namespace AlkemyWallet.Entities.JWT
+﻿namespace AlkemyWallet.Entities.JWT;
+
+public class JWTSettings
 {
-    public class JWTSettings
-    {
-        public string Key { get; set; }
-        public string Issuer { get; set; }
-        public string Audience { get; set; }
-        public double DurationInMinutes { get; set; }
-    }
+    public string Key { get; set; } = string.Empty;
+    public string Issuer { get; set; } = string.Empty;
+    public string Audience { get; set; } = string.Empty;
+    public double DurationInMinutes { get; set; }
 }

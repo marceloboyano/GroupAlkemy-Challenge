@@ -1,29 +1,27 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO.UserLogin;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AlkemyWallet.Controllers
+namespace AlkemyWallet.Controllers;
+
+[ApiController]
+[Route("[controller]")]
+public class AuthController : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class AuthController : ControllerBase
+    private readonly IAccountServiceJWT _iAccountsServiceJwt;
+
+    public AuthController(IAccountServiceJWT iAccountsServiceJwt)
     {
-        private readonly IAccountServiceJWT _iAccountsServiceJwt;
+        _iAccountsServiceJwt = iAccountsServiceJwt;
+    }
 
-        public AuthController(IAccountServiceJWT iAccountsServiceJwt)
+    [HttpPost("login")]
+    public async Task<IActionResult> AuthenticateAsync(AuthenticationRequestDTO request)
+    {
+        return Ok(await _iAccountsServiceJwt.AuthenticateAsync(new AuthenticationRequestDTO
         {
-            _iAccountsServiceJwt = iAccountsServiceJwt;
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> AuthenticateAsync(AuthenticationRequestDTO request)
-        {
-            return Ok(await _iAccountsServiceJwt.AuthenticateAsync(new AuthenticationRequestDTO
-            {
-                Email = request.Email,
-                Password = request.Password
-            }));
-        }
+            Email = request.Email,
+            Password = request.Password
+        }));
     }
 }

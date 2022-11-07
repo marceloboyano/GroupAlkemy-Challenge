@@ -6,6 +6,10 @@ namespace AlkemyWallet.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {
+    private readonly IRepositoryBase<Account>? _accountRepository;
+    private readonly IAccountRepository? _accountWithDetails;
+    private readonly IRepositoryBase<Catalogue>? _catalogueRepository;
+
     /// Basicamente unit of work tiene la funcion de crear funciones sincronicas, por ejemplo : al transferir dinero de una cuenta
     /// bancaria a otra, las dos cuentas bancarias sufren un cambio en sus depositos de forma simultanea, unit of work se encarga de
     /// enlazar las dos tablas o mas para asi utilizar una sola instancia de DBcontext.
@@ -13,39 +17,37 @@ public class UnitOfWork : IUnitOfWork
     /// la sincronizacion.(tambien para ver como initiliazar el context en con el unit of work en los endpoints).
     private readonly WalletDbContext _dbContext;
 
-    private readonly IRepositoryBase<Account> accountRepository;
-    private readonly IAccountRepository accountWithDetails;
-    private readonly IRepositoryBase<Catalogue> catalogueRepository;
-    private readonly IRepositoryBase<FixedTermDeposit> fixedTermDepositRepository;
-    private readonly IRepositoryBase<Role> roleRepository;
-    private readonly ITransactionRepository transactionRepository;
-    private readonly IUserRepository userDetailsRepository;
-    private readonly IRepositoryBase<User> userRepository;
+    private readonly IRepositoryBase<FixedTermDeposit>? _fixedTermDepositRepository;
+    private readonly IRepositoryBase<Role>? _roleRepository;
+    private readonly ITransactionRepository? _transactionRepository;
+    private readonly IUserRepository? _userDetailsRepository;
+    private readonly IRepositoryBase<User>? _userRepository;
 
     public UnitOfWork(WalletDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public IRepositoryBase<User> UserRepository => userRepository ?? new RepositoryBase<User>(_dbContext);
 
-    public IUserRepository UserDetailsRepository => userDetailsRepository ?? new UserRepository(_dbContext);
+    public IRepositoryBase<User> UserRepository => _userRepository ?? new RepositoryBase<User>(_dbContext);
 
-    public IRepositoryBase<Account> AccountRepository => accountRepository ?? new RepositoryBase<Account>(_dbContext);
+    public IUserRepository UserDetailsRepository => _userDetailsRepository ?? new UserRepository(_dbContext);
 
-    public IAccountRepository AccountWithDetails => accountWithDetails ?? new AccountRepository(_dbContext);
+    public IRepositoryBase<Account> AccountRepository => _accountRepository ?? new RepositoryBase<Account>(_dbContext);
+
+    public IAccountRepository AccountWithDetails => _accountWithDetails ?? new AccountRepository(_dbContext);
 
     public ITransactionRepository TransactionRepository =>
-        transactionRepository ?? new TransactionRepository(_dbContext);
+        _transactionRepository ?? new TransactionRepository(_dbContext);
 
 
     public IRepositoryBase<FixedTermDeposit> FixedTermDepositRepository =>
-        fixedTermDepositRepository ?? new RepositoryBase<FixedTermDeposit>(_dbContext);
+        _fixedTermDepositRepository ?? new RepositoryBase<FixedTermDeposit>(_dbContext);
 
-    public IRepositoryBase<Role> RoleRepository => roleRepository ?? new RepositoryBase<Role>(_dbContext);
+    public IRepositoryBase<Role> RoleRepository => _roleRepository ?? new RepositoryBase<Role>(_dbContext);
 
     public IRepositoryBase<Catalogue> CatalogueRepository =>
-        catalogueRepository ?? new RepositoryBase<Catalogue>(_dbContext);
+        _catalogueRepository ?? new RepositoryBase<Catalogue>(_dbContext);
 
 
     public void Dispose()
@@ -60,6 +62,6 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task SaveChangesAsync()
     {
-    await _dbContext.SaveChangesAsync();
+        await _dbContext.SaveChangesAsync();
     }
 }

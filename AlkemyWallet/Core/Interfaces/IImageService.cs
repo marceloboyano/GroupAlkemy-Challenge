@@ -1,9 +1,8 @@
 ﻿using challenge.Services;
 
-namespace AlkemyWallet.Core.Interfaces
+namespace AlkemyWallet.Core.Interfaces;
+
+public interface IImageService
 {
-    public interface IImageService
-    {
-        Task<string> StoreImage(IFormFile imageFile, ImageService.ImageType imageType);
-    }
+    Task<string> StoreImage(IFormFile imageFile, ImageService.ImageType imageType);
 }

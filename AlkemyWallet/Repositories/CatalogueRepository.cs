@@ -1,17 +1,13 @@
-﻿using AlkemyWallet.Entities;
+﻿using AlkemyWallet.DataAccess;
+using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
-using AlkemyWallet.DataAccess;
-namespace AlkemyWallet.Repositories
+
+namespace AlkemyWallet.Repositories;
+
+public class CatalogueRepository : RepositoryBase<Catalogue>, ICatalogueRepository
 {
-    public class CatalogueRepository : RepositoryBase<Catalogue>, ICatalogueRepository
+    public CatalogueRepository(WalletDbContext context)
+        : base(context)
     {
-        public CatalogueRepository(WalletDbContext context)
-            : base(context)
-        {
-
-        }
-
-
     }
 }
-

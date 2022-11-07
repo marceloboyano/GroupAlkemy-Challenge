@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AlkemyWallet.Core.Models.DTO
+namespace AlkemyWallet.Core.Models.DTO;
+
+public class LoginDTO
 {
-    public class LoginDTO
-    {
-        [Key]
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-    }
+    [Key] public string Email { get; set; } = string.Empty;
+
+    public string Password { get; set; } = string.Empty;
 }

@@ -1,11 +1,8 @@
-﻿using AlkemyWallet.DataAccess;
-using AlkemyWallet.Entities;
+﻿using AlkemyWallet.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace AlkemyWallet.DataAccess
-{
-    
+namespace AlkemyWallet.DataAccess;
 
 public class WalletDbContext : IdentityDbContext<ApplicationUser>
 {
@@ -21,17 +18,12 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Catalogue>? Catalogues { get; set; }
 
 
-
     //en caso de usar CodeFirst a Sql
     protected override void OnModelCreating(ModelBuilder builder)
     {
-
-
         base.OnModelCreating(builder);
         foreach (var foreingKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
-        {
             foreingKey.DeleteBehavior = DeleteBehavior.Restrict;
-        }
         base.OnModelCreating(builder);
         new DbInitializer(builder).Seed();
 
@@ -44,8 +36,5 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
         builder.Entity<FixedTermDeposit>().ToTable("FixedTermDeposit");
         builder.Entity<Catalogue>().ToTable("Catalogue");
         base.OnModelCreating(builder);
-
     }
-
-}
 }

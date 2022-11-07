@@ -1,8 +1,6 @@
 using AlkemyWallet.Core.Interfaces;
-using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
-using AutoMapper;
 
 namespace AlkemyWallet.Core.Services
 {
