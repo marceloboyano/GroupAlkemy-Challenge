@@ -14,9 +14,10 @@ namespace AlkemyWallet.Entities
         [Required(ErrorMessage = "An Amount its Required")]
         public int Amount { get; set; }=0;
 
-        [MaxLength(100)]
         [Required(ErrorMessage = "Enter a Payment Details")]
-        public string Concept { get; set; } = string.Empty;
+        [Column("Concept", TypeName = "varchar")]
+        [MaxLength(100)]
+        public string? Concept { get; set; }
 
         [Required(ErrorMessage = "A Creation Date is Required")]
         //si solo se requiere year month day [StringLength(10)]
@@ -24,8 +25,9 @@ namespace AlkemyWallet.Entities
         public DateTime Date { get; set; }
 
         [MaxLength(100)]
+        [Column("Type", TypeName = "varchar")]
         [Required(ErrorMessage = "Choose Transaction Type")]
-        public string Type { get; set; }= string.Empty;
+        public string? Type { get; set; }
 
 
         [Required(ErrorMessage = "User Id is Required")]
