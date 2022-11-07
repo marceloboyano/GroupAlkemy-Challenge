@@ -9,15 +9,11 @@ namespace AlkemyWallet.Core.Services
     {
         
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
-        private readonly IImageService _imageService;
-         public TransactionService(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService)
+ 
+         public TransactionService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
-            _imageService = imageService;
-
-        }
+         }
         public async Task<IEnumerable<Transaction>> GetTransactions(int userId)
         {
             var transactions = await _unitOfWork.TransactionRepository.GetByUser(userId);
