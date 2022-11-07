@@ -15,7 +15,6 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
         _entities = context.Set<T>();
     }
 
-    /// <summary>
     ///     Esta clase implementa un CRUD básico para cualquier entidad de Entity Framework
     public async Task<IEnumerable<T>> GetAll()
     {

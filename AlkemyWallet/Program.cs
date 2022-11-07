@@ -61,6 +61,7 @@ builder.Services.AddScoped<ICatalogueService, CatalogueService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
+builder.Services.AddScoped<IFixedTermDepositService,FixedTermDepositService>();
 
 // Agrego los repositorios
 builder.Services.AddScoped<ICatalogueRepository, CatalogueRepository>();

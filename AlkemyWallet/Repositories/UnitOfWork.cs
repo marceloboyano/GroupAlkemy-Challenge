@@ -6,17 +6,11 @@ namespace AlkemyWallet.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {
+    
+    private readonly WalletDbContext _dbContext;
     private readonly IRepositoryBase<Account>? _accountRepository;
     private readonly IAccountRepository? _accountWithDetails;
     private readonly IRepositoryBase<Catalogue>? _catalogueRepository;
-
-    /// Basicamente unit of work tiene la funcion de crear funciones sincronicas, por ejemplo : al transferir dinero de una cuenta
-    /// bancaria a otra, las dos cuentas bancarias sufren un cambio en sus depositos de forma simultanea, unit of work se encarga de
-    /// enlazar las dos tablas o mas para asi utilizar una sola instancia de DBcontext.
-    /// https://www.youtube.com/watch?v=GdRBFc_KKKM este video de la tutoria les permitira tener un ejemplo de en que momento usar
-    /// la sincronizacion.(tambien para ver como initiliazar el context en con el unit of work en los endpoints).
-    private readonly WalletDbContext _dbContext;
-
     private readonly IRepositoryBase<FixedTermDeposit>? _fixedTermDepositRepository;
     private readonly IRepositoryBase<Role>? _roleRepository;
     private readonly ITransactionRepository? _transactionRepository;

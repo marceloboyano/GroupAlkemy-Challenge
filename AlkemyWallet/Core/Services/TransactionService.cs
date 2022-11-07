@@ -35,12 +35,16 @@ namespace AlkemyWallet.Core.Services
         public async Task InsertTransaction(Transaction transaction)
         {
             if (await ValidateTransaction(transaction)) await _unitOfWork.TransactionRepository!.Insert(transaction);
+
         }
 
         public async Task<bool> UpdateTransaction(int id, Transaction transaction)
         {
             if (transaction.Transaction_id != id) return false;
+
+
             if (await ValidateTransaction(transaction)) return await _unitOfWork.TransactionRepository!.Update(transaction);
+
             else return false;
         }
 
@@ -48,6 +52,8 @@ namespace AlkemyWallet.Core.Services
         {
             IAccountService accountService = new AccountService(_unitOfWork, null, null);
             Account account = await accountService.GetAccountById(transaction.Account_id);
+
+
             if((account == null) || (account.User_id!=transaction.User_id) ) return false;
 
             IUserService userService = new UserService(_unitOfWork, null);
