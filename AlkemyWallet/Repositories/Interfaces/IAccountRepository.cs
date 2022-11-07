@@ -1,11 +1,8 @@
 ﻿using AlkemyWallet.Entities;
 
-namespace AlkemyWallet.Repositories.Interfaces
+namespace AlkemyWallet.Repositories.Interfaces;
+
+public interface IAccountRepository : IRepositoryBase<Account>
 {
-
-    public interface IAccountRepository : IRepositoryBase<Account>
-    {
-        Task<Account> GetByIdWithDetail(int accountId);
-    }
-
+    Task<Account?> GetByIdWithDetail(int accountId);
 }

@@ -1,11 +1,8 @@
 ﻿using AlkemyWallet.Entities;
 
-namespace AlkemyWallet.Repositories.Interfaces
+namespace AlkemyWallet.Repositories.Interfaces;
+
+public interface ITransactionRepository : IRepositoryBase<Transaction>
 {
-
-    public interface ITransactionRepository : IRepositoryBase<Transaction>
-    {
-        Task<IEnumerable<Transaction>> GetByUser(int userId);
-
-    }
+    Task<IEnumerable<Transaction>> GetByUser(int userId);
 }

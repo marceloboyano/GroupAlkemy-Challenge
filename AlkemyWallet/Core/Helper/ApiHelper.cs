@@ -1,20 +1,16 @@
 ﻿using System.Net;
+using System.Net.Sockets;
 
-namespace AlkemyWallet.Core.Helper
+namespace AlkemyWallet.Core.Helper;
+
+public class ApiHelper
 {
-    public class ApiHelper
+    public static string GetIpAddress()
     {
-        public static string GetIpAddress()
-        {
-            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (IPAddress ip in host.AddressList)
-            {
-                if (ip.AddressFamily.Equals(System.Net.Sockets.AddressFamily.InterNetwork))
-                {
-                    return ip.ToString();
-                }
-            }
-            return String.Empty;
-        }
+        var host = Dns.GetHostEntry(Dns.GetHostName());
+        foreach (var ip in host.AddressList)
+            if (ip.AddressFamily.Equals(AddressFamily.InterNetwork))
+                return ip.ToString();
+        return string.Empty;
     }
 }
