@@ -1,6 +1,8 @@
 using AlkemyWallet.Entities;
 
-namespace AlkemyWallet.Core.Interfaces
+namespace AlkemyWallet.Core.Interfaces;
+
+public interface ITransactionService
 {
     public interface ITransactionService
     {
