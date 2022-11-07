@@ -31,7 +31,7 @@ public class User
     [Required(ErrorMessage = "The Email Should be Between 4 and 20 Characters")]
     public string Email { get; set; } = string.Empty;
 
-    [MaxLength(20)]
+    [MaxLength(70)]
     [MinLength(4)]
     [Required(ErrorMessage = "The Password should be between 4 and 20 Characters ")]
     public string Password { get; set; } = string.Empty;
