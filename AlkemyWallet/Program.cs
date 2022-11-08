@@ -1,3 +1,4 @@
+using AlkemyWallet.Core.Helper.ExceptionGenerics;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Services;
 using AlkemyWallet.DataAccess;
@@ -83,6 +84,14 @@ builder.Services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 //MAPPER
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+// Agregamos politica de CORS
+builder.Services.AddCors(opt =>
+{
+    opt.AddDefaultPolicy(o => o
+       .AllowAnyHeader()
+       .AllowAnyOrigin()
+       .AllowAnyMethod());
+});
 
 var app = builder.Build();
 
@@ -119,5 +128,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.Run();
