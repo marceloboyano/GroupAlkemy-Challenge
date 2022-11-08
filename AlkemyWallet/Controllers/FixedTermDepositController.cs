@@ -1,6 +1,8 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage;
+using NuGet.Packaging.Licenses;
 
 namespace AlkemyWallet.Controllers
 {
@@ -21,6 +23,7 @@ namespace AlkemyWallet.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAccounts()
         {
+            
             var fixedTerm = await _fixedTermDeposit.GetFixedTermDeposits();
 
             return Ok(fixedTerm);
