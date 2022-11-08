@@ -48,7 +48,8 @@ public class CatalogueService : ICatalogueService
 
     public async Task<bool> DeleteCatalogue(int id)
     {
-        return await _unitOfWork.CatalogueRepository!.Delete(id);
+        await _unitOfWork.CatalogueRepository!.Delete(id);
+        return await _unitOfWork.SaveChangesAsync() > 0;
     }
 
     public async Task<bool> UpdateCatalogues(int id, CatalogueForUpdateDTO catalogueDTO)
@@ -71,6 +72,7 @@ public class CatalogueService : ICatalogueService
             catalogueEntity.Product_description = catalogueDTO.Product_description;
 
 
-        return await _unitOfWork.CatalogueRepository.Update(catalogueEntity);
+        await _unitOfWork.CatalogueRepository.Update(catalogueEntity);
+        return await _unitOfWork.SaveChangesAsync() > 0;
     }
 }
