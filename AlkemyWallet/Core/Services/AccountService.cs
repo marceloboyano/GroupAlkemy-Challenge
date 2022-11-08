@@ -176,6 +176,21 @@ public class AccountService : IAccountService
         if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "La cuenta ha sido Bloqueada.");
         else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
     }
+    public async Task<(bool Success, string Message)> Unblock(int id)
+    {
+        var accountEntity = await _unitOfWork.AccountRepository!.GetById(id);
 
+        if (accountEntity is null)
+            return (false, "El id de la cuenta que ingreso no fue encontrado.");
+
+        if (accountEntity.IsBlocked == false)
+            return (false, "La cuenta que intenta desbloquear ya se encuentra desbloqueada.");
+
+        accountEntity.IsBlocked = false;
+
+        await _unitOfWork.AccountRepository!.Update(accountEntity);
+        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "La cuenta ha sido Desbloqueada.");
+        else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
+    }
 
 }

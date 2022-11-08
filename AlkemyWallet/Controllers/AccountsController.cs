@@ -121,8 +121,7 @@ public class AccountsController : ControllerBase
     /// <summary>
     /// Block an account so that it cannot carry out operations.
     /// </summary>
-    /// <param name="id"></param>
-    /// <param name="accountDTO"></param>
+    /// <param name="id"></param>    
     /// <returns></returns>
     [Authorize(Roles = "Standard")]
     [HttpPut("block/{id}")]
@@ -133,5 +132,19 @@ public class AccountsController : ControllerBase
         return Ok(result.Message);
     }
 
-    
+    /// <summary>
+    /// Unblock an account so that it cannot carry out operations.
+    /// </summary>
+    /// <param name="id"></param>    
+    /// <returns></returns>
+    [Authorize(Roles = "Standard")]
+    [HttpPut("unblock/{id}")]
+    public async Task<ActionResult> UnblockAccount(int id)
+    {
+        var result = await _accountsService.Unblock(id);
+        if (!result.Success) return NotFound(result.Message);
+        return Ok(result.Message);
+    }
+
+
 } 
