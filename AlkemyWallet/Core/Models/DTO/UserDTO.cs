@@ -55,17 +55,12 @@ public class UserForCreatoionDto
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "el campo es requerido")]
+    [MaxLength(20)]
     public string Password { get; set; } = string.Empty;
 
 
     [Required(ErrorMessage = "el campo es requerido")]
-    public int Points { get; set; } = 0;
-
-
-    [Required(ErrorMessage = "el campo es requerido")]
-    public int Rol_id { get; set; } = 0;
-
-    [ForeignKey("Rol_id")] public Role? Role { get; set; }
+    public int Points { get; } = 0;
 }
 
 public class UserForUpdateDto

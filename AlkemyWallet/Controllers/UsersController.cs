@@ -42,8 +42,7 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> InsertUser([FromForm] UserForCreatoionDto userDTO)
     {
-        await _userService.AddUser(userDTO);
-        return Ok("The User has been created successfully");
+        return Ok(await _userService.AddUser(userDTO));
     }
 
     [HttpPut("{id}")]

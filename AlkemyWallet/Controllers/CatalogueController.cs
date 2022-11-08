@@ -1,6 +1,7 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AlkemyWallet.Controllers;
@@ -17,7 +18,7 @@ public class CatalogueController : ControllerBase
         _catalogueService = catalogueService;
         _mapper = mapper;
     }
-
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetCatalogue()
     {
@@ -26,7 +27,7 @@ public class CatalogueController : ControllerBase
         var catalogueForShow = _mapper.Map<IEnumerable<CatalogueDTO>>(catalogues);
         return Ok(catalogueForShow);
     }
-
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCatalogueById(int id)
     {
@@ -38,7 +39,7 @@ public class CatalogueController : ControllerBase
         return Ok(catalogue);
     }
 
-    //[Authorize]
+    [Authorize(Roles = "Administrador")]
     [HttpPost]
     public async Task<ActionResult> PostCatalogue([FromForm] CatalogueForCreationDTO catalogueDTO)
     {
@@ -46,7 +47,7 @@ public class CatalogueController : ControllerBase
         return Ok("Se ha creado el Catalogo exitosamente");
     }
 
-    //[Authorize]
+    [Authorize(Roles = "Administrador")]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteCatalogue(int id)
     {
@@ -58,7 +59,7 @@ public class CatalogueController : ControllerBase
         return Ok("el catalogo ha sido eliminada");
     }
 
-    // [Authorize]
+    [Authorize(Roles = "Administrador")]
     [HttpPut("{id}")]
     public async Task<ActionResult> PutCatalogue(int id, [FromForm] CatalogueForUpdateDTO catalogueDTO)
     {
