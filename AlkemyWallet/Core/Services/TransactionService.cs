@@ -43,18 +43,5 @@ namespace AlkemyWallet.Core.Services
             if (await ValidateTransaction(transaction)) return await _unitOfWork.TransactionRepository!.Update(transaction);
             else return false;
         }
-
-        private async Task<bool> ValidateTransaction(Transaction transaction)
-        {
-            IAccountService accountService = new AccountService(_unitOfWork, null, null);
-            Account account = await accountService.GetAccountById(transaction.Account_id);
-            if((account == null) || (account.User_id!=transaction.User_id) ) return false;
-
-            IUserService userService = new UserService(_unitOfWork, null);
-            User user = await userService.GetById(transaction.User_id);
-            if(user == null) return false;
-
-            return true;
-        }
-    }
+     }
 }

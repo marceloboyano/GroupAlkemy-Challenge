@@ -44,10 +44,10 @@ public class TransactionsController : ControllerBase
     public async Task<IActionResult> GetTransactionById(int id)
     {
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        var trans = await _transactionService.GetTransactionById(id, userId);
-        if (trans is null) return NotFound(TRAN_NOT_EXISTS);
-        var transForShow = _mapper.Map<TransactionDTO>(trans);
-        return Ok(transForShow);
+        var transaction = await _transactionService.GetTransactionById(id, userId);
+        if (transaction is null) return NotFound(TRAN_NOT_EXISTS);
+        var transactionForShow = _mapper.Map<TransactionDTO>(transaction);
+        return Ok(transactionForShow);
     }
 
     [Authorize(Roles = "Administrador")]
