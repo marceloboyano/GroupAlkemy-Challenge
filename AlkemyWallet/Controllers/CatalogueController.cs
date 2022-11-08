@@ -18,6 +18,11 @@ public class CatalogueController : ControllerBase
         _catalogueService = catalogueService;
         _mapper = mapper;
     }
+
+    /// <summary>
+    /// Lists Catalogues made by the user making the request ordered by points
+    /// </summary>
+    /// <returns>Catalogues list ordered by points</returns>
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetCatalogue()
@@ -27,6 +32,12 @@ public class CatalogueController : ControllerBase
         var catalogueForShow = _mapper.Map<IEnumerable<CatalogueDTO>>(catalogues);
         return Ok(catalogueForShow);
     }
+   
+    /// <summary>
+    /// Obtains the details of the Catalagoue from the id
+    /// </summary>
+    /// <param name="id">Catalogue Id</param>
+    /// <returns>Catalogue detail</returns>
     [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCatalogueById(int id)
@@ -38,7 +49,11 @@ public class CatalogueController : ControllerBase
 
         return Ok(catalogue);
     }
-
+    /// <summary>
+    /// Creates the Catalogue.
+    /// </summary>
+    /// <param name="catalogueDTO">Catalogue information</param>
+    /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPost]
     public async Task<ActionResult> PostCatalogue([FromForm] CatalogueForCreationDTO catalogueDTO)
@@ -47,6 +62,11 @@ public class CatalogueController : ControllerBase
         return Ok("Se ha creado el Catalogo exitosamente");
     }
 
+    /// <summary>
+    /// Deletes the Catalogue with the id received in the request.
+    /// </summary>
+    /// <param name="id">Catalogue Id</param>
+    /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteCatalogue(int id)
@@ -58,7 +78,12 @@ public class CatalogueController : ControllerBase
 
         return Ok("el catalogo ha sido eliminada");
     }
-
+    /// <summary>
+    /// Updates the Catalogue with the id received in the request.
+    /// </summary>
+    /// <param name="id">Catalogue Id</param>
+    /// <param name="catalogueDTO">Catalogue information</param>
+    /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPut("{id}")]
     public async Task<ActionResult> PutCatalogue(int id, [FromForm] CatalogueForUpdateDTO catalogueDTO)

@@ -11,4 +11,5 @@ public interface IAccountService
     Task<bool> UpdateAccount(int id, AccountForUpdateDTO accountDTO);
     Task<(bool Success, string Message)> Deposit(int id, int amount);
     Task<(bool Success, string Message)> Transfer(int id, int amount, int toAccountId);
+    Task<(bool Success, string Message)> Block(int id);
 }

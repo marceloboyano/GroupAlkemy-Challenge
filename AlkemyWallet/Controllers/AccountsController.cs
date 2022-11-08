@@ -20,7 +20,10 @@ public class AccountsController : ControllerBase
         _mapper = mapper;
     }
 
-    //Get all accounts
+    /// <summary>
+    /// Lists of the Accounts
+    /// </summary>
+    /// <returns>Accounts list </returns>
     [Authorize(Roles = "Administrador")]
     [HttpGet]
     public async Task<IActionResult> GetAccounts()
@@ -30,7 +33,11 @@ public class AccountsController : ControllerBase
         return Ok(accounts);
     }
 
-    //Get account by id
+    /// <summary>
+    /// Obtains the details of the Accounts from the id
+    /// </summary>
+    /// <param name="id">Accounts Id</param>
+    /// <returns>Accounts detail</returns>
     [Authorize(Roles = "Administrador")]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetAccountById(int id)
@@ -40,8 +47,12 @@ public class AccountsController : ControllerBase
         if (account is null) return NotFound("No existe ninguna cuenta con el id especificado");
 
         return Ok(account);
-    }    
-
+    }
+    /// <summary>
+    /// Creates the Accounts.
+    /// </summary>
+    /// <param name="accountDTO">Accountse information</param>
+    /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Standard")]
     [HttpPost]
     public async Task<ActionResult> PostAccount([FromForm] AccountForCreationDTO accountDTO)
@@ -49,7 +60,12 @@ public class AccountsController : ControllerBase
         await _accountsService.InsertAccounts(accountDTO);
         return Ok("Se ha creado la cuenta exitosamente");
     }
-
+    /// <summary>
+    /// Updates the Accounts with the id received in the request.
+    /// </summary>
+    /// <param name="id">Accounts Id</param>
+    /// <param name="accountDTO">Accounts information</param>
+    /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPut("{id}")]
     public async Task<ActionResult> PutCatalogue(int id, [FromForm] AccountForUpdateDTO accountDTO)
@@ -58,7 +74,12 @@ public class AccountsController : ControllerBase
         if (!result) return NotFound("Cuenta No Encontrado");
         return Ok("Cuenta Modificada con exito");
     }
-
+    /// <summary>
+    /// Make a deposit of money into an account.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="amount"></param>
+    /// <returns></returns>
     [Authorize(Roles = "Standard")]
     [HttpPost("{id}/deposit")]
     public async Task<ActionResult> PostDeposit(int id, int amount)
@@ -75,8 +96,14 @@ public class AccountsController : ControllerBase
 
 
     }
-
-   [Authorize(Roles = "Standard")]
+    /// <summary>
+    /// Transfer money from one account to another.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="amount"></param>
+    /// <param name="toAccountId"></param>
+    /// <returns></returns>
+    [Authorize(Roles = "Standard")]
     [HttpPost("{id}/transfer")]
     public async Task<ActionResult> PostTransfer(int id, int amount, int toAccountId)
     {
@@ -91,4 +118,20 @@ public class AccountsController : ControllerBase
 
 
     }
-}
+    /// <summary>
+    /// Block an account so that it cannot carry out operations.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="accountDTO"></param>
+    /// <returns></returns>
+    [Authorize(Roles = "Standard")]
+    [HttpPut("block/{id}")]
+    public async Task<ActionResult> BlockAccount(int id)
+    {
+        var result = await _accountsService.Block(id);
+        if (!result.Success) return NotFound(result.Message);
+        return Ok(result.Message);
+    }
+
+    
+} 
