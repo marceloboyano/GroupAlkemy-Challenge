@@ -75,6 +75,22 @@ public class AccountsController : ControllerBase
         return Ok("Cuenta Modificada con exito");
     }
     /// <summary>
+    /// Delete an account only if it has no pending investments or loans.
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    [Authorize(Roles = "Administrador")]
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteAccount(int id)
+    {
+        var result = await _accountsService.DeleteAccount(id);
+
+        if (!result.Success)
+            return BadRequest(result.Message);
+
+        return Ok(result.Message);
+    }
+    /// <summary>
     /// Make a deposit of money into an account.
     /// </summary>
     /// <param name="id"></param>
@@ -135,7 +151,7 @@ public class AccountsController : ControllerBase
     /// <summary>
     /// Unblock an account so that it cannot carry out operations.
     /// </summary>
-    /// <param name="id"></param>    
+    /// <param name="id">Account Id</param>    
     /// <returns></returns>
     [Authorize(Roles = "Standard")]
     [HttpPut("unblock/{id}")]
