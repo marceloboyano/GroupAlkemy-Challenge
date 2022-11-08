@@ -52,6 +52,8 @@ namespace AlkemyWallet.Core.Services
 
         public async Task<bool> ValidateTransaction(Transaction transaction)
         {
+            if (transaction.Amount <= 0) return false;
+
             Account account = await _unitOfWork.AccountRepository!.GetById(transaction.Account_id);
             if((account == null) || (account.User_id!=transaction.User_id) ) return false;
 
