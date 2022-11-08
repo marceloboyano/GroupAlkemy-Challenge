@@ -28,8 +28,8 @@ namespace AlkemyWallet.Core.Services
 
         public async Task<bool> DeleteTransaction(int id)
         {
-            return await _unitOfWork.TransactionRepository!.Delete(id);
-
+            await _unitOfWork.TransactionRepository!.Delete(id);
+            return await _unitOfWork.SaveChangesAsync() > 0;
         }
 
         public async Task InsertTransaction(Transaction transaction)
@@ -41,11 +41,9 @@ namespace AlkemyWallet.Core.Services
         public async Task<bool> UpdateTransaction(int id, Transaction transaction)
         {
             if (transaction.Transaction_id != id) return false;
-
-
-            if (await ValidateTransaction(transaction)) return await _unitOfWork.TransactionRepository!.Update(transaction);
-
-            else return false;
+            if (!(await ValidateTransaction(transaction)) ) return false;
+            await _unitOfWork.TransactionRepository!.Update(transaction);
+            return await _unitOfWork.SaveChangesAsync() > 0;
         }
 
         private async Task<bool> ValidateTransaction(Transaction transaction)
