@@ -3,6 +3,7 @@ using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
 
 namespace AlkemyWallet.Core.Services;
@@ -54,17 +55,20 @@ public class UserService : IUserService
 
     public async Task<bool> UpdateUser(int id, UserForUpdateDto userDTO)
     {
-        var userEntity = await _unitOfWork.UserRepository.GetById(id);
-        if (userEntity != null)
+        User userEntity = await _unitOfWork.UserRepository!.GetById(id);
+        if (userEntity is not null)
         {
-            userEntity.First_name = userDTO.First_name;
-            userEntity.Last_name = userDTO.Last_name;
-            userEntity.Rol_id = userDTO.Rol_id;
+            userEntity.First_name = string.IsNullOrEmpty(userDTO.First_name) ? userEntity.First_name : userDTO.First_name;
+            userEntity.Last_name = string.IsNullOrEmpty(userDTO.Last_name) ? userEntity.Last_name : userDTO.Last_name;
+            userEntity.Rol_id = userDTO.Rol_id.Equals(0) ? userEntity.Rol_id : userDTO.Rol_id;
+            userEntity.Password = string.IsNullOrEmpty(userDTO.Password) ? userEntity.Password : BCrypt.Net.BCrypt.HashPassword(userDTO.Password); 
+            userEntity.Points = userDTO.Points;
 
             await _unitOfWork.SaveChangesAsync();
+            return true;
         }
-
-        return true;
+        else
+            return false;   
     }
 
     public async Task<bool> DeleteUser(int id)
@@ -73,7 +77,7 @@ public class UserService : IUserService
         return true;
     }
 
-    private bool IsEmailValid(string email)
+    private static bool IsEmailValid(string email)
     {
         Regex regex = new("^[_a-z0-9A-Z]+(\\.[_a-z0-9A-Z]+)*@[a-zA-Z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-zA-Z]{2,15})$");
         if (regex.IsMatch(email))
