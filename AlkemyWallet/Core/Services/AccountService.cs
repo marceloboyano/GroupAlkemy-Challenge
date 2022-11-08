@@ -39,6 +39,7 @@ public class AccountService : IAccountService
              
         var account = _mapper.Map<Account>(accountDTO);  
         await _unitOfWork.AccountRepository!.Insert(account);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<bool> UpdateAccount(int id, AccountForUpdateDTO accountDTO)
@@ -93,7 +94,9 @@ public class AccountService : IAccountService
 
 
             await _unitOfWork.AccountRepository!.Update(account);
-            return (true, "Transferencia exitosa.");
+
+            if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "Deposito exitoso.");
+            else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
         }
         else
         {
@@ -147,7 +150,7 @@ public class AccountService : IAccountService
             await _unitOfWork.AccountRepository.Update(toAccount);
 
             if(await _unitOfWork.SaveChangesAsync()>0)  return (true, "Transferencia exitosa.");
-            else return (false, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"); 
+            else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
 
         }
         else
@@ -156,5 +159,23 @@ public class AccountService : IAccountService
         }
 
     }
+
+    public async Task<(bool Success, string Message)> Block(int id)
+    {
+        var accountEntity = await _unitOfWork.AccountRepository!.GetById(id);
+
+        if (accountEntity is null)
+            return (false, "El id de la cuenta que ingreso no fue encontrado.");
+
+        if (accountEntity.IsBlocked == true)
+            return (false, "La cuenta que intenta bloquear ya se encuentra bloqueada.");
+
+          accountEntity.IsBlocked = true;          
+
+        await _unitOfWork.AccountRepository!.Update(accountEntity);
+        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "La cuenta ha sido Bloqueada.");
+        else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
+    }
+
 
 }
