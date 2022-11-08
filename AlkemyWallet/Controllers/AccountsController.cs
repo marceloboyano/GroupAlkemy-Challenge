@@ -151,7 +151,7 @@ public class AccountsController : ControllerBase
     /// <summary>
     /// Unblock an account so that it cannot carry out operations.
     /// </summary>
-    /// <param name="id"></param>    
+    /// <param name="id">Account Id</param>    
     /// <returns></returns>
     [Authorize(Roles = "Standard")]
     [HttpPut("unblock/{id}")]
