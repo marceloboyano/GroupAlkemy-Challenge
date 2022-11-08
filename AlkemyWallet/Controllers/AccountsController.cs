@@ -50,6 +50,15 @@ public class AccountsController : ControllerBase
         return Ok("Se ha creado la cuenta exitosamente");
     }
 
+    [Authorize(Roles = "Administrador")]
+    [HttpPut("{id}")]
+    public async Task<ActionResult> PutCatalogue(int id, [FromForm] AccountForUpdateDTO accountDTO)
+    {
+        var result = await _accountsService.UpdateAccount(id, accountDTO);
+        if (!result) return NotFound("Cuenta No Encontrado");
+        return Ok("Cuenta Modificada con exito");
+    }
+
     [Authorize(Roles = "Standard")]
     [HttpPost("{id}/deposit")]
     public async Task<ActionResult> PostDeposit(int id, int amount)
