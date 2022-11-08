@@ -40,15 +40,17 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Standard")]
     public async Task<ActionResult> InsertUser([FromForm] UserForCreatoionDto userDTO)
     {
         return Ok(await _userService.AddUser(userDTO));
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Standard")]
     public async Task<ActionResult> UpdateUser(int id, [FromForm] UserForUpdateDto userDTO)
     {
-        var result = await _userService.UpdateUser(id, userDTO);
+        bool result = await _userService.UpdateUser(id, userDTO);
         if (!result) return NotFound("User not found");
         return Ok("Successfully Modified User");
     }
