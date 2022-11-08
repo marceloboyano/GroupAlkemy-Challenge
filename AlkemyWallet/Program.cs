@@ -24,7 +24,6 @@ builder.Services.AddSwaggerGen(c =>
 {
     //The generated Swagger JSON file will have these properties.
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Alkemy Wallet", Version = "v1" });
-
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "Jwt Authorization",
@@ -107,7 +106,10 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Alkemy Wallet V1");
+    });
 }
 
 app.UseHttpsRedirection();
