@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Core.Models.DTO.UserLogin;
 using AlkemyWallet.Entities.JWT;
 using AlkemyWallet.Repositories.Interfaces;
@@ -58,6 +59,23 @@ public class AccountServiceJWT : IAccountServiceJWT
         response.IsVerified = true;
 
         return new Response<AuthenticationResponseDTO>(response, $"Usuario autenticado {user.First_name}");
+    }
+
+    public async Task<Response<AuthenticatedUserDTO>> AuthenticatedUserAsync(List<Claim> userdataTokenList)
+    {
+        Task<Response<AuthenticatedUserDTO>> task = Task.Run(() =>
+        {
+            AuthenticatedUserDTO authenticatedUserDTO = new()
+            {
+                Id = int.Parse(userdataTokenList[3].Value),
+                Email = userdataTokenList[2].Value,
+                Name = userdataTokenList[0].Value,
+                Rol = userdataTokenList[5].Value
+            };
+
+            return new Response<AuthenticatedUserDTO>(authenticatedUserDTO, "Datos de usuario loggueado");
+        });
+        return await task;
     }
 
     private async Task<JwtSecurityToken> GenerateJWTToken(ApplicationUser user)

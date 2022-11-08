@@ -60,7 +60,7 @@ public class UserForCreatoionDto
 
 
     [Required(ErrorMessage = "el campo es requerido")]
-    public int Points { get; } = 0;
+    public int Points { get; set; }
 }
 
 public class UserForUpdateDto
