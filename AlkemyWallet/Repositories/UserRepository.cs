@@ -14,9 +14,11 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
 
     public async Task<User> GetUserByEmail(string email, string password)
     {
-        var user = await _context.Users!.FirstOrDefaultAsync(u =>
-            u.Email.Equals(email) && u.Password.Equals(password))!;
-        return user;
+        User? user = await _context.Users!.FirstOrDefaultAsync(u => u.Email.Equals(email));
+        if (user is not null && !BCrypt.Net.BCrypt.Verify(password, user!.Password))
+            return user = null!;
+
+         return user;
     }
 
     public async Task<bool> GetUserByEmail(string email)
