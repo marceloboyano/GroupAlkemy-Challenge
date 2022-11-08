@@ -21,14 +21,14 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<User>> GetAllUser()
     {
-        var users = await _unitOfWork.UserRepository.GetAll();
+        var users = await _unitOfWork.UserRepository!.GetAll();
         users = users.OrderBy(x => x.First_name);
         return users;
     }
 
     public async Task<User> GetById(int id)
     {
-        var user = await _unitOfWork.UserDetailsRepository.GetById(id);
+        var user = await _unitOfWork.UserDetailsRepository!.GetById(id);
         return user;
     }
 
@@ -91,4 +91,23 @@ public class UserService : IUserService
         else
             return false;
     }
+
+    public async Task<(bool Success, string Message)> Exchange(int id, string userIdFromToken)
+    {
+        var userEntity = await _unitOfWork.UserRepository!.GetById(Int32.Parse(userIdFromToken));
+        var catalogueEntity = await _unitOfWork.CatalogueRepository!.GetById(id);
+
+        if (userEntity is null)
+            return (false, "Usuario no encontrado.");
+
+        if (userEntity.Points < catalogueEntity.Points)
+            return (false, "No tiene los puntos suficientes para adquirir este producto.");
+
+        userEntity.Points -= catalogueEntity.Points;       
+       
+        await _unitOfWork.UserRepository!.Update(userEntity);
+        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "La operación ha sido exitosa. Muchas gracias!!.");
+        else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
+    }
+
 }
