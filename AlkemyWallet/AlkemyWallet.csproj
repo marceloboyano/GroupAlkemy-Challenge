@@ -5,7 +5,7 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-		<DocumentationFile>C:\Users\USUARIO\source\repos\Skill-Up\AlkemyWallet\obj\Debug\net6.0\AlkemyWallet.xml</DocumentationFile>
+		<DocumentationFile>bin\Debug\net6.0\AlkemyWallet.xml</DocumentationFile>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
