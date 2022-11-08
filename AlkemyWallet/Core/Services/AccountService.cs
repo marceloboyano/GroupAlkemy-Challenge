@@ -60,7 +60,16 @@ public class AccountService : IAccountService
         await _unitOfWork.AccountRepository!.Update(accountEntity);
         return await _unitOfWork.SaveChangesAsync()>0;
     }
-
+    public async Task<(bool Success, string Message)> DeleteAccount(int id)
+    {
+        var fixedTermEntity = await _unitOfWork.FixedTermDepositRepository!.GetById(id);
+        if (fixedTermEntity is not null)
+            return (false, "No se puede eliminar la cuenta mientras tenga inversiones o depositos pendientes");
+         await _unitOfWork.AccountRepository!.Delete(id);
+        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "Cuenta eliminada.");
+        else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
+       
+    }
 
     public async Task<(bool Success, string Message)> Deposit(int id, int amount)
     {
