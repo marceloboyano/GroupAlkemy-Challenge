@@ -44,6 +44,8 @@ public class CatalogueService : ICatalogueService
         catalogue.Image = path;
 
         await _unitOfWork.CatalogueRepository!.Insert(catalogue);
+
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<bool> DeleteCatalogue(int id)

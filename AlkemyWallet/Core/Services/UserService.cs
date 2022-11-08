@@ -74,7 +74,7 @@ public class UserService : IUserService
     public async Task<bool> DeleteUser(int id)
     {
         await _unitOfWork.UserRepository.Delete(id);
-        return true;
+        return await _unitOfWork.SaveChangesAsync()>0;
     }
 
     private static bool IsEmailValid(string email)

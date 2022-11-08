@@ -56,7 +56,8 @@ public class AccountService : IAccountService
             accountEntity.Money = (float)accountDTO.Money;
 
 
-        return await _unitOfWork.AccountRepository!.Update(accountEntity);
+        await _unitOfWork.AccountRepository!.Update(accountEntity);
+        return await _unitOfWork.SaveChangesAsync()>0;
     }
 
 
@@ -142,12 +143,11 @@ public class AccountService : IAccountService
             };
 
             await _unitOfWork.TransactionRepository!.Insert(transaction);
-
-
             await _unitOfWork.AccountRepository!.Update(account);
             await _unitOfWork.AccountRepository.Update(toAccount);
 
-            return (true, "Transferencia exitosa.");
+            if(await _unitOfWork.SaveChangesAsync()>0)  return (true, "Transferencia exitosa.");
+            else return (false, "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"); 
 
         }
         else

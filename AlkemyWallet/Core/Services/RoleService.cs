@@ -33,6 +33,7 @@ public class RoleService : IRoleService
     {
         var role = _mapper.Map<Role>(roleDTO);
         await _unitOfWork.RoleRepository.Insert(role);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<bool> UpdateRole(int id, RoleForUpdateDTO roleDTO)
@@ -51,6 +52,6 @@ public class RoleService : IRoleService
     public async Task<bool> DeleteRole(int id)
     {
         await _unitOfWork.RoleRepository.Delete(id);
-        return true;
+        return await _unitOfWork.SaveChangesAsync()>0;
     }
 }

@@ -33,7 +33,7 @@ namespace AlkemyWallet.Core.Services
         public async Task<bool> DeleteFixedTermDeposit(int id)
         {
             await _unitOfWork.FixedTermDepositRepository.Delete(id);
-            return true;
+            return await _unitOfWork.SaveChangesAsync() > 0;
         }
 
     }
