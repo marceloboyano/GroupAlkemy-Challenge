@@ -23,13 +23,13 @@ public class AccountService : IAccountService
 
     public async Task<IEnumerable<Account>> GetAccounts()
     {
-        var accounts = await _unitOfWork.AccountRepository.GetAll();
+        var accounts = await _unitOfWork.AccountRepository!.GetAll();
         return accounts;
     }
 
     public async Task<Account> GetAccountById(int id)
     {
-        var account = await _unitOfWork.AccountRepository.GetById(id);
+        var account = await _unitOfWork.AccountRepository!.GetById(id);
         return account;
     }
 
@@ -39,6 +39,24 @@ public class AccountService : IAccountService
              
         var account = _mapper.Map<Account>(accountDTO);  
         await _unitOfWork.AccountRepository!.Insert(account);
+    }
+
+    public async Task<bool> UpdateAccount(int id, AccountForUpdateDTO accountDTO)
+    {
+        var accountEntity = await _unitOfWork.AccountRepository!.GetById(id);
+
+        if (accountEntity is null)
+            return false;
+
+        if (accountDTO.User_id is not null) accountEntity.User_id = accountDTO.User_id.Value;       
+
+        if (accountDTO.CreationDate is not null)
+            accountEntity.CreationDate = (DateTime)accountDTO.CreationDate;
+        if (accountDTO.Money is not null)
+            accountEntity.Money = (float)accountDTO.Money;
+
+
+        return await _unitOfWork.AccountRepository!.Update(accountEntity);
     }
 
 

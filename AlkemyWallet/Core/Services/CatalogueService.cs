@@ -51,24 +51,24 @@ public class CatalogueService : ICatalogueService
         return await _unitOfWork.CatalogueRepository!.Delete(id);
     }
 
-    public async Task<bool> UpdateCatalogues(int id, CatalogueForUpdateDTO CatalogueDTO)
+    public async Task<bool> UpdateCatalogues(int id, CatalogueForUpdateDTO catalogueDTO)
     {
         var catalogueEntity = await _unitOfWork.CatalogueRepository!.GetById(id);
 
         if (catalogueEntity is null)
             return false;
 
-        if (CatalogueDTO.Points is not null) catalogueEntity.Points = CatalogueDTO.Points.Value;
+        if (catalogueDTO.Points is not null) catalogueEntity.Points = catalogueDTO.Points.Value;
 
-        if (CatalogueDTO.ImageFile is not null)
+        if (catalogueDTO.ImageFile is not null)
         {
-            var path = await _imageService.StoreImage(CatalogueDTO.ImageFile, ImageType.Catalogue);
+            var path = await _imageService.StoreImage(catalogueDTO.ImageFile, ImageType.Catalogue);
 
             catalogueEntity.Image = path;
         }
 
-        if (CatalogueDTO.Product_description is not null)
-            catalogueEntity.Product_description = CatalogueDTO.Product_description;
+        if (catalogueDTO.Product_description is not null)
+            catalogueEntity.Product_description = catalogueDTO.Product_description;
 
 
         return await _unitOfWork.CatalogueRepository.Update(catalogueEntity);
