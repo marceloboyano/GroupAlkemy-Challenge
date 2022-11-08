@@ -49,13 +49,13 @@ public class UnitOfWork : IUnitOfWork
         if (_dbContext != null) _dbContext.Dispose();
     }
 
-    public void SaveChanges()
+    public int SaveChanges()
     {
-        _dbContext.SaveChanges();
+        return _dbContext.SaveChanges();
     }
 
-    public async Task SaveChangesAsync()
+    public async Task<int> SaveChangesAsync()
     {
-        await _dbContext.SaveChangesAsync();
+        return await _dbContext.SaveChangesAsync();
     }
 }

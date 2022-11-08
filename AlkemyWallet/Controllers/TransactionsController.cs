@@ -17,6 +17,9 @@ public class TransactionsController : ControllerBase
     private const string TRAN_DELETED = "La transacción ha sido eliminada";
     private const string TRAN_NOT_FOUND = "No se encontró la transacción";
     private const string TRAN_UPDATED = "Transacción modificada con éxito";
+    private const string TRAN_CREATED = "Transacción creada con éxito";
+    private const string TRAN_NOT_CREATED = "Transacción incorrecta. No se procedió con la creación";
+
 
     #endregion
 
@@ -30,7 +33,7 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpGet]
-    [Authorize]
+    [Authorize(Roles = "standard")]
     public async Task<IActionResult> GetTransactions()
     {
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
@@ -40,14 +43,14 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize]
+    [Authorize(Roles = "standard")]
     public async Task<IActionResult> GetTransactionById(int id)
     {
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        var trans = await _transactionService.GetTransactionById(id, userId);
-        if (trans is null) return NotFound(TRAN_NOT_EXISTS);
-        var transForShow = _mapper.Map<TransactionDTO>(trans);
-        return Ok(transForShow);
+        var transaction = await _transactionService.GetTransactionById(id, userId);
+        if (transaction is null) return NotFound(TRAN_NOT_EXISTS);
+        var transactionForShow = _mapper.Map<TransactionDTO>(transaction);
+        return Ok(transactionForShow);
     }
 
     [Authorize(Roles = "Administrador")]
@@ -75,8 +78,8 @@ public class TransactionsController : ControllerBase
     {
         transaction.Transaction_id = null;
         Transaction tran = _mapper.Map<Transaction>(transaction);
-        await _transactionService.InsertTransaction(tran);
-        return Ok();
-
+        var result = await _transactionService.InsertTransaction(tran);
+        if (!result) return NotFound(TRAN_NOT_CREATED);
+        return Ok(TRAN_CREATED);
     }
 }

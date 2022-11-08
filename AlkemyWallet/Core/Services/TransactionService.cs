@@ -28,39 +28,37 @@ namespace AlkemyWallet.Core.Services
 
         public async Task<bool> DeleteTransaction(int id)
         {
-            return await _unitOfWork.TransactionRepository!.Delete(id);
-
+            await _unitOfWork.TransactionRepository!.Delete(id);
+            return await _unitOfWork.SaveChangesAsync() > 0;
         }
 
-        public async Task InsertTransaction(Transaction transaction)
-        {
-            if (await ValidateTransaction(transaction)) await _unitOfWork.TransactionRepository!.Insert(transaction);
 
+        public async Task<bool> InsertTransaction(Transaction transaction)
+        {
+            if (await ValidateTransaction(transaction)) {
+                await _unitOfWork.TransactionRepository!.Insert(transaction);
+                return await _unitOfWork.SaveChangesAsync()>0;
+            }
+            return false;
         }
 
         public async Task<bool> UpdateTransaction(int id, Transaction transaction)
         {
             if (transaction.Transaction_id != id) return false;
-
-
-            if (await ValidateTransaction(transaction)) return await _unitOfWork.TransactionRepository!.Update(transaction);
-
-            else return false;
+            if (!(await ValidateTransaction(transaction)) ) return false;
+            await _unitOfWork.TransactionRepository!.Update(transaction);
+            return await _unitOfWork.SaveChangesAsync() > 0;
         }
 
-        private async Task<bool> ValidateTransaction(Transaction transaction)
+        public async Task<bool> ValidateTransaction(Transaction transaction)
         {
-            IAccountService accountService = new AccountService(_unitOfWork, null, null);
-            Account account = await accountService.GetAccountById(transaction.Account_id);
-
-
+            Account account = await _unitOfWork.AccountRepository!.GetById(transaction.Account_id);
             if((account == null) || (account.User_id!=transaction.User_id) ) return false;
 
-            IUserService userService = new UserService(_unitOfWork, null);
-            User user = await userService.GetById(transaction.User_id);
+            User user = await _unitOfWork.UserRepository!.GetById(transaction.User_id);
             if(user == null) return false;
 
             return true;
         }
-    }
+     }
 }
