@@ -20,7 +20,10 @@ public class UsersController : ControllerBase
         _mapper = mapper;
     }
 
-    // Get all users
+    /// <summary>
+    /// Retrieve all users
+    /// </summary>
+    /// <returns>User list</returns>
     [HttpGet]
     [Authorize(Roles = "Administrador")]
     public async Task<ActionResult<UserDTO>> GetUsers()
@@ -30,7 +33,11 @@ public class UsersController : ControllerBase
         return Ok(usersForShow);
     }
 
-    //Get user by id
+    /// <summary>
+    /// Retrieve the user by their ID
+    /// </summary>
+    /// <param name="id"> The ID of the desired User</param>
+    /// <returns>User details</returns>
     [HttpGet("{id}")]
     [Authorize(Roles = "Standard")]
     public async Task<IActionResult> GetUserById(int id)
@@ -38,14 +45,23 @@ public class UsersController : ControllerBase
         var user = await _userService.GetById(id);
         return Ok(user);
     }
-
+    /// <summary>
+    /// Create a new user
+    /// </summary>
+    /// <param name="userDTO">Fields to create the user</param>
+    /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPost]
     [Authorize(Roles = "Standard")]
     public async Task<ActionResult> InsertUser([FromForm] UserForCreatoionDto userDTO)
     {
         return Ok(await _userService.AddUser(userDTO));
     }
-
+    /// <summary>
+    /// updates the user with the received in the request
+    /// </summary>
+    /// <param name="id">User Id</param>
+    /// <param name="userDTO">Fields to update the user</param>
+    /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPut("{id}")]
     [Authorize(Roles = "Standard")]
     public async Task<ActionResult> UpdateUser(int id, [FromForm] UserForUpdateDto userDTO)
@@ -54,7 +70,11 @@ public class UsersController : ControllerBase
         if (!result) return NotFound("User not found");
         return Ok("Successfully Modified User");
     }
-
+    /// <summary>
+    /// delete the user with the id received in the request 
+    /// </summary>
+    /// <param name="id">User Id</param>
+    /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpDelete("{id}")]
     public async Task<ActionResult<User>> DeleteUser(int id)
     {
