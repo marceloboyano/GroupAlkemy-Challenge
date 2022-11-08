@@ -78,4 +78,19 @@ public class UsersController : ControllerBase
     {
         return await _userService.DeleteUser(id) ? Ok($"User with Id {id} deleted") : NotFound($"User with Id {id} not found");
     }
+
+    /// <summary>
+    /// Exchange the user's points for a product from the catalog.
+    /// </summary>
+    /// <param name="id">Catalog Id</param>
+    /// <returns></returns>
+    [HttpPut("product/{id}")]
+    [Authorize(Roles = "Standard")]
+    public async Task<ActionResult> ExchangePoints(int id)
+    {
+        var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
+        var result = await _userService.Exchange(id, userIdFromToken);
+        if (!result.Success) return NotFound(result.Message);
+        return Ok(result.Message);
+    }
 }

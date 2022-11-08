@@ -10,4 +10,5 @@ public interface IUserService
     Task<string> AddUser(UserForCreatoionDto userDTO);
     Task<bool> UpdateUser(int id, UserForUpdateDto userDTO);
     Task<bool> DeleteUser(int id);
+    Task<(bool Success, string Message)> Exchange(int id, string userIdFromToken);
 }
