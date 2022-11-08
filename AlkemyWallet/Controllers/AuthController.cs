@@ -1,6 +1,8 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO.UserLogin;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AlkemyWallet.Controllers;
 
@@ -23,5 +25,14 @@ public class AuthController : ControllerBase
             Email = request.Email,
             Password = request.Password
         }));
+    }
+
+    [HttpGet("me")]
+    [Authorize(Roles = "Administrador, Standard, Invitado")]
+    public async Task<IActionResult> GetAuthenticatedUser()
+    {
+        List<Claim> userdataToken = HttpContext.User.Claims.ToList();
+
+        return Ok(await _iAccountsServiceJwt.AuthenticatedUserAsync(userdataToken));
     }
 }
