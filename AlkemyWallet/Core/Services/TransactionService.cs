@@ -33,10 +33,13 @@ namespace AlkemyWallet.Core.Services
         }
 
 
-        public async Task InsertTransaction(Transaction transaction)
+        public async Task<bool> InsertTransaction(Transaction transaction)
         {
-            if (await ValidateTransaction(transaction)) await _unitOfWork.TransactionRepository!.Insert(transaction);
-
+            if (await ValidateTransaction(transaction)) {
+                await _unitOfWork.TransactionRepository!.Insert(transaction);
+                return await _unitOfWork.SaveChangesAsync()>0;
+            }
+            return false;
         }
 
         public async Task<bool> UpdateTransaction(int id, Transaction transaction)
