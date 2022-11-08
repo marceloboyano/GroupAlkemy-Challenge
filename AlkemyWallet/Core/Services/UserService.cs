@@ -46,6 +46,7 @@ public class UserService : IUserService
                 user.Rol_id = 2;
                 user.Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
                 await _unitOfWork.UserRepository!.Insert(user);
+                await _unitOfWork.SaveChangesAsync();
                 return "Se agregó con exito";
             }
         }
@@ -73,8 +74,13 @@ public class UserService : IUserService
 
     public async Task<bool> DeleteUser(int id)
     {
+        User deleteUser = await _unitOfWork.UserRepository!.GetById(id);
+        if (deleteUser is null)
+            return false;
+
         await _unitOfWork.UserRepository.Delete(id);
-        return await _unitOfWork.SaveChangesAsync()>0;
+        await _unitOfWork.SaveChangesAsync();
+        return true;
     }
 
     private static bool IsEmailValid(string email)
