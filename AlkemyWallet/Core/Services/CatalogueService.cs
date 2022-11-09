@@ -27,10 +27,12 @@ public class CatalogueService : ICatalogueService
         return catalogue;
     }
 
-    public async Task<IEnumerable<Catalogue>> GetCatalogueByPoints(int points)
+    public async Task<IEnumerable<Catalogue>> GetCatalogueByPoints(int userId)
     {
-        var catalogues = await _unitOfWork.CatalogueRepository!.GetAll();
-        catalogues = catalogues.Where(x => x.Points <= points);
+
+        var userEntity = await _unitOfWork.UserRepository!.GetById(userId);
+        var catalogues = await _unitOfWork.CatalogueByPoints!.GetByPoints(userEntity.Points);
+
         return catalogues;
     }
 

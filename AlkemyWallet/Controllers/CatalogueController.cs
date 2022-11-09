@@ -63,8 +63,9 @@ public class CatalogueController : ControllerBase
     public async Task<IActionResult> GetCatalogueByPoints()
     {
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        var userDetail = await _userService.GetById(userId);
-        var catalogue = await _catalogueService.GetCatalogueByPoints(userDetail.Points);
+        // var userDetail = await _userService.GetById(userId);
+        var catalogue = await _catalogueService.GetCatalogueByPoints(Convert.ToInt32(userId));
+        if (!catalogue.Any()) return Ok("No cuenta con los puntos suficientes para adquirir algun producto.");
         return Ok(catalogue);
     }
 
