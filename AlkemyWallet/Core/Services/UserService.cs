@@ -3,6 +3,7 @@ using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
+using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
 
 namespace AlkemyWallet.Core.Services;
@@ -20,14 +21,14 @@ public class UserService : IUserService
 
     public async Task<IEnumerable<User>> GetAllUser()
     {
-        var users = await _unitOfWork.UserRepository.GetAll();
+        var users = await _unitOfWork.UserRepository!.GetAll();
         users = users.OrderBy(x => x.First_name);
         return users;
     }
 
     public async Task<User> GetById(int id)
     {
-        var user = await _unitOfWork.UserDetailsRepository.GetById(id);
+        var user = await _unitOfWork.UserDetailsRepository!.GetById(id);
         return user;
     }
 
@@ -45,6 +46,7 @@ public class UserService : IUserService
                 user.Rol_id = 2;
                 user.Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
                 await _unitOfWork.UserRepository!.Insert(user);
+                await _unitOfWork.SaveChangesAsync();
                 return "Se agregó con exito";
             }
         }
@@ -54,26 +56,34 @@ public class UserService : IUserService
 
     public async Task<bool> UpdateUser(int id, UserForUpdateDto userDTO)
     {
-        var userEntity = await _unitOfWork.UserRepository.GetById(id);
-        if (userEntity != null)
+        User userEntity = await _unitOfWork.UserRepository!.GetById(id);
+        if (userEntity is not null)
         {
-            userEntity.First_name = userDTO.First_name;
-            userEntity.Last_name = userDTO.Last_name;
-            userEntity.Rol_id = userDTO.Rol_id;
+            userEntity.First_name = string.IsNullOrEmpty(userDTO.First_name) ? userEntity.First_name : userDTO.First_name;
+            userEntity.Last_name = string.IsNullOrEmpty(userDTO.Last_name) ? userEntity.Last_name : userDTO.Last_name;
+            userEntity.Rol_id = userDTO.Rol_id.Equals(0) ? userEntity.Rol_id : userDTO.Rol_id;
+            userEntity.Password = string.IsNullOrEmpty(userDTO.Password) ? userEntity.Password : BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
+            userEntity.Points = userDTO.Points;
 
             await _unitOfWork.SaveChangesAsync();
+            return true;
         }
-
-        return true;
+        else
+            return false;
     }
 
     public async Task<bool> DeleteUser(int id)
     {
+        User deleteUser = await _unitOfWork.UserRepository!.GetById(id);
+        if (deleteUser is null)
+            return false;
+
         await _unitOfWork.UserRepository.Delete(id);
+        await _unitOfWork.SaveChangesAsync();
         return true;
     }
 
-    private bool IsEmailValid(string email)
+    private static bool IsEmailValid(string email)
     {
         Regex regex = new("^[_a-z0-9A-Z]+(\\.[_a-z0-9A-Z]+)*@[a-zA-Z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-zA-Z]{2,15})$");
         if (regex.IsMatch(email))
@@ -81,4 +91,23 @@ public class UserService : IUserService
         else
             return false;
     }
+
+    public async Task<(bool Success, string Message)> Exchange(int id, string userIdFromToken)
+    {
+        var userEntity = await _unitOfWork.UserRepository!.GetById(Int32.Parse(userIdFromToken));
+        var catalogueEntity = await _unitOfWork.CatalogueRepository!.GetById(id);
+
+        if (userEntity is null)
+            return (false, "Usuario no encontrado.");
+
+        if (userEntity.Points < catalogueEntity.Points)
+            return (false, "No tiene los puntos suficientes para adquirir este producto.");
+
+        userEntity.Points -= catalogueEntity.Points;
+
+        await _unitOfWork.UserRepository!.Update(userEntity);
+        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "La operación ha sido exitosa. Muchas gracias!!.");
+        else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
+    }
+
 }

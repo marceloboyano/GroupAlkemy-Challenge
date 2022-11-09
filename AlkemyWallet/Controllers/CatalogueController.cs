@@ -18,6 +18,7 @@ public class CatalogueController : ControllerBase
         _catalogueService = catalogueService;
         _mapper = mapper;
     }
+
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetCatalogue()
@@ -27,6 +28,7 @@ public class CatalogueController : ControllerBase
         var catalogueForShow = _mapper.Map<IEnumerable<CatalogueDTO>>(catalogues);
         return Ok(catalogueForShow);
     }
+
     [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCatalogueById(int id)

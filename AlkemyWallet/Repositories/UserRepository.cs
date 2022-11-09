@@ -24,8 +24,7 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
         var user = await _context.Users!.FirstOrDefaultAsync(u => u.Email.Equals(email))!;
         if (user is not null)
             return true;
-        else
-            return false;
+        return false;
     }
 
     public async Task<IEnumerable<User>> GetUserWithDetails(int id)
