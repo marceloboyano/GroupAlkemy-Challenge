@@ -5,6 +5,9 @@ using AlkemyWallet.DataAccess;
 using AlkemyWallet.Repositories;
 using AlkemyWallet.Repositories.Interfaces;
 using challenge.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -59,6 +62,7 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<WalletDbContext>
     (options => { options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseContext")); });
 
+
 //builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 //                  .AddEntityFrameworkStores<WalletDbContext>()
 //                  .AddDefaultTokenProviders();
@@ -70,7 +74,7 @@ builder.Services.AddScoped<ICatalogueService, CatalogueService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IImageService, ImageService>();
 builder.Services.AddScoped<ITransactionService, TransactionService>();
-builder.Services.AddScoped<IFixedTermDepositService,FixedTermDepositService>();
+builder.Services.AddScoped<IFixedTermDepositService, FixedTermDepositService>();
 
 // Agrego los repositorios
 builder.Services.AddScoped<ICatalogueRepository, CatalogueRepository>();
@@ -109,6 +113,7 @@ using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<WalletDbContext>();
     context.Database.Migrate();
+
 }
 
 // Configure the HTTP request pipeline.

@@ -18,5 +18,6 @@ public class AutomapperProfile : Profile
         CreateMap<Role, RolesDTO>().ReverseMap();
         CreateMap<Role, RoleDTO>().ReverseMap();
         CreateMap<Transaction, TransactionDTO>().ReverseMap();
+        CreateMap<FixedTermDeposit, FixedTermDepositDTO>().ReverseMap();
     }
 }

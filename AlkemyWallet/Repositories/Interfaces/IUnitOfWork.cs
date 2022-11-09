@@ -15,6 +15,7 @@ public interface IUnitOfWork : IDisposable
     ICatalogueRepository? CatalogueByPoints { get; }
     IFixedTermDepositRepository? FixedTermDepositDetailsRepository { get; }
 
+
     int SaveChanges();
     Task<int> SaveChangesAsync();
 }

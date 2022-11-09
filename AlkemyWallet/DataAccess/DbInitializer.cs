@@ -155,7 +155,6 @@ public class DbInitializer
                     Account_id = 2,
                     User_id = 2
                 },
-
                 new Transaction
                 {
                     Transaction_id = 3,

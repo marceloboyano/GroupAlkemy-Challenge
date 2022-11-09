@@ -6,7 +6,7 @@ namespace AlkemyWallet.Repositories;
 
 public class UnitOfWork : IUnitOfWork
 {
-    
+
     private readonly WalletDbContext _dbContext;
     private readonly IRepositoryBase<Account>? _accountRepository;
     private readonly IAccountRepository? _accountWithDetails;
@@ -19,6 +19,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly IUserRepository? _userDetailsRepository;
     private readonly IRepositoryBase<User>? _userRepository;
     
+
 
     public UnitOfWork(WalletDbContext dbContext)
     {

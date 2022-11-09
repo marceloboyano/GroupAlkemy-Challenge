@@ -62,14 +62,18 @@ public class UserService : IUserService
             userEntity.First_name = string.IsNullOrEmpty(userDTO.First_name) ? userEntity.First_name : userDTO.First_name;
             userEntity.Last_name = string.IsNullOrEmpty(userDTO.Last_name) ? userEntity.Last_name : userDTO.Last_name;
             userEntity.Rol_id = userDTO.Rol_id.Equals(0) ? userEntity.Rol_id : userDTO.Rol_id;
+
             userEntity.Password = string.IsNullOrEmpty(userDTO.Password) ? userEntity.Password : BCrypt.Net.BCrypt.HashPassword(userDTO.Password); 
+
             userEntity.Points = userDTO.Points;
 
             await _unitOfWork.SaveChangesAsync();
             return true;
         }
         else
+
             return false;   
+
     }
 
     public async Task<bool> DeleteUser(int id)
@@ -103,8 +107,10 @@ public class UserService : IUserService
         if (userEntity.Points < catalogueEntity.Points)
             return (false, "No tiene los puntos suficientes para adquirir este producto.");
 
+
         userEntity.Points -= catalogueEntity.Points;       
        
+
         await _unitOfWork.UserRepository!.Update(userEntity);
         if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "La operación ha sido exitosa. Muchas gracias!!.");
         else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");

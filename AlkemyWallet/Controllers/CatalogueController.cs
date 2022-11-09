@@ -23,10 +23,12 @@ public class CatalogueController : ControllerBase
         _userService = userService;
     }
 
+
     /// <summary>
     /// Lists Catalogues made by the user making the request ordered by points
     /// </summary>
     /// <returns>Catalogues list ordered by points</returns>
+
     [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetCatalogue()
@@ -36,12 +38,14 @@ public class CatalogueController : ControllerBase
         var catalogueForShow = _mapper.Map<IEnumerable<CatalogueDTO>>(catalogues);
         return Ok(catalogueForShow);
     }
+
    
     /// <summary>
     /// Obtains the details of the Catalagoue from the id
     /// </summary>
     /// <param name="id">Catalogue Id</param>
     /// <returns>Catalogue detail</returns>
+
     [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetCatalogueById(int id)
