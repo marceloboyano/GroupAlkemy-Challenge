@@ -11,6 +11,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly IRepositoryBase<Account>? _accountRepository;
     private readonly IAccountRepository? _accountWithDetails;
     private readonly IRepositoryBase<Catalogue>? _catalogueRepository;
+    private readonly ICatalogueRepository? _catalogueByPoints;
     private readonly IRepositoryBase<FixedTermDeposit>? _fixedTermDepositRepository;
     private readonly IRepositoryBase<Role>? _roleRepository;
     private readonly ITransactionRepository? _transactionRepository;
@@ -43,6 +44,7 @@ public class UnitOfWork : IUnitOfWork
     public IRepositoryBase<Catalogue> CatalogueRepository =>
         _catalogueRepository ?? new RepositoryBase<Catalogue>(_dbContext);
 
+    public ICatalogueRepository CatalogueByPoints => _catalogueByPoints ?? new CatalogueRepository(_dbContext);
 
     public void Dispose()
     {
