@@ -6,10 +6,6 @@ namespace AlkemyWallet.Core.Interfaces
     public interface IFixedTermDepositService
     {
         Task<IEnumerable<FixedTermDeposit>> GetFixedTermDeposits();
-        Task<FixedTermDeposit> GetFixedTermDepositsById(int id);
-        Task<bool> DeleteFixedTermDeposit(int id);
-
-
-
+        Task<IEnumerable<FixedTermDeposit>> GetFixedTermDepositsByUserId(int id);
     }
 }
