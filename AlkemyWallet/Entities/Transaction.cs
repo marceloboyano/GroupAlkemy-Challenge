@@ -4,15 +4,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AlkemyWallet.Entities
 {
     [Table("Transaction")]
-    public class Transaction
+    public class Transaction : SoftDeleteEntity
     {
 
         [Key]
         public int Transaction_id { get; set; }
 
-        [MaxLength (100)]
+        [MaxLength(100)]
         [Required(ErrorMessage = "An Amount its Required")]
-        public int Amount { get; set; }=0;
+        public int Amount { get; set; } = 0;
 
         [Required(ErrorMessage = "Enter a Payment Details")]
         [Column("Concept", TypeName = "varchar")]
@@ -43,6 +43,5 @@ namespace AlkemyWallet.Entities
         [ForeignKey("Account_id")]
         public Account? Account { get; set; }
 
-       
     }
 }
