@@ -49,7 +49,7 @@ public class DbInitializer
                     First_name = "Clint",
                     Last_name = "Eastwood",
                     Email = "clint@eastwood.com",
-                    Password = "Clint",
+                    Password = "$2b$10$DjsYH6P2iczga6DFAAVf/Oulu1f9Qdlw24w0Lfej3aNnQx.eqato2",
                     Points = 30,
                     Rol_id = 2
                 },
@@ -59,7 +59,7 @@ public class DbInitializer
                     First_name = "Arnold",
                     Last_name = "Schwarzenegger",
                     Email = "arnoldsg@skynet.com",
-                    Password = "Arnold",
+                    Password = "$2b$10$dvsbNpgI0E0v9X5D7r9h2un6DFsI8mx2RePLUOUaMMTWQr3hlU522",
                     Points = 2000,
                     Rol_id = 1
                 },
@@ -69,7 +69,7 @@ public class DbInitializer
                     First_name = "Sylvester",
                     Last_name = "Stallone",
                     Email = "sylvesters@hollywood.com",
-                    Password = "Sylvester",
+                    Password = "$2b$10$zUJTo0YB6ltWZFwFUw3Ek.47UuzqwFNI366GhKoTJZlUQkPS..mNu",
                     Points = 2000,
                     Rol_id = 3
                 }

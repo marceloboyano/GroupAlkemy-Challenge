@@ -13,6 +13,8 @@ public interface IUnitOfWork : IDisposable
     IRepositoryBase<Role>? RoleRepository { get; }
     IRepositoryBase<Catalogue>? CatalogueRepository { get; }
     ICatalogueRepository? CatalogueByPoints { get; }
+    IFixedTermDepositRepository? FixedTermDepositDetailsRepository { get; }
+
 
     int SaveChanges();
     Task<int> SaveChangesAsync();

@@ -10,7 +10,6 @@ public class TransactionRepository : RepositoryBase<Transaction>, ITransactionRe
         : base(context)
     {
     }
-
     public async Task<IEnumerable<Transaction>> GetByUser(int userId)
     {
         return await Task.FromResult(_context.Set<Transaction>().Where(t => t.User_id == userId).AsEnumerable());

@@ -3,6 +3,7 @@ using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
+using System.Security.Claims;
 using static challenge.Services.ImageService;
 
 namespace AlkemyWallet.Core.Services;
@@ -26,6 +27,15 @@ public class CatalogueService : ICatalogueService
         return catalogue;
     }
 
+    public async Task<IEnumerable<Catalogue>> GetCatalogueByPoints(int userId)
+    {
+
+        var userEntity = await _unitOfWork.UserRepository!.GetById(userId);
+        var catalogues = await _unitOfWork.CatalogueByPoints!.GetByPoints(userEntity.Points);
+
+        return catalogues;
+    }
+
     public async Task<IEnumerable<Catalogue>> GetCatalogues()
     {
         var catalogues = await _unitOfWork.CatalogueRepository!.GetAll();
@@ -44,11 +54,14 @@ public class CatalogueService : ICatalogueService
         catalogue.Image = path;
 
         await _unitOfWork.CatalogueRepository!.Insert(catalogue);
+
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<bool> DeleteCatalogue(int id)
     {
-        return await _unitOfWork.CatalogueRepository!.Delete(id);
+        await _unitOfWork.CatalogueRepository!.Delete(id);
+        return await _unitOfWork.SaveChangesAsync() > 0;
     }
 
     public async Task<bool> UpdateCatalogues(int id, CatalogueForUpdateDTO catalogueDTO)
@@ -71,6 +84,7 @@ public class CatalogueService : ICatalogueService
             catalogueEntity.Product_description = catalogueDTO.Product_description;
 
 
-        return await _unitOfWork.CatalogueRepository.Update(catalogueEntity);
+        await _unitOfWork.CatalogueRepository.Update(catalogueEntity);
+        return await _unitOfWork.SaveChangesAsync() > 0;
     }
 }

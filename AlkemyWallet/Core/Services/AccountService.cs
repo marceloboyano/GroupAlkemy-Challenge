@@ -39,6 +39,7 @@ public class AccountService : IAccountService
              
         var account = _mapper.Map<Account>(accountDTO);  
         await _unitOfWork.AccountRepository!.Insert(account);
+        await _unitOfWork.SaveChangesAsync();
     }
 
     public async Task<bool> UpdateAccount(int id, AccountForUpdateDTO accountDTO)
@@ -56,9 +57,19 @@ public class AccountService : IAccountService
             accountEntity.Money = (float)accountDTO.Money;
 
 
-        return await _unitOfWork.AccountRepository!.Update(accountEntity);
+        await _unitOfWork.AccountRepository!.Update(accountEntity);
+        return await _unitOfWork.SaveChangesAsync()>0;
     }
-
+    public async Task<(bool Success, string Message)> DeleteAccount(int id)
+    {
+        var fixedTermEntity = await _unitOfWork.FixedTermDepositRepository!.GetById(id);
+        if (fixedTermEntity is not null)
+            return (false, "No se puede eliminar la cuenta mientras tenga inversiones o depositos pendientes");
+         await _unitOfWork.AccountRepository!.Delete(id);
+        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "Cuenta eliminada.");
+        else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
+       
+    }
 
     public async Task<(bool Success, string Message)> Deposit(int id, int amount)
     {
@@ -92,7 +103,9 @@ public class AccountService : IAccountService
 
 
             await _unitOfWork.AccountRepository!.Update(account);
-            return (true, "Transferencia exitosa.");
+
+            if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "Deposito exitoso.");
+            else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
         }
         else
         {
@@ -142,12 +155,11 @@ public class AccountService : IAccountService
             };
 
             await _unitOfWork.TransactionRepository!.Insert(transaction);
-
-
             await _unitOfWork.AccountRepository!.Update(account);
             await _unitOfWork.AccountRepository.Update(toAccount);
 
-            return (true, "Transferencia exitosa.");
+            if(await _unitOfWork.SaveChangesAsync()>0)  return (true, "Transferencia exitosa.");
+            else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
 
         }
         else
@@ -155,6 +167,39 @@ public class AccountService : IAccountService
             return (false, "El importe ingresado debe ser mayor a 0");
         }
 
+    }
+
+    public async Task<(bool Success, string Message)> Block(int id)
+    {
+        var accountEntity = await _unitOfWork.AccountRepository!.GetById(id);
+
+        if (accountEntity is null)
+            return (false, "El id de la cuenta que ingreso no fue encontrado.");
+
+        if (accountEntity.IsBlocked == true)
+            return (false, "La cuenta que intenta bloquear ya se encuentra bloqueada.");
+
+          accountEntity.IsBlocked = true;          
+
+        await _unitOfWork.AccountRepository!.Update(accountEntity);
+        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "La cuenta ha sido Bloqueada.");
+        else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
+    }
+    public async Task<(bool Success, string Message)> Unblock(int id)
+    {
+        var accountEntity = await _unitOfWork.AccountRepository!.GetById(id);
+
+        if (accountEntity is null)
+            return (false, "El id de la cuenta que ingreso no fue encontrado.");
+
+        if (accountEntity.IsBlocked == false)
+            return (false, "La cuenta que intenta desbloquear ya se encuentra desbloqueada.");
+
+        accountEntity.IsBlocked = false;
+
+        await _unitOfWork.AccountRepository!.Update(accountEntity);
+        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "La cuenta ha sido Desbloqueada.");
+        else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
     }
 
 }

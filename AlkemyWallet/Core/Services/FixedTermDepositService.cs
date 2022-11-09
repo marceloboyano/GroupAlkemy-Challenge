@@ -4,9 +4,11 @@ using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Entities.Paged;
 using AlkemyWallet.Repositories.Interfaces;
+
 using AutoMapper;
 using System.Linq;
 using System.Xml.Linq;
+
 
 namespace AlkemyWallet.Core.Services;
 
@@ -19,21 +21,22 @@ public class FixedTermDepositService : IFixedTermDepositService
 
     public FixedTermDepositService(IUnitOfWork unitOfWork, IMapper mapper)
     {
+
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
-    public Task<IEnumerable<FixedTermDeposit>> GetFixedTermDeposits()
-    {
-        var fixedTermDeposits = _unitOfWork.FixedTermDepositRepository.GetAll();
-        return fixedTermDeposits;
-    }
+        public async Task<IEnumerable<FixedTermDeposit>> GetFixedTermDeposits()
+        {
+            var fixedTermDeposits = await _unitOfWork.FixedTermDepositRepository!.GetAll();
+            return fixedTermDeposits;
+        }
+      public async Task<IEnumerable<FixedTermDeposit>> GetFixedTermDepositsByUserId(int userId)
+        {
+            var fixedTermDepositsByUserId = await _unitOfWork.FixedTermDepositDetailsRepository!.GetByUser(userId);
+            return fixedTermDepositsByUserId;
+        }
 
-    public Task<FixedTermDeposit> GetFixedTermDepositsById(int id)
-    {
-        var fixedTermDepositsById = _unitOfWork.FixedTermDepositRepository.GetById(id);
-        return fixedTermDepositsById;
-    }
 
     public async Task<bool> DeleteFixedTermDeposit(int id)
     {

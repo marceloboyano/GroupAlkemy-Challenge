@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AlkemyWallet.Entities;
 
 [Table("Role")]
-public class Role
+public class Role : SoftDeleteEntity
 {
     public Role()
     {

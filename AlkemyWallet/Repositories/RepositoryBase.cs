@@ -1,4 +1,5 @@
 ﻿using AlkemyWallet.DataAccess;
+using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,35 +25,26 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     public async Task<T> GetById(int id)
     {
         var result = await _entities.FindAsync(id);
-
         return result;
     }
 
     public async Task Insert(T entity)
     {
         _entities.Add(entity);
-        await _context.SaveChangesAsync();
     }
 
-    public async Task<bool> Update(T entity)
+    public async Task Update(T entity)
     {
         _context.Update(entity);
-        var rowsAffected = await _context.SaveChangesAsync();
-        return rowsAffected > 0;
     }
 
-    public async Task<bool> Delete(int id)
+    public async Task Delete(int id)
     {
         var entity = await GetById(id);
-
 
         if (entity != null)
         {
             _entities.Remove(entity);
-            var rowsAffected = await _context.SaveChangesAsync();
-            return rowsAffected > 0;
         }
-
-        return false;
     }
 }

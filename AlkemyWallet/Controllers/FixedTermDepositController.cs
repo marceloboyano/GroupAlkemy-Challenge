@@ -1,4 +1,4 @@
-﻿using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Entities.Paged;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +10,10 @@ using System.Drawing.Printing;
 using System.Web.Http.Routing;
 using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Entities;
+using System.Security.Claims;
+using Microsoft.EntityFrameworkCore.Storage;
+using NuGet.Packaging.Licenses;
+
 
 namespace AlkemyWallet.Controllers;
 
@@ -25,6 +29,7 @@ public class FixedTermDepositController : Controller
         _pageListService = pageListService;
         _mapper = mapper;
     }
+
 
     //Get all accounts
     [Authorize]
@@ -44,8 +49,8 @@ public class FixedTermDepositController : Controller
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetaData));
         
         return Ok(fixedTerm);
-    }
 
+    }
     private string CreateFTRUri(PageResourceParameters pRp, ResourceUriType type)
     {
         switch (type)
@@ -57,5 +62,6 @@ public class FixedTermDepositController : Controller
             default:
                 return Url.Link("GetFixTermDeposit", new { page = pRp.Page, pageSize = pRp.PageSize });
         }
+
     }
 }

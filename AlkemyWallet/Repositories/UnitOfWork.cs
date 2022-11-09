@@ -18,6 +18,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly ITransactionRepository? _transactionRepository;
     private readonly IUserRepository? _userDetailsRepository;
     private readonly IRepositoryBase<User>? _userRepository;
+    
 
 
     public UnitOfWork(WalletDbContext dbContext)
@@ -30,7 +31,7 @@ public class UnitOfWork : IUnitOfWork
     public IRepositoryBase<User> UserRepository => _userRepository ?? new RepositoryBase<User>(_dbContext);
 
     public IUserRepository UserDetailsRepository => _userDetailsRepository ?? new UserRepository(_dbContext);
-
+    
     public IRepositoryBase<Account> AccountRepository => _accountRepository ?? new RepositoryBase<Account>(_dbContext);
 
     public IAccountRepository AccountWithDetails => _accountWithDetails ?? new AccountRepository(_dbContext);

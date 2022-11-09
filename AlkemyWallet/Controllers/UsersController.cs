@@ -1,6 +1,5 @@
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
-using AlkemyWallet.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +19,10 @@ public class UsersController : ControllerBase
         _mapper = mapper;
     }
 
-    // Get all users
+    /// <summary>
+    /// Retrieve all users
+    /// </summary>
+    /// <returns>User list</returns>
     [HttpGet]
     [Authorize(Roles = "Administrador")]
     public async Task<ActionResult<UserDTO>> GetUsers()
@@ -30,7 +32,11 @@ public class UsersController : ControllerBase
         return Ok(usersForShow);
     }
 
-    //Get user by id
+    /// <summary>
+    /// Retrieve the user by their ID
+    /// </summary>
+    /// <param name="id"> The ID of the desired User</param>
+    /// <returns>User details</returns>
     [HttpGet("{id}")]
     [Authorize(Roles = "Standard")]
     public async Task<IActionResult> GetUserById(int id)
@@ -38,27 +44,53 @@ public class UsersController : ControllerBase
         var user = await _userService.GetById(id);
         return Ok(user);
     }
-
+    /// <summary>
+    /// Create a new user
+    /// </summary>
+    /// <param name="userDTO">Fields to create the user</param>
+    /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPost]
+    [Authorize(Roles = "Standard")]
     public async Task<ActionResult> InsertUser([FromForm] UserForCreatoionDto userDTO)
     {
         return Ok(await _userService.AddUser(userDTO));
     }
-
+    /// <summary>
+    /// updates the user with the received in the request
+    /// </summary>
+    /// <param name="id">User Id</param>
+    /// <param name="userDTO">Fields to update the user</param>
+    /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPut("{id}")]
+    [Authorize(Roles = "Standard")]
     public async Task<ActionResult> UpdateUser(int id, [FromForm] UserForUpdateDto userDTO)
     {
-        var result = await _userService.UpdateUser(id, userDTO);
-        if (!result) return NotFound("User not found");
-        return Ok("Successfully Modified User");
+        return await _userService.UpdateUser(id, userDTO) ? Ok("Successfully Modified User") : NotFound("User not found");
+    }
+    /// <summary>
+    /// delete the user with the id received in the request 
+    /// </summary>
+    /// <param name="id">User Id</param>
+    /// <returns>If executed correctly, it returns a 200 response code.</returns>
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Administrador")]
+    public async Task<ActionResult> DeleteUser(int id)
+    {
+        return await _userService.DeleteUser(id) ? Ok($"User with Id {id} deleted") : NotFound($"User with Id {id} not found");
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult<User>> DeleteUser(int id)
+    /// <summary>
+    /// Exchange the user's points for a product from the catalog.
+    /// </summary>
+    /// <param name="id">Catalog Id</param>
+    /// <returns></returns>
+    [HttpPut("product/{id}")]
+    [Authorize(Roles = "Standard")]
+    public async Task<ActionResult> ExchangePoints(int id)
     {
-        var deleteUser = await _userService.GetById(id);
-        if (deleteUser == null) return NotFound($"User with Id = {id} not found");
-        await _userService.DeleteUser(id);
-        return Ok($"User with Id ={id} deleted");
+        var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
+        var result = await _userService.Exchange(id, userIdFromToken);
+        if (!result.Success) return NotFound(result.Message);
+        return Ok(result.Message);
     }
 }
