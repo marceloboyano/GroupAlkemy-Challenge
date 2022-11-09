@@ -10,4 +10,8 @@ public class FixedTermDepositRepository : RepositoryBase<FixedTermDeposit>, IFix
         : base(context)
     {
     }
+    public async Task<IEnumerable<FixedTermDeposit>> GetByUser(int userId)
+    {
+        return await Task.FromResult(_context.Set<FixedTermDeposit>().Where(t => t.User_id == userId).AsEnumerable());
+    }
 }
