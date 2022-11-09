@@ -17,6 +17,10 @@ public class AuthController : ControllerBase
         _iAccountsServiceJwt = iAccountsServiceJwt;
     }
 
+    /// <summary>
+    /// Retrieve the token of a logged-in user
+    /// </summary>
+    /// <returns>If executed correctly, it returns a token</returns>
     [HttpPost("login")]
     public async Task<IActionResult> AuthenticateAsync(AuthenticationRequestDTO request)
     {
@@ -27,6 +31,10 @@ public class AuthController : ControllerBase
         }));
     }
 
+    /// <summary>
+    /// Retrieves authenticated user data
+    /// </summary>
+    /// <returns>If executed correctly, it returns the authenticated user data</returns>
     [HttpGet("me")]
     [Authorize(Roles = "Administrador, Standard, Invitado")]
     public async Task<IActionResult> GetAuthenticatedUser()

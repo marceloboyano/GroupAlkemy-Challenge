@@ -37,7 +37,7 @@ public class TransactionsController : ControllerBase
     /// </summary>
     /// <returns>Transactions list ordered by date</returns>
     [HttpGet]
-    [Authorize(Roles = "standard")]
+    [Authorize(Roles = "Standard")]
     public async Task<IActionResult> GetTransactions()
     {
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
@@ -52,7 +52,7 @@ public class TransactionsController : ControllerBase
     /// <param name="id">Transaction Id</param>
     /// <returns>Transaction detail</returns>
     [HttpGet("{id}")]
-    [Authorize(Roles = "standard")]
+    [Authorize(Roles = "Standard")]
     public async Task<IActionResult> GetTransactionById(int id)
     {
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);

@@ -1,8 +1,10 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
+using AlkemyWallet.Core.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AlkemyWallet.Controllers;
 
@@ -12,11 +14,13 @@ public class CatalogueController : ControllerBase
 {
     private readonly ICatalogueService _catalogueService;
     private readonly IMapper _mapper;
+    private readonly IUserService _userService;
 
-    public CatalogueController(ICatalogueService catalogueService, IMapper mapper)
+    public CatalogueController(ICatalogueService catalogueService, IMapper mapper, IUserService userService)
     {
         _catalogueService = catalogueService;
         _mapper = mapper;
+        _userService = userService;
     }
 
     /// <summary>
@@ -49,6 +53,22 @@ public class CatalogueController : ControllerBase
 
         return Ok(catalogue);
     }
+
+    /// <summary>
+    /// List of products whose value in points is less than or equal to the user's points
+    /// </summary>
+    /// <returns>List of products according to the user's points</returns>
+    [Authorize(Roles = "Standard")]
+    [HttpGet("user")]
+    public async Task<IActionResult> GetCatalogueByPoints()
+    {
+        int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
+        // var userDetail = await _userService.GetById(userId);
+        var catalogue = await _catalogueService.GetCatalogueByPoints(Convert.ToInt32(userId));
+        if (!catalogue.Any()) return Ok("No cuenta con los puntos suficientes para adquirir algun producto.");
+        return Ok(catalogue);
+    }
+
     /// <summary>
     /// Creates the Catalogue.
     /// </summary>

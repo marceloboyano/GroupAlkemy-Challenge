@@ -3,6 +3,7 @@ using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
+using System.Security.Claims;
 using static challenge.Services.ImageService;
 
 namespace AlkemyWallet.Core.Services;
@@ -24,6 +25,15 @@ public class CatalogueService : ICatalogueService
     {
         var catalogue = await _unitOfWork.CatalogueRepository!.GetById(id);
         return catalogue;
+    }
+
+    public async Task<IEnumerable<Catalogue>> GetCatalogueByPoints(int userId)
+    {
+
+        var userEntity = await _unitOfWork.UserRepository!.GetById(userId);
+        var catalogues = await _unitOfWork.CatalogueByPoints!.GetByPoints(userEntity.Points);
+
+        return catalogues;
     }
 
     public async Task<IEnumerable<Catalogue>> GetCatalogues()
