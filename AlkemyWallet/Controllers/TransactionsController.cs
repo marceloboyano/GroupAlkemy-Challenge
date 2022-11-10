@@ -8,6 +8,7 @@ using AlkemyWallet.Core.Services;
 using AlkemyWallet.Entities.Paged;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using AlkemyWallet.Core.Helper;
 
 namespace AlkemyWallet.Controllers;
 
@@ -39,10 +40,11 @@ public class TransactionsController : ControllerBase
     /// Lists transactions made by the user making the request ordered by date
     /// </summary>
     /// <returns>Transactions list ordered by date</returns>
-    [HttpGet(Name = "GetTransactions")]
+    [HttpGet("GetTransactions")]
     [Authorize(Roles = "Standard")]
     public async Task<IActionResult> GetTransactions(int Page)
     {
+/*  
         var ID = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
         if (Page == 0 || ID == null) Page = 1;
         var pagesiz = 1;
@@ -51,10 +53,10 @@ public class TransactionsController : ControllerBase
         var getPage = _transactionService.GetPagedTransactions(pRp);
 
         var HasPrev =
-            getPage.HasPrevious ? Url.Link("GetTransactions", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
+            getPage.HasPrevious ? Url.Link("GetTransactions", new { Page = pRp.Page - 1 }) : null;
 
         var HasNext = getPage.HasNext
-            ? Url.Link("GetTransactions", new { Page = pRp.Page + 1, pRp.PageSize })
+            ? Url.Link("GetTransactions", new { Page = pRp.Page + 1 })
             : null;
 
         var metadata = new
@@ -65,26 +67,29 @@ public class TransactionsController : ControllerBase
         return Ok(getPage.Select(x => new TransactionDTO
             { Transaction_id = x.Transaction_id, Amount = x.Amount, Concept = x.Concept, Date = x.Date, Type = x.Type , User_id =x.User_id, Account_id=x.Account_id }));
 
+        */
 
-
-        // int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        // var transactions = await _transactionService.GetTransactions(userId);
-        // var transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions);
-        // return Ok(transactionsForShow);
+        int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
+        var transactions = await _transactionService.GetTransactions(userId);
+        var transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions);
+        return Ok(transactionsForShow);
     }
 
     /// <summary>
     /// Lists transactions made by the user making the request ordered by date over page
     /// </summary>
-    /// <param name="page">Page number starting in 0</param>
+    /// <param name="page">Page number starting in 1</param>
     /// <returns>Transactions page list ordered by date</returns>
     [HttpGet]
     [Authorize(Roles = "Standard")]
     public async Task<IActionResult> GetTransactionsPaging(int page)
     {
+        int pageSize = 1;
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        var transactions = await _transactionService.GetTransactionsPaging(userId, page, 1);
-        var transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions);
+        var transactions = await _transactionService.GetTransactionsPaging(userId, page, pageSize);
+        IEnumerable<TransactionDTO> transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions.recordList);
+        PageListed pagedTransactions = new PageListed(page, pageSize, transactions.totalPages);
+        pagedTransactions.AddHeader(Response, Url);
         return Ok(transactionsForShow);
     }
 

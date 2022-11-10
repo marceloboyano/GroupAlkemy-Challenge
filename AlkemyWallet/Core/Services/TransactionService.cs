@@ -21,7 +21,7 @@ namespace AlkemyWallet.Core.Services
             return transactions.OrderBy(x=>x.Date);
         }
 
-        public async Task<IEnumerable<Transaction>> GetTransactionsPaging(int userId, int pageNumber, int pageSize)
+        public async Task<(int totalPages, IEnumerable<Transaction> recordList)> GetTransactionsPaging(int userId, int pageNumber, int pageSize)
         {
             return await _unitOfWork.TransactionRepository!.GetByUserPaging(userId,pageNumber, pageSize);
         }

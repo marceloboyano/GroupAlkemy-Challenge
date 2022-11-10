@@ -10,12 +10,9 @@ public interface ITransactionService
     Task<bool> InsertTransaction(Transaction transaction);
     Task<bool> UpdateTransaction(int id, Transaction transaction);
     Task<IEnumerable<Transaction>> GetTransactions(int userId);
-    Task<IEnumerable<Transaction>> GetTransactionsPaging(int userId, int pageNumber, int pageSize);
+    Task<(int totalPages, IEnumerable<Transaction> recordList)> GetTransactionsPaging(int userId, int pageNumber, int pageSize);
     Task<Transaction?> GetTransactionById(int id, int userId);
-
     Task<bool> ValidateTransaction(Transaction transaction);
     PagedList<Transaction> GetPagedTransactions(PageResourceParameters pageResourceParameters);
-
-
 
 }

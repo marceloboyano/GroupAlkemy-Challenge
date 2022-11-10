@@ -15,13 +15,17 @@ public class TransactionRepository : RepositoryBase<Transaction>, ITransactionRe
         return await Task.FromResult(_context.Set<Transaction>().Where(t => t.User_id == userId).AsEnumerable());
     }
 
-    public async Task<IEnumerable<Transaction>> GetByUserPaging(int userId, int pageNumber, int pageSize)
+    public async Task<(int totalPages, IEnumerable<Transaction> recordList)> GetByUserPaging(int userId, int pageNumber, int pageSize)
     {
-        return await Task.FromResult(_context.Set<Transaction>()
+        IEnumerable<Transaction> list= await Task.FromResult(_context.Set<Transaction>()
             .Where(t => t.User_id == userId)
             .OrderBy(x => x.Date)
-            .Skip(pageNumber * pageSize)
+            .Skip((pageNumber-1) * pageSize)
             .Take(pageSize)
             .AsEnumerable());
+        int totalRecords = _context.Set<Transaction>()
+            .Where(t => t.User_id == userId)
+            .Count();
+        return ((int)Math.Ceiling(totalRecords/(double) pageSize), list);  
     }
 }

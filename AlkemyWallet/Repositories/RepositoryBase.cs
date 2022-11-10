@@ -29,12 +29,14 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
         return await Task.FromResult(_entities.AsEnumerable());
     }
 
-    public async Task<IEnumerable<T>> GetAllPaging(int pageNumber, int pageSize)
+    public async Task<(int totalPages, IEnumerable<T> recordList)> GetAllPaging(int pageNumber, int pageSize)
     {
-        return await Task.FromResult(_entities
-            .Skip(pageNumber * pageSize)
-            .Take(pageSize)
-            .AsEnumerable());
+        IEnumerable<T> list = await Task.FromResult(_entities
+           .Skip((pageNumber - 1) * pageSize)
+           .Take(pageSize)
+           .AsEnumerable());
+        int totalRecords = _entities.Count();
+        return ((int)Math.Ceiling(totalRecords / (double)pageSize), list);
     }
     public async Task<T?> GetById(int id)
     {
