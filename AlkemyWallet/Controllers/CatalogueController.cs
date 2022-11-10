@@ -54,8 +54,9 @@ public class CatalogueController : ControllerBase
 
         if (catalogue is null) return NotFound("No existe ningún catalogo con el id especificado");
 
-
-        return Ok(catalogue);
+        var catalogoForShow = _mapper.Map<CatalogueForShowDTO>(catalogue);
+        return Ok(catalogoForShow);
+       
     }
 
     /// <summary>
@@ -66,8 +67,7 @@ public class CatalogueController : ControllerBase
     [HttpGet("user")]
     public async Task<IActionResult> GetCatalogueByPoints()
     {
-        int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        // var userDetail = await _userService.GetById(userId);
+        int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);      
         var catalogue = await _catalogueService.GetCatalogueByPoints(Convert.ToInt32(userId));
         if (!catalogue.Any()) return Ok("No cuenta con los puntos suficientes para adquirir algun producto.");
         return Ok(catalogue);
@@ -98,7 +98,7 @@ public class CatalogueController : ControllerBase
         var result = await _catalogueService.DeleteCatalogue(id);
 
         if (!result)
-            return BadRequest("no se encontro el catalogo");
+            return NotFound("no se encontro el catalogo");
 
         return Ok("el catalogo ha sido eliminada");
     }
