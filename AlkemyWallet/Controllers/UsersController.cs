@@ -1,8 +1,10 @@
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
+using AlkemyWallet.Core.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Text;
 
 namespace AlkemyWallet.Controllers;
 
@@ -65,7 +67,11 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "Standard")]
     public async Task<ActionResult> UpdateUser(int id, UserForUpdateDto userDTO)
     {
-        return await _userService.UpdateUser(id, userDTO) ? Ok("Successfully Modified User") : NotFound("User not found");
+
+        var result = await _userService.UpdateUser(id, userDTO);
+        if (!result) return NotFound("Usuario No Encontrado");
+        return Ok("Usuario Modificado con exito");
+       
     }
     /// <summary>
     /// delete the user with the id received in the request 
@@ -80,9 +86,9 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Exchange the user's points for a product from the catalog.
+    ///  Exchange the user's points for a product from the catalog.
     /// </summary>
-    /// <param name="id">Catalog Id</param>
+    /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("product/{id}")]
     [Authorize(Roles = "Standard")]

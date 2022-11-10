@@ -65,10 +65,18 @@ public class UserForCreatoionDto
 
 public class UserForUpdateDto
 {
-    [StringLength(100, MinimumLength = 2)] public string First_name { get; set; } = string.Empty;
+       
+    public string? First_name { get; set; }    
+    public string? Last_name { get; set; } 
 
-    [StringLength(100, MinimumLength = 2)] public string Last_name { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
-    public int Points { get; set; } = 0;
-    public int Rol_id { get; set; } = 0;
+    public string? Email { get; set; }
+    
+    public string? Password { get; set; }
+
+    public int? Points { get; set; }
+   
+    public int? Rol_id { get; set; } 
+   
 }
+
+
