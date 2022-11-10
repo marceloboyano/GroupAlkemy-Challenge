@@ -29,7 +29,14 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
         return await Task.FromResult(_entities.AsEnumerable());
     }
 
-    public async Task<T> GetById(int id)
+    public async Task<IEnumerable<T>> GetAllPaging(int pageNumber, int pageSize)
+    {
+        return _entities
+            .Skip(pageNumber * pageSize)
+            .Take(pageSize)
+            .AsEnumerable();
+    }
+    public async Task<T?> GetById(int id)
     {
         var result = await _entities.FindAsync(id);
         return result;
