@@ -22,7 +22,7 @@ public class AuthController : ControllerBase
     /// </summary>
     /// <returns>If executed correctly, it returns a token</returns>
     [HttpPost("login")]
-    public async Task<IActionResult> AuthenticateAsync(AuthenticationRequestDTO request)
+    public async Task<IActionResult> AuthenticateAsync([FromForm] AuthenticationRequestDTO request)
     {
         return Ok(await _iAccountsServiceJwt.AuthenticateAsync(new AuthenticationRequestDTO
         {
