@@ -44,19 +44,9 @@ public class FixedTermDepositService : IFixedTermDepositService
         return true;
     }
 
-    public PagedList<FixedTermDeposit> GetFixedPaged(PageResourceParameters pageResourceParameters)
+    public PagedList<FixedTermDeposit> GetPagedFtD(PageResourceParameters pRp)
     {
-        if (pageResourceParameters == null)
-        {
-            throw new ArgumentNullException(nameof(pageResourceParameters));
-        }
-
-        var collection = _unitOfWork.FixedTermDepositRepository.GetAll().Result.AsQueryable().OrderBy(x => x.Id);
-
-        var col = collection.Where(x => x.User_id.Equals(pageResourceParameters.UserID));
-
-        return PagedList<FixedTermDeposit>.Create(col,
-            pageResourceParameters.Page,
-            pageResourceParameters.PageSize);
+        var x = _unitOfWork.FixedTermDepositRepository.FindAll().Result.OrderBy(x => x.User_id);
+        return PagedList<FixedTermDeposit>.PagedIQueryObj(x,pRp.Page,pRp.PageSize) ;
     }
 }

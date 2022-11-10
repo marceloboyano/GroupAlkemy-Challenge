@@ -17,6 +17,13 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     }
 
     /// Esta clase implementa un CRUD básico para cualquier entidad de Entity Framework
+    ///
+
+    public async Task<IQueryable<T>> FindAll()
+    {
+        return await Task.FromResult(_entities.AsNoTracking());
+    }
+
     public async Task<IEnumerable<T>> GetAll()
     {
         return await Task.FromResult(_entities.AsEnumerable());

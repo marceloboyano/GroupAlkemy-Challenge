@@ -15,8 +15,3 @@ public class PageResourceParameters
     }
 
 }
-public enum ResourceUriType
-{
-    previousPage,
-    nextPage
-}
