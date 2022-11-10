@@ -14,4 +14,14 @@ public class TransactionRepository : RepositoryBase<Transaction>, ITransactionRe
     {
         return await Task.FromResult(_context.Set<Transaction>().Where(t => t.User_id == userId).AsEnumerable());
     }
+
+    public async Task<IEnumerable<Transaction>> GetByUserPaging(int userId, int pageNumber, int pageSize)
+    {
+        return await Task.FromResult(_context.Set<Transaction>()
+            .Where(t => t.User_id == userId)
+            .OrderBy(x => x.Date)
+            .Skip(pageNumber * pageSize)
+            .Take(pageSize)
+            .AsEnumerable());
+    }
 }
