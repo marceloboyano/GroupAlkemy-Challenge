@@ -1,5 +1,7 @@
+using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Entities.Paged;
 using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Core.Services
@@ -67,5 +69,10 @@ namespace AlkemyWallet.Core.Services
             return true;
         }
 
+        public PagedList<Transaction> GetPagedTransactions(PageResourceParameters pRp)
+        {
+            var x = _unitOfWork.TransactionRepository.FindAll().Result.OrderBy(x => x.Date);
+            return PagedList<Transaction>.PagedIQueryObj(x, pRp.Page, pRp.PageSize);
+        }
     }
 }

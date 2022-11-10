@@ -1,5 +1,6 @@
 using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Entities.Paged;
 
 namespace AlkemyWallet.Core.Interfaces;
 
@@ -11,5 +12,10 @@ public interface ITransactionService
     Task<IEnumerable<Transaction>> GetTransactions(int userId);
     Task<IEnumerable<Transaction>> GetTransactionsPaging(int userId, int pageNumber, int pageSize);
     Task<Transaction?> GetTransactionById(int id, int userId);
+
     Task<bool> ValidateTransaction(Transaction transaction);
- }
+    PagedList<Transaction> GetPagedTransactions(PageResourceParameters pageResourceParameters);
+
+
+
+}
