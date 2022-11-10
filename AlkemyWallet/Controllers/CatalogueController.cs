@@ -80,7 +80,7 @@ public class CatalogueController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPost]
-    public async Task<ActionResult> PostCatalogue([FromForm] CatalogueForCreationDTO catalogueDTO)
+    public async Task<ActionResult> PostCatalogue(CatalogueForCreationDTO catalogueDTO)
     {
         await _catalogueService.InsertCatalogue(catalogueDTO);
         return Ok("Se ha creado el Catalogo exitosamente");
@@ -110,7 +110,7 @@ public class CatalogueController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPut("{id}")]
-    public async Task<ActionResult> PutCatalogue(int id, [FromForm] CatalogueForUpdateDTO catalogueDTO)
+    public async Task<ActionResult> PutCatalogue(int id, CatalogueForUpdateDTO catalogueDTO)
     {
         var result = await _catalogueService.UpdateCatalogues(id, catalogueDTO);
         if (!result) return NotFound("Catalogo No Encontrado");
