@@ -1,5 +1,7 @@
-﻿using AlkemyWallet.Core.Models;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Entities.Paged;
 
 namespace AlkemyWallet.Core.Interfaces;
 
@@ -11,4 +13,6 @@ public interface IUserService
     Task<bool> UpdateUser(int id, UserForUpdateDto userDTO);
     Task<bool> DeleteUser(int id);
     Task<(bool Success, string Message)> Exchange(int id, string userIdFromToken);
+
+    PagedList<User> GetPagedUser(PageResourceParameters pageResourceParameters);
 }

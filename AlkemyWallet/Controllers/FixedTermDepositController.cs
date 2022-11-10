@@ -37,12 +37,13 @@ public class FixedTermDepositController : Controller
             getPage.HasPrevious ? Url.Link("GetFixTermDeposit", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
 
         var HasNext = getPage.HasNext
-            ? Url.Link("GetFixTermDeposit", new { Page = pRp.Page + 1, pRp.PageSize }) : null;
+            ? Url.Link("GetFixTermDeposit", new { Page = pRp.Page + 1, pRp.PageSize })
+            : null;
 
         var HasDefault = Url.Link("GetFixTermDeposit", new { page = pRp.Page, pageSize = pRp.PageSize });
 
         var metadata = new
-            {  getPage.CurrentPage, HasPrev, HasNext , getPage.TotalPages, getPage.PageSize };
+            { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
 
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 

@@ -1,6 +1,9 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Entities.Paged;
+using AlkemyWallet.Repositories;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
 using System.Security.Claims;
@@ -86,5 +89,11 @@ public class CatalogueService : ICatalogueService
 
         await _unitOfWork.CatalogueRepository.Update(catalogueEntity);
         return await _unitOfWork.SaveChangesAsync() > 0;
+    }
+
+    public PagedList<Catalogue> GetCataloguePages(PageResourceParameters pRp)
+    {
+        var x = _unitOfWork.CatalogueByPoints.FindAll().Result.OrderBy(x => x.Points);
+        return PagedList<Catalogue>.PagedIQueryObj(x, pRp.Page, pRp.PageSize);
     }
 }
