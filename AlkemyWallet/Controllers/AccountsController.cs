@@ -46,7 +46,6 @@ public class AccountsController : ControllerBase
             ? Url.Link("GetAccount", new { Page = pRp.Page + 1, pRp.PageSize })
             : null;
 
-        var HasDefault = Url.Link("GetAccount", new { page = pRp.Page, pageSize = pRp.PageSize });
 
         var metadata = new
             { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };

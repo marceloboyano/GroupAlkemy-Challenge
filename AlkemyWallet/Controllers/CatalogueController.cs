@@ -50,8 +50,6 @@ public class CatalogueController : ControllerBase
             ? Url.Link("GetCatalogue", new { Page = pRp.Page + 1, pRp.PageSize })
             : null;
 
-        var HasDefault = Url.Link("GetCatalogue", new { page = pRp.Page, pageSize = pRp.PageSize });
-
         var metadata = new
             { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
 
