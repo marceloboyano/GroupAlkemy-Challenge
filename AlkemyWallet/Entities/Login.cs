@@ -2,7 +2,7 @@
 
 namespace AlkemyWallet.Entities;
 
-public class Login
+public class Login : SoftDeleteEntity
 {
     [Key] public string Email { get; set; } = string.Empty;
 

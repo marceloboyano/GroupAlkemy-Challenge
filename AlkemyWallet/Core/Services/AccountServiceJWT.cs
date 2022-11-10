@@ -10,6 +10,8 @@ using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Mvc;
+using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Core.Services;
 

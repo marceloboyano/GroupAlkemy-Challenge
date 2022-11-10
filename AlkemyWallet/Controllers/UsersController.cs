@@ -87,9 +87,7 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "Standard")]
     public async Task<ActionResult> UpdateUser(int id, [FromForm] UserForUpdateDto userDTO)
     {
-        return await _userService.UpdateUser(id, userDTO)
-            ? Ok("Successfully Modified User")
-            : NotFound("User not found");
+        return await _userService.UpdateUser(id, userDTO) ? Ok("Successfully Modified User") : NotFound("User not found");
     }
 
     /// <summary>
@@ -101,9 +99,7 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "Administrador")]
     public async Task<ActionResult> DeleteUser(int id)
     {
-        return await _userService.DeleteUser(id)
-            ? Ok($"User with Id {id} deleted")
-            : NotFound($"User with Id {id} not found");
+        return await _userService.DeleteUser(id) ? Ok($"User with Id {id} deleted") : NotFound($"User with Id {id} not found");
     }
 
     /// <summary>
