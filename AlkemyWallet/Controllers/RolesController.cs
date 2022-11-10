@@ -50,7 +50,7 @@ public class RolesController : ControllerBase
     /// <param name="roleDTO">Roles information</param>
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPost]
-    public async Task<ActionResult> InsertRole([FromForm] RoleDTO roleDTO)
+    public async Task<ActionResult> InsertRole(RoleDTO roleDTO)
     {
         return Ok(await _roleService.AddRole(roleDTO));
     }
@@ -61,7 +61,7 @@ public class RolesController : ControllerBase
     /// <param name="roleDTO">Roles information</param>
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateRole(int id, [FromForm] RoleForUpdateDTO roleDTO)
+    public async Task<ActionResult> UpdateRole(int id, RoleForUpdateDTO roleDTO)
     {
         bool result = await _roleService.UpdateRole(id, roleDTO);
         if (!result) return NotFound("Role not found");

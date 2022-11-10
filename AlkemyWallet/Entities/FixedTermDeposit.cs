@@ -21,9 +21,7 @@ public class FixedTermDeposit: SoftDeleteEntity
     public int Account_id { get; set; } = 0;
 
     [ForeignKey("Account_id")] public Account? Account { get; set; }
-
-
-    [MaxLength(255)]
+    
     [Column(TypeName = "decimal(18,4)")]
     [Required(ErrorMessage = "An Amount its Required")]
     public float Amount { get; set; } = 0;

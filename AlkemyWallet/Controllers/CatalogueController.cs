@@ -78,8 +78,9 @@ public class CatalogueController : ControllerBase
 
         if (catalogue is null) return NotFound("No existe ningún catalogo con el id especificado");
 
-
-        return Ok(catalogue);
+        var catalogoForShow = _mapper.Map<CatalogueForShowDTO>(catalogue);
+        return Ok(catalogoForShow);
+       
     }
 
     /// <summary>
@@ -90,8 +91,7 @@ public class CatalogueController : ControllerBase
     [HttpGet("user")]
     public async Task<IActionResult> GetCatalogueByPoints()
     {
-        int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        // var userDetail = await _userService.GetById(userId);
+        int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);      
         var catalogue = await _catalogueService.GetCatalogueByPoints(Convert.ToInt32(userId));
         if (!catalogue.Any()) return Ok("No cuenta con los puntos suficientes para adquirir algun producto.");
         return Ok(catalogue);
@@ -104,7 +104,7 @@ public class CatalogueController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPost]
-    public async Task<ActionResult> PostCatalogue([FromForm] CatalogueForCreationDTO catalogueDTO)
+    public async Task<ActionResult> PostCatalogue(CatalogueForCreationDTO catalogueDTO)
     {
         await _catalogueService.InsertCatalogue(catalogueDTO);
         return Ok("Se ha creado el Catalogo exitosamente");
@@ -122,7 +122,7 @@ public class CatalogueController : ControllerBase
         var result = await _catalogueService.DeleteCatalogue(id);
 
         if (!result)
-            return BadRequest("no se encontro el catalogo");
+            return NotFound("no se encontro el catalogo");
 
         return Ok("el catalogo ha sido eliminada");
     }
@@ -134,7 +134,7 @@ public class CatalogueController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPut("{id}")]
-    public async Task<ActionResult> PutCatalogue(int id, [FromForm] CatalogueForUpdateDTO catalogueDTO)
+    public async Task<ActionResult> PutCatalogue(int id, CatalogueForUpdateDTO catalogueDTO)
     {
         var result = await _catalogueService.UpdateCatalogues(id, catalogueDTO);
         if (!result) return NotFound("Catalogo No Encontrado");

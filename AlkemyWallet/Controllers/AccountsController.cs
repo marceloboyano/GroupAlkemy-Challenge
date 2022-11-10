@@ -81,7 +81,7 @@ public class AccountsController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Standard")]
     [HttpPost]
-    public async Task<ActionResult> PostAccount([FromForm] AccountForCreationDTO accountDTO)
+    public async Task<ActionResult> PostAccount(AccountForCreationDTO accountDTO)
     {
         await _accountsService.InsertAccounts(accountDTO);
         return Ok("Se ha creado la cuenta exitosamente");
@@ -94,7 +94,7 @@ public class AccountsController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPut("{id}")]
-    public async Task<ActionResult> PutCatalogue(int id, [FromForm] AccountForUpdateDTO accountDTO)
+    public async Task<ActionResult> PutCatalogue(int id, AccountForUpdateDTO accountDTO)
     {
         var result = await _accountsService.UpdateAccount(id, accountDTO);
         if (!result) return NotFound("Cuenta No Encontrado");

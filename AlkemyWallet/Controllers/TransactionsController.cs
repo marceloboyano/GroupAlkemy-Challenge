@@ -119,7 +119,7 @@ public class TransactionsController : ControllerBase
     public async Task<ActionResult> DeleteTransaction(int id)
     {
         var result = await _transactionService.DeleteTransaction(id);
-        if (!result) return BadRequest(TRAN_NOT_FOUND);
+        if (!result) return NotFound(TRAN_NOT_FOUND);
         return Ok(TRAN_DELETED);
     }
 
@@ -131,7 +131,7 @@ public class TransactionsController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateTransaction(int id, [FromForm] TransactionDTO transaction)
+    public async Task<ActionResult> UpdateTransaction(int id, TransactionDTO transaction)
     {
         Transaction tran = _mapper.Map<Transaction>(transaction);
         var result = await _transactionService.UpdateTransaction(id, tran);
@@ -146,7 +146,7 @@ public class TransactionsController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPost]
-    public async Task<ActionResult> InsertTransaction([FromForm] TransactionDTO transaction)
+    public async Task<ActionResult> InsertTransaction( TransactionDTO transaction)
     {
         transaction.Transaction_id = null;
         Transaction tran = _mapper.Map<Transaction>(transaction);

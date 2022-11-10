@@ -72,7 +72,7 @@ public class UsersController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPost]
     [Authorize(Roles = "Standard")]
-    public async Task<ActionResult> InsertUser([FromForm] UserForCreatoionDto userDTO)
+    public async Task<ActionResult> InsertUser(UserForCreatoionDto userDTO)
     {
         return Ok(await _userService.AddUser(userDTO));
     }
@@ -85,9 +85,13 @@ public class UsersController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPut("{id}")]
     [Authorize(Roles = "Standard")]
-    public async Task<ActionResult> UpdateUser(int id, [FromForm] UserForUpdateDto userDTO)
+    public async Task<ActionResult> UpdateUser(int id, UserForUpdateDto userDTO)
     {
-        return await _userService.UpdateUser(id, userDTO) ? Ok("Successfully Modified User") : NotFound("User not found");
+
+        var result = await _userService.UpdateUser(id, userDTO);
+        if (!result) return NotFound("Usuario No Encontrado");
+        return Ok("Usuario Modificado con exito");
+       
     }
 
     /// <summary>
@@ -103,9 +107,9 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    ///     Exchange the user's points for a product from the catalog.
+    ///  Exchange the user's points for a product from the catalog.
     /// </summary>
-    /// <param name="id">Catalog Id</param>
+    /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("product/{id}")]
     [Authorize(Roles = "Standard")]
