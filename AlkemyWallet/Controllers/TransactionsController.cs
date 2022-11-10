@@ -72,7 +72,7 @@ public class TransactionsController : ControllerBase
     public async Task<ActionResult> DeleteTransaction(int id)
     {
         var result = await _transactionService.DeleteTransaction(id);
-        if (!result) return BadRequest(TRAN_NOT_FOUND);
+        if (!result) return NotFound(TRAN_NOT_FOUND);
         return Ok(TRAN_DELETED);
     }
 
