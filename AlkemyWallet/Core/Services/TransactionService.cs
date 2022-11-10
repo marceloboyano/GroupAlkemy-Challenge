@@ -19,6 +19,10 @@ namespace AlkemyWallet.Core.Services
             return transactions.OrderBy(x=>x.Date);
         }
 
+        public async Task<IEnumerable<Transaction>> GetTransactionsPaging(int userId, int pageNumber, int pageSize)
+        {
+            return await _unitOfWork.TransactionRepository!.GetByUserPaging(userId,pageNumber, pageSize);
+        }
         public async Task<Transaction?> GetTransactionById(int id, int userId)
         {
             var tran = await _unitOfWork.TransactionRepository!.GetById(id);
@@ -62,5 +66,6 @@ namespace AlkemyWallet.Core.Services
 
             return true;
         }
-     }
+
+    }
 }

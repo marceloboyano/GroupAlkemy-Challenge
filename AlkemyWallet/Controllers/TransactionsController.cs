@@ -47,6 +47,21 @@ public class TransactionsController : ControllerBase
     }
 
     /// <summary>
+    /// Lists transactions made by the user making the request ordered by date over page
+    /// </summary>
+    /// <param name="page">Page number starting in 0</param>
+    /// <returns>Transactions page list ordered by date</returns>
+    [HttpGet]
+    [Authorize(Roles = "Standard")]
+    public async Task<IActionResult> GetTransactionsPaging(int page)
+    {
+        int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
+        var transactions = await _transactionService.GetTransactionsPaging(userId, page, 10);
+        var transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions);
+        return Ok(transactionsForShow);
+    }
+
+    /// <summary>
     /// Obtains the details of the transaction from the id, as long as it has been carried out by the registered user
     /// </summary>
     /// <param name="id">Transaction Id</param>
