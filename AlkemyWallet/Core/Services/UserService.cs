@@ -28,7 +28,7 @@ public class UserService : IUserService
 
     public async Task<User> GetById(int id)
     {
-        var user = await _unitOfWork.UserDetailsRepository!.GetById(id);
+        var user = await _unitOfWork.UserDetailsRepository!.GetUserWithDetails(id);
         return user;
     }
 
@@ -56,23 +56,28 @@ public class UserService : IUserService
 
     public async Task<bool> UpdateUser(int id, UserForUpdateDto userDTO)
     {
+
+
         User userEntity = await _unitOfWork.UserRepository!.GetById(id);
-        if (userEntity is not null)
-        {
-            userEntity.First_name = string.IsNullOrEmpty(userDTO.First_name) ? userEntity.First_name : userDTO.First_name;
-            userEntity.Last_name = string.IsNullOrEmpty(userDTO.Last_name) ? userEntity.Last_name : userDTO.Last_name;
-            userEntity.Rol_id = userDTO.Rol_id.Equals(0) ? userEntity.Rol_id : userDTO.Rol_id;
 
-            userEntity.Password = string.IsNullOrEmpty(userDTO.Password) ? userEntity.Password : BCrypt.Net.BCrypt.HashPassword(userDTO.Password); 
+        if (userEntity is null)
+                return false;
 
-            userEntity.Points = userDTO.Points;
+            if (userDTO.First_name is not null) 
+                userEntity.First_name = userDTO.First_name;
+       
+            if (userDTO.Last_name is not null)
+                 userEntity.Last_name = userDTO.Last_name; 
 
-            await _unitOfWork.SaveChangesAsync();
-            return true;
-        }
-        else
-
-            return false;   
+            if (userDTO.Password is not null)
+                 userEntity.Password = userDTO.Password;
+        
+            if (userDTO.Points is not null)
+                 userEntity.Points = userDTO.Points.Value;       
+          
+            await _unitOfWork.UserRepository!.Update(userEntity);
+            return await _unitOfWork.SaveChangesAsync() > 0;     
+      
 
     }
 
