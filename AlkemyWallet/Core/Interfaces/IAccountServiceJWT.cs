@@ -7,6 +7,6 @@ namespace AlkemyWallet.Core.Interfaces;
 
 public interface IAccountServiceJWT
 {
-    Task<Response<AuthenticationResponseDTO>> AuthenticateAsync(AuthenticationRequestDTO request);
+    Task<string> AuthenticateAsync(AuthenticationRequestDTO request);
     Task<Response<AuthenticatedUserDTO>> AuthenticatedUserAsync(List<Claim> userdataTokenList);
 }

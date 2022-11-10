@@ -5,9 +5,11 @@ using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Core.Models.DTO.UserLogin;
+using AlkemyWallet.Entities;
 using AlkemyWallet.Entities.JWT;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -29,14 +31,12 @@ public class AccountServiceJWT : IAccountServiceJWT
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Response<AuthenticationResponseDTO>> AuthenticateAsync(AuthenticationRequestDTO request)
+    public async Task<string> AuthenticateAsync(AuthenticationRequestDTO request)
     {
-        AuthenticationResponseDTO responseSinAutenticar = new();
-        var user = await _iUserRepository.GetUserByEmail(request.Email, request.Password);
+        User user = await _iUserRepository.GetUserByEmail(request.Email, request.Password);
 
         if (user is null)
-            return new Response<AuthenticationResponseDTO>(responseSinAutenticar, false,
-                "El email o la contraseña no coinciden con lo registrado en la base de datos");
+            return $"El email o la contraseña no coinciden con lo registrado en la base de datos";
 
         ApplicationUser userIdentity = new()
         {
@@ -46,19 +46,9 @@ public class AccountServiceJWT : IAccountServiceJWT
             RolId = user.Rol_id
         };
 
-        var jwtSecurityToken = await GenerateJWTToken(userIdentity);
-        AuthenticationResponseDTO response = new();
-        response.Id = user.Id.ToString();
-        response.JWToken = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
-        response.Email = user.Email;
-        response.Name = user.First_name;
+        JwtSecurityToken jwtSecurityToken = await GenerateJWTToken(userIdentity);
 
-        List<string> rolesList = new();
-        rolesList.Add(user.Rol_id.ToString());
-        response.Roles = rolesList.ToList();
-        response.IsVerified = true;
-
-        return new Response<AuthenticationResponseDTO>(response, $"Usuario autenticado {user.First_name}");
+        return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
     }
 
     public async Task<Response<AuthenticatedUserDTO>> AuthenticatedUserAsync(List<Claim> userdataTokenList)
