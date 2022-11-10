@@ -39,7 +39,7 @@ public class TransactionsController : ControllerBase
     /// Lists transactions made by the user making the request ordered by date
     /// </summary>
     /// <returns>Transactions list ordered by date</returns>
-    [HttpGet]
+
     [HttpGet(Name = "GetTransactions")]
     [Authorize(Roles = "Standard")]
     public async Task<IActionResult> GetTransactions(int Page)
