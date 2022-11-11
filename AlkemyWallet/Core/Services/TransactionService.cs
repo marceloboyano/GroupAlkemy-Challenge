@@ -11,12 +11,10 @@ namespace AlkemyWallet.Core.Services
     {
         
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IAccountService _accountService;
  
-         public TransactionService(IUnitOfWork unitOfWork, IAccountService accountService)
+         public TransactionService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
-            _accountService = accountService;
         }
         public async Task<IEnumerable<Transaction>> GetTransactions(int userId)
         {
@@ -84,12 +82,6 @@ namespace AlkemyWallet.Core.Services
             if(user == null) return false;
 
             return true;
-        }
-
-        public PagedList<Transaction> GetPagedTransactions(PageResourceParameters pRp)
-        {
-            var x = _unitOfWork.TransactionRepository.FindAll().Result.OrderBy(x => x.Date);
-            return PagedList<Transaction>.PagedIQueryObj(x, pRp.Page, pRp.PageSize);
         }
     }
 }
