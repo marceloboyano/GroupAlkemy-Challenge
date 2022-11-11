@@ -1,12 +1,8 @@
-﻿using AlkemyWallet.Core.Helper;
-using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
-using AlkemyWallet.Entities.Paged;
-using AlkemyWallet.Repositories;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
-using System.Security.Claims;
 using static challenge.Services.ImageService;
 
 namespace AlkemyWallet.Core.Services;
@@ -32,7 +28,6 @@ public class CatalogueService : ICatalogueService
 
     public async Task<IEnumerable<Catalogue>> GetCatalogueByPoints(int userId)
     {
-
         var userEntity = await _unitOfWork.UserRepository!.GetById(userId);
         var catalogues = await _unitOfWork.CatalogueByPoints!.GetByPoints(userEntity!.Points);
 
@@ -91,9 +86,9 @@ public class CatalogueService : ICatalogueService
         return await _unitOfWork.SaveChangesAsync() > 0;
     }
 
-    public async Task<(int totalPages, IEnumerable<Catalogue> recordList)> GetCataloguesPaging(int pageNumber, int pageSize)
+    public async Task<(int totalPages, IEnumerable<Catalogue> recordList)> GetCataloguesPaging(int pageNumber,
+        int pageSize)
     {
         return await _unitOfWork.CatalogueRepository!.GetAllPaging(pageNumber, pageSize);
     }
-
 }

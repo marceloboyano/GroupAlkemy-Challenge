@@ -19,10 +19,10 @@ public class RolesController : ControllerBase
         _mapper = mapper;
     }
 
-   /// <summary>
-   /// Lists of the Roles
-   /// </summary>
-   /// <returns>Roles list</returns>
+    /// <summary>
+    ///     Lists of the Roles
+    /// </summary>
+    /// <returns>Roles list</returns>
     [HttpGet]
     [Authorize]
     public async Task<ActionResult<RolesDTO>> GetRoles()
@@ -33,7 +33,7 @@ public class RolesController : ControllerBase
     }
 
     /// <summary>
-    /// Obtains the details of the Roles from the id
+    ///     Obtains the details of the Roles from the id
     /// </summary>
     /// <param name="id">Rol Id</param>
     /// <returns>Role detail</returns>
@@ -44,8 +44,9 @@ public class RolesController : ControllerBase
         var roles = await _roleService.GetRoleById(id);
         return Ok(roles);
     }
+
     /// <summary>
-    /// Creates the Roles
+    ///     Creates the Roles
     /// </summary>
     /// <param name="roleDTO">Roles information</param>
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
@@ -54,8 +55,9 @@ public class RolesController : ControllerBase
     {
         return Ok(await _roleService.AddRole(roleDTO));
     }
+
     /// <summary>
-    /// Updates the Roles with the Id received in the request
+    ///     Updates the Roles with the Id received in the request
     /// </summary>
     /// <param name="id">Roles Id</param>
     /// <param name="roleDTO">Roles information</param>
@@ -63,12 +65,13 @@ public class RolesController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateRole(int id, RoleForUpdateDTO roleDTO)
     {
-        bool result = await _roleService.UpdateRole(id, roleDTO);
+        var result = await _roleService.UpdateRole(id, roleDTO);
         if (!result) return NotFound("Role not found");
         return Ok("Successfully Modified Role");
     }
+
     /// <summary>
-    /// Delete a Role
+    ///     Delete a Role
     /// </summary>
     /// <param name="id">Role Id</param>
     /// <returns></returns>

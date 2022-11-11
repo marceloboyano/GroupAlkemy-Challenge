@@ -4,8 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AlkemyWallet.Entities;
 
 [Table("Catalogue")]
-
-public class Catalogue: SoftDeleteEntity
+public class Catalogue : SoftDeleteEntity
 
 {
     [Key] public int Id { get; set; }

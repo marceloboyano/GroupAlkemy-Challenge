@@ -1,10 +1,10 @@
+using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
-using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
 using AlkemyWallet.Entities;
-using AlkemyWallet.Core.Helper;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Controllers;
@@ -13,7 +13,6 @@ namespace AlkemyWallet.Controllers;
 [Route("[controller]")]
 public class TransactionsController : ControllerBase
 {
- 
     private readonly IMapper _mapper;
     private readonly ITransactionService _transactionService;
 
@@ -24,7 +23,7 @@ public class TransactionsController : ControllerBase
     }
 
     /// <summary>
-    /// Lists transactions made by the user making the request ordered by date over page
+    ///     Lists transactions made by the user making the request ordered by date over page
     /// </summary>
     /// <param name="page">Page number starting in 1</param>
     /// <returns>Transactions page list ordered by date</returns>
@@ -32,16 +31,17 @@ public class TransactionsController : ControllerBase
     [Authorize(Roles = "Standard")]
     public async Task<IActionResult> GetTransactionsPaging(int page)
     {
-        int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
+        var userId =
+            Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
         var transactions = await _transactionService.GetTransactionsPaging(userId, page, PageListed.PAGESIZE);
-        IEnumerable<TransactionDTO> transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions.recordList);
-        PageListed pagedTransactions = new PageListed(page,transactions.totalPages);
-        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Transactions",null, protocol: "https"));
+        var transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions.recordList);
+        var pagedTransactions = new PageListed(page, transactions.totalPages);
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Transactions", null, "https"));
         return Ok(transactionsForShow);
     }
 
     /// <summary>
-    /// Obtains the details of the transaction from the id, as long as it has been carried out by the registered user
+    ///     Obtains the details of the transaction from the id, as long as it has been carried out by the registered user
     /// </summary>
     /// <param name="id">Transaction Id</param>
     /// <returns>Transaction detail</returns>
@@ -49,7 +49,8 @@ public class TransactionsController : ControllerBase
     [Authorize(Roles = "Standard")]
     public async Task<IActionResult> GetTransactionById(int id)
     {
-        int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
+        var userId =
+            Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
         var transaction = await _transactionService.GetTransactionById(id, userId);
         if (transaction is null) return NotFound(TRAN_NOT_EXISTS);
         var transactionForShow = _mapper.Map<TransactionDTO>(transaction);
@@ -57,7 +58,7 @@ public class TransactionsController : ControllerBase
     }
 
     /// <summary>
-    /// Deletes the transaction with the id received in the request.
+    ///     Deletes the transaction with the id received in the request.
     /// </summary>
     /// <param name="id">Transaction Id</param>
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
@@ -71,7 +72,7 @@ public class TransactionsController : ControllerBase
     }
 
     /// <summary>
-    /// Updates the transaction with the id received in the request.
+    ///     Updates the transaction with the id received in the request.
     /// </summary>
     /// <param name="id">Transaction Id</param>
     /// <param name="transaction">Transaction information</param>
@@ -80,14 +81,14 @@ public class TransactionsController : ControllerBase
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateTransaction(int id, TransactionDTO transaction)
     {
-        Transaction tran = _mapper.Map<Transaction>(transaction);
+        var tran = _mapper.Map<Transaction>(transaction);
         var result = await _transactionService.UpdateTransaction(id, tran);
         if (!result) return NotFound(TRAN_NOT_FOUND);
         return Ok(TRAN_UPDATED);
     }
 
     /// <summary>
-    /// Creates the transaction.
+    ///     Creates the transaction.
     /// </summary>
     /// <param name="transaction">Transaction information</param>
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
@@ -96,7 +97,7 @@ public class TransactionsController : ControllerBase
     public async Task<ActionResult> InsertTransaction(TransactionDTO transaction)
     {
         transaction.Transaction_id = null;
-        Transaction tran = _mapper.Map<Transaction>(transaction);
+        var tran = _mapper.Map<Transaction>(transaction);
         var result = await _transactionService.InsertTransaction(tran);
         if (!result) return NotFound(TRAN_NOT_CREATED);
         return Ok(TRAN_CREATED);
