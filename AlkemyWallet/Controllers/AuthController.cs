@@ -23,11 +23,12 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> AuthenticateAsync(AuthenticationRequestDTO request)
     {
-        return Ok(await _iAccountsServiceJwt.AuthenticateAsync(new AuthenticationRequestDTO
+        var returnToken = await _iAccountsServiceJwt.AuthenticateAsync(new AuthenticationRequestDTO
         {
             Email = request.Email,
             Password = request.Password
-        }));
+        });
+        return returnToken.Equals("false") ? NotFound("El email o la contraseña no coinciden con lo registrado en la base de datos") : Ok(returnToken);            
     }
 
     /// <summary>
