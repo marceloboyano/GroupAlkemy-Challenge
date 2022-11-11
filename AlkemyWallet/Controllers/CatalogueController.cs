@@ -28,8 +28,9 @@ public class CatalogueController : ControllerBase
     /// <summary>
     /// Lists Catalogues made by the user making the request ordered by points
     /// </summary>
+    /// <param name="page">Page number starting in 1</param>
     /// <returns>Catalogues list ordered by points</returns>
-    //[Authorize]
+    [Authorize]
     [HttpGet()]
     public async Task<IActionResult> GetCatalogue(int page)
     {

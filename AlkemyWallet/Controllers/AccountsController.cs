@@ -28,6 +28,7 @@ public class AccountsController : ControllerBase
     /// <summary>
     /// Lists of the Accounts
     /// </summary>
+    /// <param name="page">Page number starting in 1</param>
     /// <returns>Accounts list </returns>
     //[Authorize(Roles = "Administrador")]
     [HttpGet()]
