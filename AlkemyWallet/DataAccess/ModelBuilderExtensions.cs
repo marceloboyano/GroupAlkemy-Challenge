@@ -62,7 +62,7 @@ public static class ModelBuilderExtensions
         {
             var currentQueryFilter = entityTypeBuilder.Metadata.GetQueryFilter();
             var currentExpressionFilter = ReplacingExpressionVisitor.Replace(
-                currentQueryFilter.Parameters.Single(), parameterType, currentQueryFilter.Body);
+                currentQueryFilter!.Parameters.Single(), parameterType, currentQueryFilter.Body);
             expressionFilter = Expression.AndAlso(currentExpressionFilter, expressionFilter);
         }
 
@@ -83,7 +83,7 @@ public static class ExpressionExtensions
         return (Expression<Func<TTarget, bool>>)visitor.Visit(root);
     }
 
-    private class ParameterTypeVisitor<TSource, TTarget> : ExpressionVisitor
+    private sealed class ParameterTypeVisitor<TSource, TTarget> : ExpressionVisitor
     {
         private ReadOnlyCollection<ParameterExpression> _parameters;
 

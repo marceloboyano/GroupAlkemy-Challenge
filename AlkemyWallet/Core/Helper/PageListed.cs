@@ -25,8 +25,8 @@ public class PageListed
         response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
     }
 
-    private string CreateUrl(string? urlBase, int page)
+    private string? CreateUrl(string? urlBase, int page)
     {
-        return urlBase + (urlBase!.Contains("?") ? "&" : "?") + "page=" + page;
+        return urlBase + (urlBase!.Contains('?') ? "&" : "?") + "page=" + page;
     }
 }

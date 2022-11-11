@@ -9,12 +9,10 @@ public interface IUnitOfWork : IDisposable
     IRepositoryBase<Account> AccountRepository { get; }
     IAccountRepository AccountWithDetails { get; }
     ITransactionRepository TransactionRepository { get; }
-    IRepositoryBase<FixedTermDeposit> FixedTermDepositRepository { get; }
+    IFixedTermDepositRepository FixedTermDepositRepository { get; }
     IRepositoryBase<Role> RoleRepository { get; }
     IRepositoryBase<Catalogue> CatalogueRepository { get; }
     ICatalogueRepository CatalogueByPoints { get; }
-    IFixedTermDepositRepository FixedTermDepositDetailsRepository { get; }
-
 
     int SaveChanges();
     Task<int> SaveChangesAsync();
