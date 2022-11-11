@@ -22,6 +22,9 @@
         public const string ACC_TRANSFER_SUCCESSFUL_MESSAGE = "Transferencia exitosa.";
         public const string ACC_BLOCK_SUCCESSFUL_MESSAGE = "La cuenta ha sido Bloqueada.";
         public const string ACC_UNBLOCK_SUCCESSFUL_MESSAGE = "La cuenta ha sido Desbloqueada.";
+        public const string ACC_SUCCESSFUL_ACCOUNT_MESSAGE = "Se ha creado la cuenta exitosamente";
+        public const string ACC_SUCCESSFUL_ACCOUNT_MODIFIED_MESSAGE = "Cuenta Modificada con exito";
+        public const string ACC_NOT_MATCHED_MESSAGE = "El id de cuenta ingresado no coincide con el id de usuario registrado en el sistema";
 
     }
 }
