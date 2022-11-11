@@ -84,12 +84,11 @@ public class TransactionsController : ControllerBase
     [Authorize(Roles = "Standard")]
     public async Task<IActionResult> GetTransactionsPaging(int page)
     {
-        int pageSize = 1;
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        var transactions = await _transactionService.GetTransactionsPaging(userId, page, pageSize);
+        var transactions = await _transactionService.GetTransactionsPaging(userId, page, PageListed.PAGESIZE);
         IEnumerable<TransactionDTO> transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions.recordList);
-        PageListed pagedTransactions = new PageListed(page, pageSize, transactions.totalPages);
-        pagedTransactions.AddHeader(Response, Url.Link("GetTransactions", null));
+        PageListed pagedTransactions = new PageListed(page,transactions.totalPages);
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Transactions",null, protocol: "https"));
         return Ok(transactionsForShow);
     }
 
