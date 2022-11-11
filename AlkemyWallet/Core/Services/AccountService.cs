@@ -180,7 +180,7 @@ public class AccountService : IAccountService
         if (accountEntity is null)
             return (Success: false, Message: ACC_NOT_FOUND_MESSAGE);
 
-        if (accountEntity.IsBlocked == true)
+        if (accountEntity.IsBlocked)
             return (Success: false, Message: ACC_BLOCK_MESSAGE);
 
         accountEntity.IsBlocked = true;
@@ -198,7 +198,7 @@ public class AccountService : IAccountService
         if (accountEntity is null)
             return (Success: false, Message: ACC_NOT_FOUND_MESSAGE);
 
-        if (accountEntity.IsBlocked == false)
+        if (!accountEntity.IsBlocked)
             return (Success: false, Message: ACC_BLOCK_MESSAGE);
 
         accountEntity.IsBlocked = false;

@@ -16,5 +16,5 @@ public interface IAccountService
     Task<(bool Success, string Message)> Transfer(int id, int amount, int toAccountId);
     Task<(bool Success, string Message)> Block(int id);
     Task<(bool Success, string Message)> Unblock(int id);
-    Task<(int totalPages, IEnumerable<Account> recordList)> GetAccountsPaging(int page, int pAGESIZE); 
+    Task<(int totalPages, IEnumerable<Account> recordList)> GetAccountsPaging(int pageNumber, int pageSize); 
 }
