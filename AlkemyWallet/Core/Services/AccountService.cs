@@ -3,7 +3,7 @@ using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
-using static challenge.Services.ImageService;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Core.Services;
 
@@ -35,9 +35,9 @@ public class AccountService : IAccountService
 
     public async Task InsertAccounts(AccountForCreationDTO accountDTO)
     {
-        
-             
-        var account = _mapper.Map<Account>(accountDTO);  
+
+
+        var account = _mapper.Map<Account>(accountDTO);
         await _unitOfWork.AccountRepository!.Insert(account);
         await _unitOfWork.SaveChangesAsync();
     }
@@ -49,7 +49,7 @@ public class AccountService : IAccountService
         if (accountEntity is null)
             return false;
 
-        if (accountDTO.User_id is not null) accountEntity.User_id = accountDTO.User_id.Value;       
+        if (accountDTO.User_id is not null) accountEntity.User_id = accountDTO.User_id.Value;
 
         if (accountDTO.CreationDate is not null)
             accountEntity.CreationDate = (DateTime)accountDTO.CreationDate;
@@ -58,114 +58,118 @@ public class AccountService : IAccountService
 
 
         await _unitOfWork.AccountRepository!.Update(accountEntity);
-        return await _unitOfWork.SaveChangesAsync()>0;
+        return await _unitOfWork.SaveChangesAsync() > 0;
     }
     public async Task<(bool Success, string Message)> DeleteAccount(int id)
     {
         var fixedTermEntity = await _unitOfWork.FixedTermDepositRepository!.GetById(id);
         if (fixedTermEntity is not null)
-            return (false, "No se puede eliminar la cuenta mientras tenga inversiones o depositos pendientes");
-         await _unitOfWork.AccountRepository!.Delete(id);
-        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "Cuenta eliminada.");
-        else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
-       
+            return (Success: false, Message: ACC_PENDING_TRANSACTIONS_MESSAGE);
+        await _unitOfWork.AccountRepository!.Delete(id);
+        if (await _unitOfWork.SaveChangesAsync() > 0)
+            return (true, Message: ACC_DELETED_MESSAGE);
+        else
+            return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
+
     }
 
     public async Task<(bool Success, string Message)> Deposit(int id, int amount)
     {
-        //el monto ingresado debe ser mayor a 0
-        if (amount > 0)
+
+        if (amount <= 0)
         {
-            var account = await _unitOfWork.AccountWithDetails!.GetByIdWithDetail(id);
-
-            if (account is null)
-                return (false, "El id de la cuenta que ingreso no fue encontrado.");
-            if (account.IsBlocked)
-                return (false, "Su cuenta esta bloqueada, no puede realizar operaciones.");
-
-            //se suman los puntos al usuario un 2% redondeado en el deposito
-            account.Money += amount;
-            decimal porcentaje = amount * 2m / 100m;
-            porcentaje = Math.Round(porcentaje);
-            account.User!.Points += Convert.ToInt32(porcentaje);
-
-            var transaction = new Transaction()
-            {
-                Amount = amount,
-                Concept = "Deposit",
-                Date = DateTime.Now,
-                Type = "Topup",
-                User_id = id,
-                Account_id = account.Id,
-            };
-
-            await _unitOfWork.TransactionRepository!.Insert(transaction);
-
-
-            await _unitOfWork.AccountRepository!.Update(account);
-
-            if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "Deposito exitoso.");
-            else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
+            return (false, Message: ACC_AMOUNT_LESS_THAN_ZERO_MESSAGE);
         }
+
+        var account = await _unitOfWork.AccountWithDetails!.GetByIdWithDetail(id);
+
+        if (account is null)
+            return (false, Message: ACC_NOT_FOUND_MESSAGE);
+        if (account.IsBlocked)
+            return (false, Message: ACC_BLOCK_MESSAGE);
+
+        //se suman los puntos al usuario un 2% redondeado en el deposito
+        account.Money += amount;
+        decimal porcentaje = amount * 2m / 100m;
+        porcentaje = Math.Round(porcentaje);
+        account.User!.Points += Convert.ToInt32(porcentaje);
+
+        var transaction = new Transaction()
+        {
+            Amount = amount,
+            Concept = "Deposit",
+            Date = DateTime.Now,
+            Type = "Topup",
+            User_id = id,
+            Account_id = account.Id,
+        };
+
+        await _unitOfWork.TransactionRepository!.Insert(transaction);
+
+
+        await _unitOfWork.AccountRepository!.Update(account);
+
+        if (await _unitOfWork.SaveChangesAsync() > 0)
+            return (Success: true, Message: ACC_DELETED_MESSAGE);
         else
-        {
-            return (false, "El importe ingresado debe ser mayor a 0");
-        }
+            return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
+
 
     }
 
     public async Task<(bool Success, string Message)> Transfer(int id, int amount, int toAccountId)
     {
-        if (amount > 0)
+        if (amount <= 0)
         {
-
-            //traigo el usuario que transfiere el dinero
-            var account = await _unitOfWork.AccountWithDetails!.GetByIdWithDetail(id);
-
-            if (account is null)
-                return (false, "El id de la cuenta que ingreso no fue encontrado.");
-            if (account.IsBlocked)
-                return (false, "Su cuenta esta bloqueada, no puede realizar operaciones.");
-            if (account.Money < amount)
-                return (false, "El dinero disponible en la cuenta es menor que el importe a transferir.");
-            account.Money -= amount;
-            decimal porcentaje = amount * 3m / 100m;
-            porcentaje = Math.Round(porcentaje);
-            account.User!.Points += Convert.ToInt32(porcentaje);
-            if(id == toAccountId)
-                return (false, "La cuenta de destino es igual a la de origen. No se puede transferir a la misma cuenta.");
-
-            //traigo el usuario que recibe el dinero
-            var toAccount = await _unitOfWork.AccountWithDetails.GetByIdWithDetail(toAccountId);
-            if (toAccount is null)
-                return (false, "La cuenta a la que desea transferir no fue encontrada.");
-            if (toAccount.IsBlocked)
-                return (false, "La cuenta a la que desea transferir esta bloqueada, no puede realizar operaciones.");
-            toAccount.Money += amount;
-
-            var transaction = new Transaction()
-            {
-                Amount = amount,
-                Concept = "transfer",
-                Date = DateTime.Now,
-                Type = "Payment",
-                User_id = id,
-                Account_id = account.Id,
-                To_Account = toAccountId,
-            };
-
-            await _unitOfWork.TransactionRepository!.Insert(transaction);
-            await _unitOfWork.AccountRepository!.Update(account);
-            await _unitOfWork.AccountRepository.Update(toAccount);
-
-            if(await _unitOfWork.SaveChangesAsync()>0)  return (true, "Transferencia exitosa.");
-            else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
-
+            return (Success: false, Message: ACC_AMOUNT_LESS_THAN_ZERO_MESSAGE);
         }
+
+
+        //traigo el usuario que transfiere el dinero
+        var account = await _unitOfWork.AccountWithDetails!.GetByIdWithDetail(id);
+
+        if (account is null)
+            return (Success: false, Message: ACC_NOT_FOUND_MESSAGE);
+        if (account.IsBlocked)
+            return (Success: false, Message: ACC_BLOCK_MESSAGE);
+        if (account.Money < amount)
+            return (Success: false, Message: ACC_INSUFFICIENT_FUNDS_MESSAGE);
+        account.Money -= amount;
+        decimal porcentaje = amount * 3m / 100m;
+        porcentaje = Math.Round(porcentaje);
+        account.User!.Points += Convert.ToInt32(porcentaje);
+        if (id == toAccountId)
+            return (Success: false, Message: ACC_SAME_ACCOUNT_MESSAGE);
+
+        //traigo el usuario que recibe el dinero
+        var toAccount = await _unitOfWork.AccountWithDetails.GetByIdWithDetail(toAccountId);
+        if (toAccount is null)
+            return (Success: false, Message: ACC_NOT_FOUND_MESSAGE);
+        if (toAccount.IsBlocked)
+            return (Success: false, Message: ACC_BLOCK_MESSAGE);
+        toAccount.Money += amount;
+
+        var transaction = new Transaction()
+        {
+            Amount = amount,
+            Concept = "transfer",
+            Date = DateTime.Now,
+            Type = "Payment",
+            User_id = id,
+            Account_id = account.Id,
+            To_Account = toAccountId,
+        };
+
+        await _unitOfWork.TransactionRepository!.Insert(transaction);
+        await _unitOfWork.AccountRepository!.Update(account);
+        await _unitOfWork.AccountRepository.Update(toAccount);
+
+        if (await _unitOfWork.SaveChangesAsync() > 0)
+            return (Success: true, Message: ACC_TRANSFER_SUCCESSFUL_MESSAGE);
         else
-        {
-            return (false, "El importe ingresado debe ser mayor a 0");
-        }
+            return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
+
+
 
     }
 
@@ -174,32 +178,34 @@ public class AccountService : IAccountService
         var accountEntity = await _unitOfWork.AccountRepository!.GetById(id);
 
         if (accountEntity is null)
-            return (false, "El id de la cuenta que ingreso no fue encontrado.");
+            return (Success: false, Message: ACC_NOT_FOUND_MESSAGE);
 
         if (accountEntity.IsBlocked == true)
-            return (false, "La cuenta que intenta bloquear ya se encuentra bloqueada.");
+            return (Success: false, Message: ACC_BLOCK_MESSAGE);
 
-          accountEntity.IsBlocked = true;          
+        accountEntity.IsBlocked = true;
 
         await _unitOfWork.AccountRepository!.Update(accountEntity);
-        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "La cuenta ha sido Bloqueada.");
-        else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
+        if (await _unitOfWork.SaveChangesAsync() > 0)
+            return (Success: true, Message: ACC_BLOCK_SUCCESSFUL_MESSAGE );
+        else
+            return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
     }
     public async Task<(bool Success, string Message)> Unblock(int id)
     {
         var accountEntity = await _unitOfWork.AccountRepository!.GetById(id);
 
         if (accountEntity is null)
-            return (false, "El id de la cuenta que ingreso no fue encontrado.");
+            return (Success: false, Message: ACC_NOT_FOUND_MESSAGE);
 
         if (accountEntity.IsBlocked == false)
-            return (false, "La cuenta que intenta desbloquear ya se encuentra desbloqueada.");
+            return (Success: false, Message: ACC_BLOCK_MESSAGE);
 
         accountEntity.IsBlocked = false;
 
         await _unitOfWork.AccountRepository!.Update(accountEntity);
-        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "La cuenta ha sido Desbloqueada.");
-        else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
+        if (await _unitOfWork.SaveChangesAsync() > 0) return (Success: true, Message: ACC_UNBLOCK_SUCCESSFUL_MESSAGE);
+        else return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
     }
 
 }
