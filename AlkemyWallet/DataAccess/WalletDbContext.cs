@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.Linq.Expressions;
 using System.Reflection.Emit;
+using AlkemyWallet.DataAccess.Seeds;
 
 namespace AlkemyWallet.DataAccess;
 
@@ -30,7 +31,16 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
         foreach (var foreingKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             foreingKey.DeleteBehavior = DeleteBehavior.Restrict;
         base.OnModelCreating(builder);
-        new DbInitializer(builder).Seed();
+        
+       
+        new AccountSeeder(builder).SeedAccount();
+        new CatalogueSeeder(builder).SeedCatalogue();
+        new FixedTermDepositSeeder(builder).SeedFixedTermDeposit();
+        new RoleSeeder(builder).SeedRole();
+        new TransactionSeeder(builder).SeedTransaction();
+        new UserSeeder(builder).SeedUser();
+
+
 
         //en construccion
         ///////////////////////
