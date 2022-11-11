@@ -1,22 +1,22 @@
 ﻿using AlkemyWallet.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace AlkemyWallet.DataAccess.Seeds
+namespace AlkemyWallet.DataAccess.Seeds;
+
+public class TransactionSeeder
 {
-    public class TransactionSeeder
+    private readonly ModelBuilder _modelBuilder;
+
+    public TransactionSeeder(ModelBuilder modelBuilder)
     {
-        private readonly ModelBuilder _modelBuilder;
+        _modelBuilder = modelBuilder;
+    }
 
-        public TransactionSeeder(ModelBuilder modelBuilder)
+    public void SeedTransaction()
+    {
+        _modelBuilder.Entity<Transaction>(p =>
         {
-            _modelBuilder = modelBuilder;
-        }
-
-        public void SeedTransaction()
-        {
-            _modelBuilder.Entity<Transaction>(p =>
-            {
-                p.HasData(
+            p.HasData(
                 new Transaction
                 {
                     Transaction_id = 1,
@@ -88,8 +88,6 @@ namespace AlkemyWallet.DataAccess.Seeds
                     User_id = 1
                 }
             );
-            });
-        }
+        });
     }
-
 }

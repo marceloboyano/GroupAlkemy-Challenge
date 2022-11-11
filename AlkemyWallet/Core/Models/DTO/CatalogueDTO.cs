@@ -31,13 +31,13 @@ public class CatalogueForUpdateDTO
 
     [Range(0, 9999)] public int? Points { get; set; }
 }
+
 public class CatalogueForShowDTO
 {
- public int Id { get; set; }
-public string Product_description { get; set; } = string.Empty;
+    public int Id { get; set; }
+    public string Product_description { get; set; } = string.Empty;
 
-public string Image { get; set; } = string.Empty;
+    public string Image { get; set; } = string.Empty;
 
-public int Points { get; set; } = 0;
-
+    public int Points { get; set; } = 0;
 }

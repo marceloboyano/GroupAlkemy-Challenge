@@ -1,3 +1,5 @@
+using System.Reflection;
+using System.Text.Json.Serialization;
 using AlkemyWallet.Core.Helper.ExceptionGenerics;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Services;
@@ -5,20 +7,13 @@ using AlkemyWallet.DataAccess;
 using AlkemyWallet.Repositories;
 using AlkemyWallet.Repositories.Interfaces;
 using challenge.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 // ignora los ciclos cuando trae registros relacionados
 builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-    });
+    .AddJsonOptions(options => { options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles; });
 
 
 // Add services to the container.
@@ -99,9 +94,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddCors(opt =>
 {
     opt.AddDefaultPolicy(o => o
-       .AllowAnyHeader()
-       .AllowAnyOrigin()
-       .AllowAnyMethod());
+        .AllowAnyHeader()
+        .AllowAnyOrigin()
+        .AllowAnyMethod());
 });
 
 var app = builder.Build();
@@ -120,17 +115,13 @@ using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<WalletDbContext>();
     context.Database.Migrate();
-
 }
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Alkemy Wallet V1");
-    });
+    app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Alkemy Wallet V1"); });
 }
 
 app.UseHttpsRedirection();
