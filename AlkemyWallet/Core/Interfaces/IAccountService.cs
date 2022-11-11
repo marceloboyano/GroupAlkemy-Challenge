@@ -1,5 +1,7 @@
-﻿using AlkemyWallet.Core.Models;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Entities.Paged;
 
 namespace AlkemyWallet.Core.Interfaces;
 
@@ -14,5 +16,5 @@ public interface IAccountService
     Task<(bool Success, string Message)> Transfer(int id, int amount, int toAccountId);
     Task<(bool Success, string Message)> Block(int id);
     Task<(bool Success, string Message)> Unblock(int id);
-    Task<(int totalPages, IEnumerable<Account> recordList)> GetAccountsPaging(int pageNumber, int pageSize);
+    Task<(int totalPages, IEnumerable<Account> recordList)> GetAccountsPaging(int pageNumber, int pageSize); 
 }

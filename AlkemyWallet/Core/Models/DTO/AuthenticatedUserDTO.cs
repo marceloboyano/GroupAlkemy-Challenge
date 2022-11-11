@@ -1,9 +1,10 @@
-﻿namespace AlkemyWallet.Core.Models.DTO;
-
-public class AuthenticatedUserDTO
+﻿namespace AlkemyWallet.Core.Models.DTO
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Rol { get; set; } = string.Empty;
+    public class AuthenticatedUserDTO
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string Rol { get; set; } = string.Empty;
+    }
 }

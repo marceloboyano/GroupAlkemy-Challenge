@@ -1,6 +1,8 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Entities.Paged;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
 using static AlkemyWallet.Core.Helper.Constants;
@@ -33,6 +35,8 @@ public class AccountService : IAccountService
 
     public async Task InsertAccounts(AccountForCreationDTO accountDTO)
     {
+
+
         var account = _mapper.Map<Account>(accountDTO);
         await _unitOfWork.AccountRepository!.Insert(account);
         await _unitOfWork.SaveChangesAsync();
@@ -56,7 +60,6 @@ public class AccountService : IAccountService
         await _unitOfWork.AccountRepository!.Update(accountEntity);
         return await _unitOfWork.SaveChangesAsync() > 0;
     }
-
     public async Task<(bool Success, string Message)> DeleteAccount(int id)
     {
         var fixedTermEntity = await _unitOfWork.FixedTermDepositRepository!.GetById(id);
@@ -65,12 +68,18 @@ public class AccountService : IAccountService
         await _unitOfWork.AccountRepository!.Delete(id);
         if (await _unitOfWork.SaveChangesAsync() > 0)
             return (true, Message: ACC_DELETED_MESSAGE);
-        return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
+        else
+            return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
+
     }
 
     public async Task<(bool Success, string Message)> Deposit(int id, int amount)
     {
-        if (amount <= 0) return (false, Message: ACC_AMOUNT_LESS_THAN_ZERO_MESSAGE);
+
+        if (amount <= 0)
+        {
+            return (false, Message: ACC_AMOUNT_LESS_THAN_ZERO_MESSAGE);
+        }
 
         var account = await _unitOfWork.AccountWithDetails!.GetByIdWithDetail(id);
 
@@ -81,18 +90,18 @@ public class AccountService : IAccountService
 
         //se suman los puntos al usuario un 2% redondeado en el deposito
         account.Money += amount;
-        var porcentaje = amount * 2m / 100m;
+        decimal porcentaje = amount * 2m / 100m;
         porcentaje = Math.Round(porcentaje);
         account.User!.Points += Convert.ToInt32(porcentaje);
 
-        var transaction = new Transaction
+        var transaction = new Transaction()
         {
             Amount = amount,
             Concept = "Deposit",
             Date = DateTime.Now,
             Type = "Topup",
             User_id = id,
-            Account_id = account.Id
+            Account_id = account.Id,
         };
 
         await _unitOfWork.TransactionRepository!.Insert(transaction);
@@ -102,12 +111,18 @@ public class AccountService : IAccountService
 
         if (await _unitOfWork.SaveChangesAsync() > 0)
             return (Success: true, Message: ACC_DELETED_MESSAGE);
-        return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
+        else
+            return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
+
+
     }
 
     public async Task<(bool Success, string Message)> Transfer(int id, int amount, int toAccountId)
     {
-        if (amount <= 0) return (Success: false, Message: ACC_AMOUNT_LESS_THAN_ZERO_MESSAGE);
+        if (amount <= 0)
+        {
+            return (Success: false, Message: ACC_AMOUNT_LESS_THAN_ZERO_MESSAGE);
+        }
 
 
         //traigo el usuario que transfiere el dinero
@@ -120,7 +135,7 @@ public class AccountService : IAccountService
         if (account.Money < amount)
             return (Success: false, Message: ACC_INSUFFICIENT_FUNDS_MESSAGE);
         account.Money -= amount;
-        var porcentaje = amount * 3m / 100m;
+        decimal porcentaje = amount * 3m / 100m;
         porcentaje = Math.Round(porcentaje);
         account.User!.Points += Convert.ToInt32(porcentaje);
         if (id == toAccountId)
@@ -134,7 +149,7 @@ public class AccountService : IAccountService
             return (Success: false, Message: ACC_BLOCK_MESSAGE);
         toAccount.Money += amount;
 
-        var transaction = new Transaction
+        var transaction = new Transaction()
         {
             Amount = amount,
             Concept = "transfer",
@@ -142,7 +157,7 @@ public class AccountService : IAccountService
             Type = "Payment",
             User_id = id,
             Account_id = account.Id,
-            To_Account = toAccountId
+            To_Account = toAccountId,
         };
 
         await _unitOfWork.TransactionRepository!.Insert(transaction);
@@ -151,7 +166,11 @@ public class AccountService : IAccountService
 
         if (await _unitOfWork.SaveChangesAsync() > 0)
             return (Success: true, Message: ACC_TRANSFER_SUCCESSFUL_MESSAGE);
-        return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
+        else
+            return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
+
+
+
     }
 
     public async Task<(bool Success, string Message)> Block(int id)
@@ -168,10 +187,10 @@ public class AccountService : IAccountService
 
         await _unitOfWork.AccountRepository!.Update(accountEntity);
         if (await _unitOfWork.SaveChangesAsync() > 0)
-            return (Success: true, Message: ACC_BLOCK_SUCCESSFUL_MESSAGE);
-        return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
+            return (Success: true, Message: ACC_BLOCK_SUCCESSFUL_MESSAGE );
+        else
+            return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
     }
-
     public async Task<(bool Success, string Message)> Unblock(int id)
     {
         var accountEntity = await _unitOfWork.AccountRepository!.GetById(id);
@@ -186,7 +205,7 @@ public class AccountService : IAccountService
 
         await _unitOfWork.AccountRepository!.Update(accountEntity);
         if (await _unitOfWork.SaveChangesAsync() > 0) return (Success: true, Message: ACC_UNBLOCK_SUCCESSFUL_MESSAGE);
-        return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
+        else return (Success: false, Message: DB_NOT_EXPECTED_RESULT_MESSAGE);
     }
 
     public async Task<(int totalPages, IEnumerable<Account> recordList)> GetAccountsPaging(int pageNumber, int pageSize)

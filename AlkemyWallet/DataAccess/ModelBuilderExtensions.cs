@@ -9,38 +9,40 @@ namespace AlkemyWallet.DataAccess;
 
 public static class ModelBuilderExtensions
 {
-    private static readonly MethodInfo SetQueryFilterMethod = typeof(ModelBuilderExtensions)
-        .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
-        .Single(t => t.IsGenericMethod && t.Name == nameof(SetQueryFilter));
+    static readonly MethodInfo SetQueryFilterMethod = typeof(ModelBuilderExtensions)
+            .GetMethods(BindingFlags.NonPublic | BindingFlags.Static)
+            .Single(t => t.IsGenericMethod && t.Name == nameof(SetQueryFilter));
 
     public static void SetQueryFilterOnAllEntities<TEntityInterface>(
         this ModelBuilder builder,
         Expression<Func<TEntityInterface, bool>> filterExpression)
     {
         foreach (var type in builder.Model.GetEntityTypes()
-                     .Where(t => t.BaseType == null)
-                     .Select(t => t.ClrType)
-                     .Where(t => typeof(TEntityInterface).IsAssignableFrom(t)))
+            .Where(t => t.BaseType == null)
+            .Select(t => t.ClrType)
+            .Where(t => typeof(TEntityInterface).IsAssignableFrom(t)))
+        {
             builder.SetEntityQueryFilter(
                 type,
                 filterExpression);
+        }
     }
 
-    private static void SetEntityQueryFilter<TEntityInterface>(
+    static void SetEntityQueryFilter<TEntityInterface>(
         this ModelBuilder builder,
         Type entityType,
         Expression<Func<TEntityInterface, bool>> filterExpression)
     {
         SetQueryFilterMethod
             .MakeGenericMethod(entityType, typeof(TEntityInterface))
-            .Invoke(null, new object[] { builder, filterExpression });
+           .Invoke(null, new object[] { builder, filterExpression });
     }
 
-    private static void SetQueryFilter<TEntity, TEntityInterface>(
+    static void SetQueryFilter<TEntity, TEntityInterface>(
         this ModelBuilder builder,
         Expression<Func<TEntityInterface, bool>> filterExpression)
-        where TEntityInterface : class
-        where TEntity : class, TEntityInterface
+            where TEntityInterface : class
+            where TEntity : class, TEntityInterface
     {
         var concreteExpression = filterExpression
             .Convert<TEntityInterface, TEntity>();
@@ -49,8 +51,7 @@ public static class ModelBuilderExtensions
     }
 
     // CREDIT: This comment by magiak on GitHub https://github.com/dotnet/efcore/issues/10275#issuecomment-785916356
-    private static void AppendQueryFilter<T>(this EntityTypeBuilder entityTypeBuilder,
-        Expression<Func<T, bool>> expression)
+    static void AppendQueryFilter<T>(this EntityTypeBuilder entityTypeBuilder, Expression<Func<T, bool>> expression)
         where T : class
     {
         var parameterType = Expression.Parameter(entityTypeBuilder.Metadata.ClrType);
@@ -83,7 +84,7 @@ public static class ExpressionExtensions
         return (Expression<Func<TTarget, bool>>)visitor.Visit(root);
     }
 
-    private class ParameterTypeVisitor<TSource, TTarget> : ExpressionVisitor
+    class ParameterTypeVisitor<TSource, TTarget> : ExpressionVisitor
     {
         private ReadOnlyCollection<ParameterExpression> _parameters;
 

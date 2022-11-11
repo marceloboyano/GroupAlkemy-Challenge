@@ -1,37 +1,45 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Entities.Paged;
 using AlkemyWallet.Repositories.Interfaces;
+
 using AutoMapper;
+using System.Linq;
+using System.Xml.Linq;
+using static challenge.Services.ImageService;
 
 namespace AlkemyWallet.Core.Services;
 
 public class FixedTermDepositService : IFixedTermDepositService
 {
+    
     private readonly IMapper _mapper;
 
     private readonly IUnitOfWork _unitOfWork;
 
     public FixedTermDepositService(IUnitOfWork unitOfWork, IMapper mapper)
     {
+
         _unitOfWork = unitOfWork;
         _mapper = mapper;
     }
 
-
+      
     public async Task<FixedTermDeposit> GetFixedTermDepositsById(int id, int userId)
     {
-        var fixedTermDepositsEntity = await _unitOfWork.FixedTermDepositDetailsRepository!.GetFixedTermById(id, userId);
+        var fixedTermDepositsEntity = await _unitOfWork.FixedTermDepositDetailsRepository!.GetFixedTermById(id,userId);
         return fixedTermDepositsEntity;
     }
 
     public async Task<IEnumerable<FixedTermDeposit>> GetFixedTermDepositsByUserId(int userId)
-    {
-        var fixedTermDepositsByUserId = await _unitOfWork.FixedTermDepositDetailsRepository!.GetByUser(userId);
+        {
+            var fixedTermDepositsByUserId = await _unitOfWork.FixedTermDepositDetailsRepository!.GetByUser(userId);
         fixedTermDepositsByUserId = fixedTermDepositsByUserId.OrderBy(x => x.Creation_date);
         return fixedTermDepositsByUserId;
-    }
-
+        }
+    
 
     public async Task<bool> DeleteFixedTermDeposit(int id)
     {
@@ -46,7 +54,7 @@ public class FixedTermDepositService : IFixedTermDepositService
         if (depositEntity is null)
             return false;
 
-        if (depositDTO.User_id is not null)
+        if (depositDTO.User_id is not null) 
             depositEntity.User_id = depositDTO.User_id.Value;
 
         if (depositDTO.Account_id is not null)
@@ -59,7 +67,7 @@ public class FixedTermDepositService : IFixedTermDepositService
             depositEntity.Creation_date = depositDTO.Creation_date.Value;
 
         if (depositDTO.Closing_date is not null)
-            depositEntity.Closing_date = depositDTO.Closing_date.Value;
+            depositEntity.Closing_date = depositDTO.Closing_date.Value;       
 
 
         await _unitOfWork.FixedTermDepositRepository.Update(depositEntity);
@@ -69,9 +77,13 @@ public class FixedTermDepositService : IFixedTermDepositService
 
     public async Task InsertFixedTermDeposit(DepositForCreationDTO depositDTO)
     {
+
+        
         var deposit = _mapper.Map<FixedTermDeposit>(depositDTO);
         deposit.Creation_date = DateTime.Now;
         await _unitOfWork.FixedTermDepositRepository!.Insert(deposit);
         await _unitOfWork.SaveChangesAsync();
     }
+
+
 }

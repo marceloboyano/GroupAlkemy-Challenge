@@ -1,7 +1,12 @@
-﻿using AlkemyWallet.DataAccess.Seeds;
-using AlkemyWallet.Entities;
+﻿using AlkemyWallet.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Linq.Expressions;
+using System.Reflection.Emit;
+using AlkemyWallet.DataAccess.Seeds;
 
 namespace AlkemyWallet.DataAccess;
 
@@ -26,14 +31,15 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
         foreach (var foreingKey in builder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
             foreingKey.DeleteBehavior = DeleteBehavior.Restrict;
         base.OnModelCreating(builder);
-
-
+        
+       
         new AccountSeeder(builder).SeedAccount();
         new CatalogueSeeder(builder).SeedCatalogue();
         new FixedTermDepositSeeder(builder).SeedFixedTermDeposit();
         new RoleSeeder(builder).SeedRole();
         new TransactionSeeder(builder).SeedTransaction();
         new UserSeeder(builder).SeedUser();
+
 
 
         //en construccion
@@ -50,9 +56,9 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(builder);
     }
 
-    private static void SetQueryFilter<TEntity>(ModelBuilder builder) where TEntity : class
+    static void SetQueryFilter<TEntity>(ModelBuilder builder) where TEntity : class
     {
-        builder.Entity<TEntity>().HasQueryFilter(m => !EF.Property<bool>(m, "IsDeleted"));
+        builder.Entity<TEntity>().HasQueryFilter(m => !(EF.Property<bool>(m, "IsDeleted")));
     }
 
     public override int SaveChanges()
@@ -61,8 +67,7 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
         return base.SaveChanges();
     }
 
-    public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
-        CancellationToken cancellationToken = default)
+    public override async Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
     {
         UpdateSoftDeleteStatuses();
         return await base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
@@ -70,7 +75,8 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
 
     private void UpdateSoftDeleteStatuses()
     {
-        foreach (var entry in ChangeTracker.Entries())
+        foreach (EntityEntry entry in ChangeTracker.Entries())
+        {
             if (entry.Entity.GetType().GetInterfaces().Contains(typeof(ISoftDelete)))
                 switch (entry.State)
                 {
@@ -83,5 +89,6 @@ public class WalletDbContext : IdentityDbContext<ApplicationUser>
                         entry.CurrentValues["DeletedDate"] = DateTime.Now;
                         break;
                 }
+        }
     }
 }

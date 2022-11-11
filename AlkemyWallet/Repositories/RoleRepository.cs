@@ -14,9 +14,10 @@ public class RoleRepository : RepositoryBase<Role>, IRoleRepository
 
     public async Task<bool> ExistRolByName(string rolName)
     {
-        var rol = await _context.Roles!.FirstOrDefaultAsync(u => u.Name.Equals(rolName))!;
+        Role? rol = await _context.Roles!.FirstOrDefaultAsync(u => u.Name.Equals(rolName))!;
         if (rol is not null)
             return true;
-        return false;
+        else
+            return false;
     }
 }

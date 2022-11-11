@@ -1,8 +1,10 @@
-﻿namespace AlkemyWallet.Repositories.Interfaces;
+﻿using AlkemyWallet.Entities;
+
+namespace AlkemyWallet.Repositories.Interfaces;
 
 public interface IRepositoryBase<T> where T : class
 {
-    Task<IQueryable<T>> FindAll();
+    Task <IQueryable<T>> FindAll();
     Task<IEnumerable<T>> GetAll();
     Task<(int totalPages, IEnumerable<T> recordList)> GetAllPaging(int pageNumber, int pageSize);
     Task<T?> GetById(int id);

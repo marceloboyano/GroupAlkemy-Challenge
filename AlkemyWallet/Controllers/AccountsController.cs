@@ -22,23 +22,23 @@ public class AccountsController : ControllerBase
     }
 
     /// <summary>
-    ///     Lists of the Accounts
+    /// Lists of the Accounts
     /// </summary>
     /// <param name="page">Page number starting in 1</param>
     /// <returns>Accounts list </returns>
     [Authorize(Roles = "Administrador")]
-    [HttpGet]
+    [HttpGet()]
     public async Task<IActionResult> GetAccounts(int page)
     {
         var result = await _accountsService.GetAccountsPaging(page, PageListed.PAGESIZE);
-        var resultDTO = _mapper.Map<IEnumerable<AccountForShowDTO>>(result.recordList);
-        var pagedTransactions = new PageListed(page, result.totalPages);
-        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Accounts", null, "https"));
-        return Ok(resultDTO);
+        IEnumerable<AccountForShowDTO> resultDTO = _mapper.Map<IEnumerable<AccountForShowDTO>>(result.recordList);
+        PageListed pagedTransactions = new PageListed(page, result.totalPages);
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Accounts", null, protocol: "https"));
+        return Ok(resultDTO); 
     }
 
     /// <summary>
-    ///     Obtains the details of the Accounts from the id
+    /// Obtains the details of the Accounts from the id
     /// </summary>
     /// <param name="id">Accounts Id</param>
     /// <returns>Accounts detail</returns>
@@ -52,9 +52,8 @@ public class AccountsController : ControllerBase
 
         return Ok(account);
     }
-
     /// <summary>
-    ///     Creates the Accounts.
+    /// Creates the Accounts.
     /// </summary>
     /// <param name="accountDTO">Accountse information</param>
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
@@ -65,9 +64,8 @@ public class AccountsController : ControllerBase
         await _accountsService.InsertAccounts(accountDTO);
         return Ok(ACC_SUCCESSFUL_ACCOUNT_MESSAGE);
     }
-
     /// <summary>
-    ///     Updates the Accounts with the id received in the request.
+    /// Updates the Accounts with the id received in the request.
     /// </summary>
     /// <param name="id">Accounts Id</param>
     /// <param name="accountDTO">Accounts information</param>
@@ -80,9 +78,8 @@ public class AccountsController : ControllerBase
         if (!result) return NotFound(ACC_NOT_FOUND_MESSAGE);
         return Ok(ACC_SUCCESSFUL_ACCOUNT_MODIFIED_MESSAGE);
     }
-
     /// <summary>
-    ///     Delete an account only if it has no pending investments or loans.
+    /// Delete an account only if it has no pending investments or loans.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -97,9 +94,8 @@ public class AccountsController : ControllerBase
 
         return Ok(result.Message);
     }
-
     /// <summary>
-    ///     Make a deposit of money into an account.
+    /// Make a deposit of money into an account.
     /// </summary>
     /// <param name="id"></param>
     /// <param name="amount"></param>
@@ -109,7 +105,7 @@ public class AccountsController : ControllerBase
     public async Task<ActionResult> PostDeposit(int id, int amount)
     {
         var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
-        if (int.Parse(userIdFromToken) != id)
+        if (Int32.Parse(userIdFromToken) != id)
             return BadRequest(ACC_NOT_MATCHED_MESSAGE);
 
         var result = await _accountsService.Deposit(id, amount);
@@ -117,10 +113,11 @@ public class AccountsController : ControllerBase
             return Ok(result.Message);
 
         return BadRequest(result.Message);
-    }
 
+
+    }
     /// <summary>
-    ///     Transfer money from one account to another.
+    /// Transfer money from one account to another.
     /// </summary>
     /// <param name="id"></param>
     /// <param name="amount"></param>
@@ -131,19 +128,20 @@ public class AccountsController : ControllerBase
     public async Task<ActionResult> PostTransfer(int id, int amount, int toAccountId)
     {
         var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
-        if (int.Parse(userIdFromToken) != id)
+        if (Int32.Parse(userIdFromToken) != id)
             return BadRequest(ACC_NOT_MATCHED_MESSAGE);
 
         var result = await _accountsService.Transfer(id, amount, toAccountId);
         if (result.Success)
             return Ok(result.Message);
         return BadRequest(result.Message);
-    }
 
+
+    }
     /// <summary>
-    ///     Block an account so that it cannot carry out operations.
+    /// Block an account so that it cannot carry out operations.
     /// </summary>
-    /// <param name="id"></param>
+    /// <param name="id"></param>    
     /// <returns></returns>
     [Authorize(Roles = "Standard")]
     [HttpPut("block/{id}")]
@@ -155,9 +153,9 @@ public class AccountsController : ControllerBase
     }
 
     /// <summary>
-    ///     Unblock an account so that it cannot carry out operations.
+    /// Unblock an account so that it cannot carry out operations.
     /// </summary>
-    /// <param name="id">Account Id</param>
+    /// <param name="id">Account Id</param>    
     /// <returns></returns>
     [Authorize(Roles = "Standard")]
     [HttpPut("unblock/{id}")]
@@ -167,4 +165,6 @@ public class AccountsController : ControllerBase
         if (!result.Success) return NotFound(result.Message);
         return Ok(result.Message);
     }
-}
+
+
+} 
