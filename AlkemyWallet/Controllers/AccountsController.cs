@@ -30,7 +30,7 @@ public class AccountsController : ControllerBase
     /// </summary>
     /// <param name="page">Page number starting in 1</param>
     /// <returns>Accounts list </returns>
-    //[Authorize(Roles = "Administrador")]
+    [Authorize(Roles = "Administrador")]
     [HttpGet()]
     public async Task<IActionResult> GetAccounts(int page)
     {
@@ -38,7 +38,7 @@ public class AccountsController : ControllerBase
         IEnumerable<AccountForShowDTO> resultDTO = _mapper.Map<IEnumerable<AccountForShowDTO>>(result.recordList);
         PageListed pagedTransactions = new PageListed(page, result.totalPages);
         pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Accounts", null, protocol: "https"));
-        return Ok(resultDTO); ;
+        return Ok(resultDTO); 
     }
 
     /// <summary>
