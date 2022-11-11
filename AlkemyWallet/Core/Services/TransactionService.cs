@@ -1,5 +1,7 @@
+using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Entities.Paged;
 using AlkemyWallet.Repositories.Interfaces;
 
 namespace AlkemyWallet.Core.Services
@@ -19,6 +21,10 @@ namespace AlkemyWallet.Core.Services
             return transactions.OrderBy(x=>x.Date);
         }
 
+        public async Task<(int totalPages, IEnumerable<Transaction> recordList)> GetTransactionsPaging(int userId, int pageNumber, int pageSize)
+        {
+            return await _unitOfWork.TransactionRepository!.GetByUserPaging(userId,pageNumber, pageSize);
+        }
         public async Task<Transaction?> GetTransactionById(int id, int userId)
         {
             var tran = await _unitOfWork.TransactionRepository!.GetById(id);
@@ -54,13 +60,19 @@ namespace AlkemyWallet.Core.Services
         {
             if (transaction.Amount <= 0) return false;
 
-            Account account = await _unitOfWork.AccountRepository!.GetById(transaction.Account_id);
+            Account? account = await _unitOfWork.AccountRepository.GetById(transaction.Account_id);
             if((account == null) || (account.User_id!=transaction.User_id) ) return false;
 
-            User user = await _unitOfWork.UserRepository!.GetById(transaction.User_id);
+            User? user = await _unitOfWork.UserRepository.GetById(transaction.User_id);
             if(user == null) return false;
 
             return true;
         }
-     }
+
+        public PagedList<Transaction> GetPagedTransactions(PageResourceParameters pRp)
+        {
+            var x = _unitOfWork.TransactionRepository.FindAll().Result.OrderBy(x => x.Date);
+            return PagedList<Transaction>.PagedIQueryObj(x, pRp.Page, pRp.PageSize);
+        }
+    }
 }

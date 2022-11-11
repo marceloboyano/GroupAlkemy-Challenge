@@ -4,7 +4,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AlkemyWallet.Entities;
 
 [Table("FixedTermDeposit")]
+
 public class FixedTermDeposit: SoftDeleteEntity
+
 {
     [Key] public int Id { get; set; }
 

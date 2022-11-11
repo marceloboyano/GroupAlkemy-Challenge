@@ -1,9 +1,12 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Core.Services;
+using AlkemyWallet.Entities.Paged;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 
 namespace AlkemyWallet.Controllers;
 
@@ -25,12 +28,35 @@ public class AccountsController : ControllerBase
     /// </summary>
     /// <returns>Accounts list </returns>
     [Authorize(Roles = "Administrador")]
-    [HttpGet]
-    public async Task<IActionResult> GetAccounts()
+    [HttpGet(Name = "GetAccount")]
+    public async Task<IActionResult> GetAccounts(int Page)
     {
-        var accounts = await _accountsService.GetAccounts();
 
-        return Ok(accounts);
+        var ID = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
+        if (Page == 0 || ID == null) Page = 1;
+        var pagesiz = 1;
+
+        PageResourceParameters pRp = new() { UserID = ID, Page = Page, PageSize = pagesiz };
+        var getPage = _accountsService.GetPagedAccount(pRp);
+
+        var HasPrev =
+            getPage.HasPrevious ? Url.Link("GetAccount", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
+
+        var HasNext = getPage.HasNext
+            ? Url.Link("GetAccount", new { Page = pRp.Page + 1, pRp.PageSize })
+            : null;
+
+
+        var metadata = new
+            { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
+
+        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+
+        return Ok(getPage);
+
+        // var accounts = await _accountsService.GetAccounts();
+        //
+        // return Ok(accounts);
     }
 
     /// <summary>

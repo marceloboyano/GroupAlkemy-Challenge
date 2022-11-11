@@ -1,6 +1,8 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Entities.Paged;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
@@ -58,7 +60,7 @@ public class UserService : IUserService
     {
 
 
-        User userEntity = await _unitOfWork.UserRepository!.GetById(id);
+        User? userEntity = await _unitOfWork.UserRepository.GetById(id);
 
         if (userEntity is null)
                 return false;
@@ -121,4 +123,8 @@ public class UserService : IUserService
         else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
     }
 
+    public async Task<(int totalPages, IEnumerable<User> recordList)> GetUsersPaging(int pageNumber, int pageSize)
+    {
+        return await _unitOfWork.UserRepository!.GetAllPaging(pageNumber, pageSize);
+    }
 }

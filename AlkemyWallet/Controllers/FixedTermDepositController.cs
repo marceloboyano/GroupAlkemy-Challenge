@@ -33,7 +33,7 @@ public class FixedTermDepositController : Controller
     {
         var userIdFromToken = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);        
         var fixedTermDeposit = await _pListS.GetFixedTermDepositsByUserId(userIdFromToken);
-        if (fixedTermDeposit is null) return NotFound("No se ha encontrado ninguna inversión realizada por el usuario.");
+        if (fixedTermDeposit is null) return NotFound("No se ha encontrado ninguna inversiï¿½n realizada por el usuario.");
         var fixedTermDepositForShow = _mapper.Map<IEnumerable<DepositForShowDTO>>(fixedTermDeposit);
         return Ok(fixedTermDepositForShow);
     }
@@ -47,7 +47,7 @@ public class FixedTermDepositController : Controller
     {
         var userIdFromToken = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);       
         var fixedTermDeposit = await _pListS.GetFixedTermDepositsById(id, userIdFromToken);
-        if (fixedTermDeposit is null) return NotFound("No existe inversión con ese id o esta intentando consultar inversiones de otros usuarios.");
+        if (fixedTermDeposit is null) return NotFound("No existe inversiï¿½n con ese id o esta intentando consultar inversiones de otros usuarios.");
         var fixedTermDepositForShow = _mapper.Map<FixedTermDepositForShowDTO>(fixedTermDeposit);
         return Ok(fixedTermDepositForShow);
     }
@@ -64,9 +64,9 @@ public class FixedTermDepositController : Controller
         var result = await _pListS.DeleteFixedTermDeposit(id);
 
         if (!result)
-            return NotFound("No se encontro ninguna inversión con ese id.");
+            return NotFound("No se encontro ninguna inversiï¿½n con ese id.");
 
-        return Ok("La inversión ha sido eliminada");
+        return Ok("La inversiï¿½n ha sido eliminada");
     }
 
     /// <summary>
@@ -80,8 +80,8 @@ public class FixedTermDepositController : Controller
     public async Task<ActionResult> PutFixedTermDeposit(int id, [FromForm] DepositForUpdateDTO depositDTO)
     {
         var result = await _pListS.UpdateDeposit(id, depositDTO);
-        if (!result) return NotFound("No hay ninguna inversión con ese id");
-        return Ok("La inversión ha sido Modificada con exito");
+        if (!result) return NotFound("No hay ninguna inversiï¿½n con ese id");
+        return Ok("La inversiï¿½n ha sido Modificada con exito");
     }
 
     /// <summary>
@@ -94,6 +94,6 @@ public class FixedTermDepositController : Controller
     public async Task<ActionResult> PostFixedTermDeposit([FromForm] DepositForCreationDTO depositDTO)
     {
         await _pListS.InsertFixedTermDeposit(depositDTO);
-        return Ok("Se ha creado la inversión exitosamente");
+        return Ok("Se ha creado la inversiï¿½n exitosamente");
     }
 }

@@ -5,6 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Core.Services;
+using AlkemyWallet.Entities.Paged;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
+using AlkemyWallet.Core.Helper;
 
 namespace AlkemyWallet.Controllers;
 
@@ -25,7 +29,7 @@ public class TransactionsController : ControllerBase
 
     private readonly IMapper _mapper;
     private readonly ITransactionService _transactionService;
-    
+
     public TransactionsController(ITransactionService transactionService, IMapper mapper)
     {
         _transactionService = transactionService;
@@ -33,16 +37,19 @@ public class TransactionsController : ControllerBase
     }
 
     /// <summary>
-    /// Lists transactions made by the user making the request ordered by date
+    /// Lists transactions made by the user making the request ordered by date over page
     /// </summary>
-    /// <returns>Transactions list ordered by date</returns>
+    /// <param name="page">Page number starting in 1</param>
+    /// <returns>Transactions page list ordered by date</returns>
     [HttpGet]
     [Authorize(Roles = "Standard")]
-    public async Task<IActionResult> GetTransactions()
+    public async Task<IActionResult> GetTransactionsPaging(int page)
     {
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        var transactions = await _transactionService.GetTransactions(userId);
-        var transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions);
+        var transactions = await _transactionService.GetTransactionsPaging(userId, page, PageListed.PAGESIZE);
+        IEnumerable<TransactionDTO> transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions.recordList);
+        PageListed pagedTransactions = new PageListed(page,transactions.totalPages);
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Transactions",null, protocol: "https"));
         return Ok(transactionsForShow);
     }
 
@@ -99,7 +106,7 @@ public class TransactionsController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPost]
-    public async Task<ActionResult> InsertTransaction( TransactionDTO transaction)
+    public async Task<ActionResult> InsertTransaction(TransactionDTO transaction)
     {
         transaction.Transaction_id = null;
         Transaction tran = _mapper.Map<Transaction>(transaction);

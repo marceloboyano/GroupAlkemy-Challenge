@@ -1,6 +1,8 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
+using AlkemyWallet.Entities.Paged;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
 using static challenge.Services.ImageService;
@@ -202,4 +204,9 @@ public class AccountService : IAccountService
         else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
     }
 
+    public PagedList<Account> GetPagedAccount(PageResourceParameters pRp)
+    {
+        var x = _unitOfWork.AccountRepository.FindAll().Result.OrderBy(x => x.User_id);
+        return PagedList<Account>.PagedIQueryObj(x, pRp.Page, pRp.PageSize);
+    }
 }

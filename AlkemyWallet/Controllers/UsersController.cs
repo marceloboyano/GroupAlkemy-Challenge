@@ -1,10 +1,13 @@
+using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Core.Services;
+using AlkemyWallet.Entities.Paged;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Text;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json;
 
 namespace AlkemyWallet.Controllers;
 
@@ -25,17 +28,19 @@ public class UsersController : ControllerBase
     /// Retrieve all users
     /// </summary>
     /// <returns>User list</returns>
-    [HttpGet]
+    [HttpGet(Name = "")]
     [Authorize(Roles = "Administrador")]
-    public async Task<ActionResult<UserDTO>> GetUsers()
+    public async Task<ActionResult<UserDTO>> GetUsers(int page)
     {
-        var users = await _userService.GetAllUser();
-        var usersForShow = _mapper.Map<IEnumerable<UserDTO>>(users);
-        return Ok(usersForShow);
+        var result = await _userService.GetUsersPaging(page, PageListed.PAGESIZE);
+        IEnumerable<UserDTO> resultDTO = _mapper.Map<IEnumerable<UserDTO>>(result.recordList);
+        PageListed pagedTransactions = new PageListed(page, result.totalPages);
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Users", null, protocol: "https"));
+        return Ok(resultDTO);
     }
 
     /// <summary>
-    /// Retrieve the user by their ID
+    ///     Retrieve the user by their ID
     /// </summary>
     /// <param name="id"> The ID of the desired User</param>
     /// <returns>User details</returns>
@@ -46,8 +51,9 @@ public class UsersController : ControllerBase
         var user = await _userService.GetById(id);
         return Ok(user);
     }
+
     /// <summary>
-    /// Create a new user
+    ///     Create a new user
     /// </summary>
     /// <param name="userDTO">Fields to create the user</param>
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
@@ -57,8 +63,9 @@ public class UsersController : ControllerBase
     {
         return Ok(await _userService.AddUser(userDTO));
     }
+
     /// <summary>
-    /// updates the user with the received in the request
+    ///     updates the user with the received in the request
     /// </summary>
     /// <param name="id">User Id</param>
     /// <param name="userDTO">Fields to update the user</param>
@@ -73,8 +80,9 @@ public class UsersController : ControllerBase
         return Ok("Usuario Modificado con exito");
        
     }
+
     /// <summary>
-    /// delete the user with the id received in the request 
+    ///     delete the user with the id received in the request
     /// </summary>
     /// <param name="id">User Id</param>
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
