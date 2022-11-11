@@ -1,4 +1,5 @@
 using AlkemyWallet.Core.Interfaces;
+using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities.Paged;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -34,17 +35,19 @@ public class FixedTermDepositController : Controller
         var getPage = _pListS.GetPagedFtD(pRp);
 
         var HasPrev =
-            getPage.HasPrevious ? Url.Link("GetFixTermDeposit", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
+            getPage.HasPrevious ? Url.Link("GetFixTermDeposit", new { Page = pRp.Page - 1}) : null;
 
         var HasNext = getPage.HasNext
-            ? Url.Link("GetFixTermDeposit", new { Page = pRp.Page + 1, pRp.PageSize })
+            ? Url.Link("GetFixTermDeposit", new { Page = pRp.Page + 1 })
             : null;
 
         var metadata = new
-            { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
+            { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages};
 
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 
-        return Ok(getPage);
+        return Ok(getPage.Select(x => new FixedTermDepositDTO
+            { Id = x.Id, User_id = x.User_id, Account_id = x.Account_id, Amount = x.Amount, Creation_date = x.Creation_date,Closing_date = x.Closing_date}));
+        ;
     }
 }

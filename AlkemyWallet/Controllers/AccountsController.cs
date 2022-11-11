@@ -40,12 +40,11 @@ public class AccountsController : ControllerBase
         var getPage = _accountsService.GetPagedAccount(pRp);
 
         var HasPrev =
-            getPage.HasPrevious ? Url.Link("GetAccount", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
+            getPage.HasPrevious ? Url.Link("GetAccount", new { Page = pRp.Page - 1}) : null;
 
         var HasNext = getPage.HasNext
-            ? Url.Link("GetAccount", new { Page = pRp.Page + 1, pRp.PageSize })
+            ? Url.Link("GetAccount", new { Page = pRp.Page + 1 })
             : null;
-
 
         var metadata = new
             { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
@@ -54,9 +53,6 @@ public class AccountsController : ControllerBase
 
         return Ok(getPage);
 
-        // var accounts = await _accountsService.GetAccounts();
-        //
-        // return Ok(accounts);
     }
 
     /// <summary>
