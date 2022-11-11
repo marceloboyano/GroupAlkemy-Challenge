@@ -1,4 +1,5 @@
-﻿using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Helper;
+using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Core.Services;
 using AlkemyWallet.Entities.Paged;
@@ -6,6 +7,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Newtonsoft.Json;
 
 namespace AlkemyWallet.Controllers;
@@ -27,36 +29,15 @@ public class AccountsController : ControllerBase
     /// Lists of the Accounts
     /// </summary>
     /// <returns>Accounts list </returns>
-    [Authorize(Roles = "Administrador")]
-    [HttpGet(Name = "GetAccount")]
-    public async Task<IActionResult> GetAccounts(int Page)
+    //[Authorize(Roles = "Administrador")]
+    [HttpGet()]
+    public async Task<IActionResult> GetAccounts(int page)
     {
-
-        var ID = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        if (Page == 0 || ID == null) Page = 1;
-        var pagesiz = 1;
-
-        PageResourceParameters pRp = new() { UserID = ID, Page = Page, PageSize = pagesiz };
-        var getPage = _accountsService.GetPagedAccount(pRp);
-
-        var HasPrev =
-            getPage.HasPrevious ? Url.Link("GetAccount", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
-
-        var HasNext = getPage.HasNext
-            ? Url.Link("GetAccount", new { Page = pRp.Page + 1, pRp.PageSize })
-            : null;
-
-
-        var metadata = new
-            { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
-
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
-        return Ok(getPage);
-
-        // var accounts = await _accountsService.GetAccounts();
-        //
-        // return Ok(accounts);
+        var result = await _accountsService.GetAccountsPaging(page, PageListed.PAGESIZE);
+        IEnumerable<AccountForShowDTO> resultDTO = _mapper.Map<IEnumerable<AccountForShowDTO>>(result.recordList);
+        PageListed pagedTransactions = new PageListed(page, result.totalPages);
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Accounts", null, protocol: "https"));
+        return Ok(resultDTO); ;
     }
 
     /// <summary>
