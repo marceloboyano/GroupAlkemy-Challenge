@@ -11,16 +11,14 @@ namespace AlkemyWallet.Core.Services;
 
 public class AccountService : IAccountService
 {
-    private readonly IImageService _imageService;
     private readonly IMapper _mapper;
 
     private readonly IUnitOfWork _unitOfWork;
 
-    public AccountService(IUnitOfWork unitOfWork, IMapper mapper, IImageService imageService)
+    public AccountService(IUnitOfWork unitOfWork, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
-        _imageService = imageService;
     }
 
     public async Task<IEnumerable<Account>> GetAccounts()
@@ -29,7 +27,7 @@ public class AccountService : IAccountService
         return accounts;
     }
 
-    public async Task<Account> GetAccountById(int id)
+    public async Task<Account?> GetAccountById(int id)
     {
         var account = await _unitOfWork.AccountRepository!.GetById(id);
         return account;
@@ -204,9 +202,8 @@ public class AccountService : IAccountService
         else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
     }
 
-    public PagedList<Account> GetPagedAccount(PageResourceParameters pRp)
+    public async Task<(int totalPages, IEnumerable<Account> recordList)> GetAccountsPaging(int pageNumber, int pageSize)
     {
-        var x = _unitOfWork.AccountRepository.FindAll().Result.OrderBy(x => x.User_id);
-        return PagedList<Account>.PagedIQueryObj(x, pRp.Page, pRp.PageSize);
+        return await _unitOfWork.AccountRepository!.GetAllPaging(pageNumber, pageSize);
     }
 }
