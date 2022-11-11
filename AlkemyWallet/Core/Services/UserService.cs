@@ -85,7 +85,7 @@ public class UserService : IUserService
 
     public async Task<bool> DeleteUser(int id)
     {
-        User deleteUser = await _unitOfWork.UserRepository!.GetById(id);
+        User? deleteUser = await _unitOfWork.UserRepository.GetById(id);
         if (deleteUser is null)
             return false;
 
