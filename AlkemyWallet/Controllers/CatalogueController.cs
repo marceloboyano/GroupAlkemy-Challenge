@@ -44,10 +44,10 @@ public class CatalogueController : ControllerBase
         var getPage = _catalogueService.GetCataloguePages(pRp);
 
         var HasPrev =
-            getPage.HasPrevious ? Url.Link("GetCatalogue", new { Page = pRp.Page - 1 }) : null;
+            getPage.HasPrevious ? Url.Link("GetCatalogue", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
 
         var HasNext = getPage.HasNext
-            ? Url.Link("GetCatalogue", new { Page = pRp.Page + 1 })
+            ? Url.Link("GetCatalogue", new { Page = pRp.Page + 1, pRp.PageSize })
             : null;
 
         var metadata = new

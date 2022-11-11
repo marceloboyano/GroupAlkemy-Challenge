@@ -52,10 +52,10 @@ public class TransactionsController : ControllerBase
         var getPage = _transactionService.GetPagedTransactions(pRp);
 
         var HasPrev =
-            getPage.HasPrevious ? Url.Link("GetTransactions", new { Page = pRp.Page - 1}) : null;
+            getPage.HasPrevious ? Url.Link("GetTransactions", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
 
         var HasNext = getPage.HasNext
-            ? Url.Link("GetTransactions", new { Page = pRp.Page + 1 })
+            ? Url.Link("GetTransactions", new { Page = pRp.Page + 1, pRp.PageSize })
             : null;
 
         var metadata = new

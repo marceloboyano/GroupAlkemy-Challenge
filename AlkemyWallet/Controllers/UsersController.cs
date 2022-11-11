@@ -37,14 +37,14 @@ public class UsersController : ControllerBase
         var getPage = _userService.GetPagedUser(pRp);
 
         var HasPrev =
-            getPage.HasPrevious ? Url.Link("GetUsers", new { Page = pRp.Page - 1 }) : null;
+            getPage.HasPrevious ? Url.Link("GetUsers", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
 
         var HasNext = getPage.HasNext
-            ? Url.Link("GetUsers", new { Page = pRp.Page + 1 })
+            ? Url.Link("GetUsers", new { Page = pRp.Page + 1, pRp.PageSize })
             : null;
 
         var metadata = new
-            { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages};
+            { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
 
         Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 
