@@ -31,10 +31,10 @@ public class FixedTermDepositController : Controller
     public async Task<IActionResult> GetFixedTermDepositByUserId(int page)
     {
         var userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        var result = await _fixedTermDepositService.GetFixedTermDepositsPaging(userId, page == null || page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);
+        var result = await _fixedTermDepositService.GetFixedTermDepositsPaging(userId, page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);
         var resultDTO = _mapper.Map<IEnumerable<DepositForShowDTO>>(result.recordList);
         var pagedTransactions = new PageListed(page, result.totalPages);
-        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "FixedDeposit", null, "https"));
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "FixedTermDeposit", null, "https"));
         return Ok(resultDTO);
     }
 
