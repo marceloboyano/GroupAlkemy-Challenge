@@ -19,15 +19,15 @@ public class FixedTermDepositService : IFixedTermDepositService
     }
 
 
-    public async Task<FixedTermDeposit> GetFixedTermDepositsById(int id, int userId)
+    public async Task<FixedTermDeposit?> GetFixedTermDepositsById(int id, int userId)
     {
-        var fixedTermDepositsEntity = await _unitOfWork.FixedTermDepositDetailsRepository!.GetFixedTermById(id, userId);
+        var fixedTermDepositsEntity = await _unitOfWork.FixedTermDepositRepository!.GetFixedTermById(id, userId);
         return fixedTermDepositsEntity;
     }
 
     public async Task<IEnumerable<FixedTermDeposit>> GetFixedTermDepositsByUserId(int userId)
     {
-        var fixedTermDepositsByUserId = await _unitOfWork.FixedTermDepositDetailsRepository!.GetByUser(userId);
+        var fixedTermDepositsByUserId = await _unitOfWork.FixedTermDepositRepository!.GetByUser(userId);
         fixedTermDepositsByUserId = fixedTermDepositsByUserId.OrderBy(x => x.Creation_date);
         return fixedTermDepositsByUserId;
     }
@@ -73,5 +73,10 @@ public class FixedTermDepositService : IFixedTermDepositService
         deposit.Creation_date = DateTime.Now;
         await _unitOfWork.FixedTermDepositRepository!.Insert(deposit);
         await _unitOfWork.SaveChangesAsync();
+    }
+
+    public async Task<(int totalPages, IEnumerable<FixedTermDeposit> recordList)> GetFixedTermDepositsPaging(int userId, int pageNumber, int pageSize)
+    {
+        return await _unitOfWork.FixedTermDepositRepository!.GetFixedTermDepositsPaging(userId, pageNumber, pageSize);
     }
 }

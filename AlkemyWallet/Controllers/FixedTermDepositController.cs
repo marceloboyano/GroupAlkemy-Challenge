@@ -1,3 +1,4 @@
+using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AutoMapper;
@@ -11,30 +12,30 @@ namespace AlkemyWallet.Controllers;
 public class FixedTermDepositController : Controller
 {
     private readonly IMapper _mapper;
-    private readonly IFixedTermDepositService _pListS;
+    private readonly IFixedTermDepositService _fixedTermDepositService;
 
-    public FixedTermDepositController(IFixedTermDepositService pageListService, IMapper mapper)
+    public FixedTermDepositController(IFixedTermDepositService fixedTermDepositService, IMapper mapper)
     {
-        _pListS = pageListService;
+        _fixedTermDepositService = fixedTermDepositService;
         _mapper = mapper;
     }
 
 
     /// <summary>
-    ///     returns all investments made by a user, sorted by date.
+    ///     Returns all investments made by a user, sorted by date.
     /// </summary>
+    /// <param name="page">Page number starting in 1</param>
     /// <returns>returns all investments made by a user</returns>
     [Authorize(Roles = "Standard")]
     [HttpGet]
-    public async Task<IActionResult> GetFixedTermDepositByUserId()
+    public async Task<IActionResult> GetFixedTermDepositByUserId(int page)
     {
-        var userIdFromToken =
-            Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        var fixedTermDeposit = await _pListS.GetFixedTermDepositsByUserId(userIdFromToken);
-        if (fixedTermDeposit is null)
-            return NotFound("No se ha encontrado ninguna inversi�n realizada por el usuario.");
-        var fixedTermDepositForShow = _mapper.Map<IEnumerable<DepositForShowDTO>>(fixedTermDeposit);
-        return Ok(fixedTermDepositForShow);
+        var userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
+        var result = await _fixedTermDepositService.GetFixedTermDepositsPaging(userId, page, PageListed.PAGESIZE);
+        var resultDTO = _mapper.Map<IEnumerable<DepositForShowDTO>>(result.recordList);
+        var pagedTransactions = new PageListed(page, result.totalPages);
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "FixedDeposit", null, "https"));
+        return Ok(resultDTO);
     }
 
     /// <summary>
@@ -47,7 +48,7 @@ public class FixedTermDepositController : Controller
     {
         var userIdFromToken =
             Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        var fixedTermDeposit = await _pListS.GetFixedTermDepositsById(id, userIdFromToken);
+        var fixedTermDeposit = await _fixedTermDepositService.GetFixedTermDepositsById(id, userIdFromToken);
         if (fixedTermDeposit is null)
             return NotFound(
                 "No existe inversi�n con ese id o esta intentando consultar inversiones de otros usuarios.");
@@ -64,7 +65,7 @@ public class FixedTermDepositController : Controller
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteFixedTermDeposit(int id)
     {
-        var result = await _pListS.DeleteFixedTermDeposit(id);
+        var result = await _fixedTermDepositService.DeleteFixedTermDeposit(id);
 
         if (!result)
             return NotFound("No se encontro ninguna inversi�n con ese id.");
@@ -82,7 +83,7 @@ public class FixedTermDepositController : Controller
     [HttpPut("{id}")]
     public async Task<ActionResult> PutFixedTermDeposit(int id, [FromForm] DepositForUpdateDTO depositDTO)
     {
-        var result = await _pListS.UpdateDeposit(id, depositDTO);
+        var result = await _fixedTermDepositService.UpdateDeposit(id, depositDTO);
         if (!result) return NotFound("No hay ninguna inversi�n con ese id");
         return Ok("La inversi�n ha sido Modificada con exito");
     }
@@ -96,7 +97,7 @@ public class FixedTermDepositController : Controller
     [HttpPost]
     public async Task<ActionResult> PostFixedTermDeposit([FromForm] DepositForCreationDTO depositDTO)
     {
-        await _pListS.InsertFixedTermDeposit(depositDTO);
+        await _fixedTermDepositService.InsertFixedTermDeposit(depositDTO);
         return Ok("Se ha creado la inversi�n exitosamente");
     }
 }
