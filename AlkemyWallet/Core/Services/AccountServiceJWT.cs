@@ -5,6 +5,7 @@ using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models.DTO;
 using AlkemyWallet.Core.Models.DTO.UserLogin;
+using AlkemyWallet.Entities;
 using AlkemyWallet.Entities.JWT;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -31,10 +32,10 @@ public class AccountServiceJWT : IAccountServiceJWT
 
     public async Task<string> AuthenticateAsync(AuthenticationRequestDTO request)
     {
-        var user = await _iUserRepository.GetUserByEmail(request.Email, request.Password);
+        User user = await _iUserRepository.GetUserByEmail(request.Email, request.Password);
 
         if (user is null)
-            return "El email o la contraseña no coinciden con lo registrado en la base de datos";
+            return "false";
 
         ApplicationUser userIdentity = new()
         {
