@@ -24,7 +24,7 @@ public class CatalogueService : ICatalogueService
         _imageService = imageService;
     }
 
-    public async Task<Catalogue> GetCatalogueById(int id)
+    public async Task<Catalogue?> GetCatalogueById(int id)
     {
         var catalogue = await _unitOfWork.CatalogueRepository!.GetById(id);
         return catalogue;
@@ -34,7 +34,7 @@ public class CatalogueService : ICatalogueService
     {
 
         var userEntity = await _unitOfWork.UserRepository!.GetById(userId);
-        var catalogues = await _unitOfWork.CatalogueByPoints!.GetByPoints(userEntity.Points);
+        var catalogues = await _unitOfWork.CatalogueByPoints!.GetByPoints(userEntity!.Points);
 
         return catalogues;
     }
@@ -91,9 +91,9 @@ public class CatalogueService : ICatalogueService
         return await _unitOfWork.SaveChangesAsync() > 0;
     }
 
-    public PagedList<Catalogue> GetCataloguePages(PageResourceParameters pRp)
+    public async Task<(int totalPages, IEnumerable<Catalogue> recordList)> GetCataloguesPaging(int pageNumber, int pageSize)
     {
-        var x = _unitOfWork.CatalogueByPoints.FindAll().Result.OrderBy(x => x.Points);
-        return PagedList<Catalogue>.PagedIQueryObj(x, pRp.Page, pRp.PageSize);
+        return await _unitOfWork.CatalogueRepository!.GetAllPaging(pageNumber, pageSize);
     }
+
 }
