@@ -29,7 +29,7 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "Administrador")]
     public async Task<ActionResult<UserDTO>> GetUsers(int page)
     {
-        var result = await _userService.GetUsersPaging(page, PageListed.PAGESIZE);
+        var result = await _userService.GetUsersPaging(page == null || page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);
         var resultDTO = _mapper.Map<IEnumerable<UserDTO>>(result.recordList);
         var pagedTransactions = new PageListed(page, result.totalPages);
         pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Users", null, "https"));
