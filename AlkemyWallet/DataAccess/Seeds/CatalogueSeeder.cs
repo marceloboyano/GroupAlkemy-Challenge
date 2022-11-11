@@ -5,7 +5,7 @@ namespace AlkemyWallet.DataAccess.Seeds
 {
     public class CatalogueSeeder
     {
-        //falta el interface para cargar todo a dbcontext de una 
+      
         private readonly ModelBuilder _modelBuilder;
 
         public CatalogueSeeder(ModelBuilder modelBuilder)
