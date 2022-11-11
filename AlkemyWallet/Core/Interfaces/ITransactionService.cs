@@ -13,6 +13,4 @@ public interface ITransactionService
     Task<(int totalPages, IEnumerable<Transaction> recordList)> GetTransactionsPaging(int userId, int pageNumber, int pageSize);
     Task<Transaction?> GetTransactionById(int id, int userId);
     Task<bool> ValidateTransaction(Transaction transaction);
-    PagedList<Transaction> GetPagedTransactions(PageResourceParameters pageResourceParameters);
-
 }
