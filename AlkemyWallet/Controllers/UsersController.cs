@@ -27,6 +27,7 @@ public class UsersController : ControllerBase
     /// <summary>
     /// Retrieve all users
     /// </summary>
+    /// <param name="page">Page number starting in 1</param>
     /// <returns>User list</returns>
     [HttpGet(Name = "")]
     [Authorize(Roles = "Administrador")]

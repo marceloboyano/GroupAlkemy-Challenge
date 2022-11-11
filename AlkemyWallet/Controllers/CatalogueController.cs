@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using AlkemyWallet.Entities.Paged;
 using Newtonsoft.Json;
+using AlkemyWallet.Core.Helper;
 
 namespace AlkemyWallet.Controllers;
 
@@ -16,51 +17,28 @@ public class CatalogueController : ControllerBase
 {
     private readonly ICatalogueService _catalogueService;
     private readonly IMapper _mapper;
-    private readonly IUserService _userService;
 
-    public CatalogueController(ICatalogueService catalogueService, IMapper mapper, IUserService userService)
+    public CatalogueController(ICatalogueService catalogueService, IMapper mapper)
     {
         _catalogueService = catalogueService;
         _mapper = mapper;
-        _userService = userService;
     }
 
 
     /// <summary>
     /// Lists Catalogues made by the user making the request ordered by points
     /// </summary>
+    /// <param name="page">Page number starting in 1</param>
     /// <returns>Catalogues list ordered by points</returns>
-
     [Authorize]
-    [HttpGet(Name = "GetCatalogue")]
-    public async Task<IActionResult> GetCatalogue(int Page)
+    [HttpGet()]
+    public async Task<IActionResult> GetCatalogue(int page)
     {
-
-        var ID = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        if (Page == 0 || ID == null) Page = 1;
-        var pagesiz = 1;
-
-        PageResourceParameters pRp = new() { UserID = ID, Page = Page, PageSize = pagesiz };
-        var getPage = _catalogueService.GetCataloguePages(pRp);
-
-        var HasPrev =
-            getPage.HasPrevious ? Url.Link("GetCatalogue", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
-
-        var HasNext = getPage.HasNext
-            ? Url.Link("GetCatalogue", new { Page = pRp.Page + 1, pRp.PageSize })
-            : null;
-
-        var metadata = new
-            { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
-
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
-        return Ok(getPage.Select(x => new CatalogueDTO
-            { Product_description = x.Product_description, Image = x.Image, Points = x.Points}));
-        // var catalogues = await _catalogueService.GetCatalogues();
-        //
-        // var catalogueForShow = _mapper.Map<IEnumerable<CatalogueDTO>>(catalogues);
-        // return Ok(catalogueForShow);
+        var result = await _catalogueService.GetCataloguesPaging(page, PageListed.PAGESIZE);
+        IEnumerable<CatalogueDTO> resultDTO = _mapper.Map<IEnumerable<CatalogueDTO>>(result.recordList);
+        PageListed pagedTransactions = new PageListed(page, result.totalPages);
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Catalogue", null, protocol: "https"));
+        return Ok(resultDTO);
     }
 
    

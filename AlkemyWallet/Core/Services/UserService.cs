@@ -28,7 +28,7 @@ public class UserService : IUserService
         return users;
     }
 
-    public async Task<User> GetById(int id)
+    public async Task<User?> GetById(int id)
     {
         var user = await _unitOfWork.UserDetailsRepository!.GetUserWithDetails(id);
         return user;
@@ -111,7 +111,7 @@ public class UserService : IUserService
         if (userEntity is null)
             return (false, "Usuario no encontrado.");
 
-        if (userEntity.Points < catalogueEntity.Points)
+        if (userEntity.Points < catalogueEntity!.Points)
             return (false, "No tiene los puntos suficientes para adquirir este producto.");
 
 
