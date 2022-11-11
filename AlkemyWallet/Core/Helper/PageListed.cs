@@ -1,5 +1,6 @@
 ﻿using AlkemyWallet.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Newtonsoft.Json;
 
 namespace AlkemyWallet.Core.Helper
@@ -19,13 +20,18 @@ namespace AlkemyWallet.Core.Helper
             CurrentPage = pageNumber;
             TotalPages = totalPages;
         }
-        internal void AddHeader(HttpResponse response, IUrlHelper url)
+        internal void AddHeader(HttpResponse response, string? urlBase)
         {
-            var UrlPrev = (HasPrevious) ? url.Link("GetTransactions", new { Page = CurrentPage - 1 }) : null;
-            var UrlNext = (HasNext) ? url.Link("GetTransactions", new { Page = CurrentPage + 1 }) : null;
-            var metadata = new
-            { CurrentPage, UrlPrev, UrlNext, TotalPages, PageSize };
+            string? UrlPrev = (HasPrevious) ? CreateUrl(urlBase, CurrentPage - 1) : null;
+            string? UrlNext = (HasNext) ? CreateUrl(urlBase, CurrentPage + 1) : null;
+            var metadata = new { CurrentPage, UrlPrev, UrlNext, TotalPages, PageSize };
             response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
         }
+
+        private string CreateUrl(string urlBase, int page)
+        {
+            return urlBase + (urlBase.Contains("?") ? "&" : "?") + "page=" + page;
+        }
+
     }
 }

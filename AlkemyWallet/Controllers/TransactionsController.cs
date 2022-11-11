@@ -29,7 +29,7 @@ public class TransactionsController : ControllerBase
 
     private readonly IMapper _mapper;
     private readonly ITransactionService _transactionService;
-    
+
     public TransactionsController(ITransactionService transactionService, IMapper mapper)
     {
         _transactionService = transactionService;
@@ -44,30 +44,30 @@ public class TransactionsController : ControllerBase
     [Authorize(Roles = "Standard")]
     public async Task<IActionResult> GetTransactions(int Page)
     {
-/*  
-        var ID = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        if (Page == 0 || ID == null) Page = 1;
-        var pagesiz = 1;
+        /*  
+                var ID = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
+                if (Page == 0 || ID == null) Page = 1;
+                var pagesiz = 1;
 
-        PageResourceParameters pRp = new() { UserID = ID, Page = Page, PageSize = pagesiz };
-        var getPage = _transactionService.GetPagedTransactions(pRp);
+                PageResourceParameters pRp = new() { UserID = ID, Page = Page, PageSize = pagesiz };
+                var getPage = _transactionService.GetPagedTransactions(pRp);
 
-        var HasPrev =
-            getPage.HasPrevious ? Url.Link("GetTransactions", new { Page = pRp.Page - 1 }) : null;
+                var HasPrev =
+                    getPage.HasPrevious ? Url.Link("GetTransactions", new { Page = pRp.Page - 1 }) : null;
 
-        var HasNext = getPage.HasNext
-            ? Url.Link("GetTransactions", new { Page = pRp.Page + 1 })
-            : null;
+                var HasNext = getPage.HasNext
+                    ? Url.Link("GetTransactions", new { Page = pRp.Page + 1 })
+                    : null;
 
-        var metadata = new
-            { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
+                var metadata = new
+                    { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
 
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
+                Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
 
-        return Ok(getPage.Select(x => new TransactionDTO
-            { Transaction_id = x.Transaction_id, Amount = x.Amount, Concept = x.Concept, Date = x.Date, Type = x.Type , User_id =x.User_id, Account_id=x.Account_id }));
+                return Ok(getPage.Select(x => new TransactionDTO
+                    { Transaction_id = x.Transaction_id, Amount = x.Amount, Concept = x.Concept, Date = x.Date, Type = x.Type , User_id =x.User_id, Account_id=x.Account_id }));
 
-        */
+                */
 
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
         var transactions = await _transactionService.GetTransactions(userId);
@@ -89,7 +89,7 @@ public class TransactionsController : ControllerBase
         var transactions = await _transactionService.GetTransactionsPaging(userId, page, pageSize);
         IEnumerable<TransactionDTO> transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions.recordList);
         PageListed pagedTransactions = new PageListed(page, pageSize, transactions.totalPages);
-        pagedTransactions.AddHeader(Response, Url);
+        pagedTransactions.AddHeader(Response, Url.Link("GetTransactions", null));
         return Ok(transactionsForShow);
     }
 
@@ -146,7 +146,7 @@ public class TransactionsController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPost]
-    public async Task<ActionResult> InsertTransaction( TransactionDTO transaction)
+    public async Task<ActionResult> InsertTransaction(TransactionDTO transaction)
     {
         transaction.Transaction_id = null;
         Transaction tran = _mapper.Map<Transaction>(transaction);
