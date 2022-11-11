@@ -13,5 +13,5 @@ public interface ICatalogueService
     Task<IEnumerable<Catalogue>> GetCatalogueByPoints(int points);
     Task InsertCatalogue(CatalogueForCreationDTO catalogue);
     Task<bool> UpdateCatalogues(int id, CatalogueForUpdateDTO CatalogueDTO);
-    Task<(int totalPages, IEnumerable<Catalogue> recordList)> GetCataloguesPaging(int page, int pAGESIZE);
+    Task<(int totalPages, IEnumerable<Catalogue> recordList)> GetCataloguesPaging(int pageNumber, int pageSize);
 }
