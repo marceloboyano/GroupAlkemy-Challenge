@@ -60,7 +60,7 @@ public class UserService : IUserService
     {
 
 
-        User userEntity = await _unitOfWork.UserRepository!.GetById(id);
+        User? userEntity = await _unitOfWork.UserRepository.GetById(id);
 
         if (userEntity is null)
                 return false;
@@ -123,9 +123,8 @@ public class UserService : IUserService
         else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
     }
 
-    public PagedList<User> GetPagedUser(PageResourceParameters pRp)
+    public async Task<(int totalPages, IEnumerable<User> recordList)> GetUsersPaging(int pageNumber, int pageSize)
     {
-        var x = _unitOfWork.UserRepository.FindAll().Result.OrderBy(x => x.Id);
-        return PagedList<User>.PagedIQueryObj(x, pRp.Page, pRp.PageSize);
+        return await _unitOfWork.UserRepository!.GetAllPaging(pageNumber, pageSize);
     }
 }

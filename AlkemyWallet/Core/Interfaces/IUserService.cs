@@ -13,6 +13,5 @@ public interface IUserService
     Task<bool> UpdateUser(int id, UserForUpdateDto userDTO);
     Task<bool> DeleteUser(int id);
     Task<(bool Success, string Message)> Exchange(int id, string userIdFromToken);
-
-    PagedList<User> GetPagedUser(PageResourceParameters pageResourceParameters);
+    Task<(int totalPages, IEnumerable<User> recordList)> GetUsersPaging(int pageNumber, int pageSize);
 }
