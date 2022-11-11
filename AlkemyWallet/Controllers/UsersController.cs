@@ -5,7 +5,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace AlkemyWallet.Controllers;
 
 [ApiController]
@@ -22,7 +21,7 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    /// Retrieve all users
+    ///     Retrieve all users
     /// </summary>
     /// <param name="page">Page number starting in 1</param>
     /// <returns>User list</returns>
@@ -31,9 +30,9 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<UserDTO>> GetUsers(int page)
     {
         var result = await _userService.GetUsersPaging(page, PageListed.PAGESIZE);
-        IEnumerable<UserDTO> resultDTO = _mapper.Map<IEnumerable<UserDTO>>(result.recordList);
-        PageListed pagedTransactions = new PageListed(page, result.totalPages);
-        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Users", null, protocol: "https"));
+        var resultDTO = _mapper.Map<IEnumerable<UserDTO>>(result.recordList);
+        var pagedTransactions = new PageListed(page, result.totalPages);
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Users", null, "https"));
         return Ok(resultDTO);
     }
 
@@ -72,11 +71,9 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "Standard")]
     public async Task<ActionResult> UpdateUser(int id, UserForUpdateDto userDTO)
     {
-
         var result = await _userService.UpdateUser(id, userDTO);
         if (!result) return NotFound("Usuario No Encontrado");
         return Ok("Usuario Modificado con exito");
-       
     }
 
     /// <summary>
@@ -88,11 +85,13 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "Administrador")]
     public async Task<ActionResult> DeleteUser(int id)
     {
-        return await _userService.DeleteUser(id) ? Ok($"User with Id {id} deleted") : NotFound($"User with Id {id} not found");
+        return await _userService.DeleteUser(id)
+            ? Ok($"User with Id {id} deleted")
+            : NotFound($"User with Id {id} not found");
     }
 
     /// <summary>
-    ///  Exchange the user's points for a product from the catalog.
+    ///     Exchange the user's points for a product from the catalog.
     /// </summary>
     /// <param name="id"></param>
     /// <returns></returns>

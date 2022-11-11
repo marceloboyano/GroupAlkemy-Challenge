@@ -1,5 +1,4 @@
 ﻿using AlkemyWallet.DataAccess;
-using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,8 +16,6 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     }
 
     /// Esta clase implementa un CRUD básico para cualquier entidad de Entity Framework
-    ///
-
     public async Task<IQueryable<T>> FindAll()
     {
         return await Task.FromResult(_entities.AsNoTracking());
@@ -31,13 +28,14 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
 
     public async Task<(int totalPages, IEnumerable<T> recordList)> GetAllPaging(int pageNumber, int pageSize)
     {
-        IEnumerable<T> list = await Task.FromResult(_entities
-           .Skip((pageNumber - 1) * pageSize)
-           .Take(pageSize)
-           .AsEnumerable());
-        int totalRecords = _entities.Count();
+        var list = await Task.FromResult(_entities
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .AsEnumerable());
+        var totalRecords = _entities.Count();
         return ((int)Math.Ceiling(totalRecords / (double)pageSize), list);
     }
+
     public async Task<T?> GetById(int id)
     {
         var result = await _entities.FindAsync(id);
@@ -58,9 +56,6 @@ public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         var entity = await GetById(id);
 
-        if (entity != null)
-        {
-            _entities.Remove(entity);
-        }
+        if (entity != null) _entities.Remove(entity);
     }
 }

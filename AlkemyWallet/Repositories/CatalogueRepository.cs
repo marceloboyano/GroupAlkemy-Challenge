@@ -10,6 +10,7 @@ public class CatalogueRepository : RepositoryBase<Catalogue>, ICatalogueReposito
         : base(context)
     {
     }
+
     public async Task<IEnumerable<Catalogue>> GetByPoints(int points)
     {
         return await Task.FromResult(_context.Set<Catalogue>().Where(t => t.Points <= points).AsEnumerable());
