@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AlkemyWallet.Controllers;
 
 [ApiController]
-[Route("FixedDeposit")]
+[Route("FixedTermDeposit")]
 public class FixedTermDepositController : Controller
 {
     private readonly IMapper _mapper;
@@ -34,7 +34,7 @@ public class FixedTermDepositController : Controller
         var result = await _fixedTermDepositService.GetFixedTermDepositsPaging(userId, page == null || page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);
         var resultDTO = _mapper.Map<IEnumerable<DepositForShowDTO>>(result.recordList);
         var pagedTransactions = new PageListed(page, result.totalPages);
-        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "FixedDeposit", null, "https"));
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "FixedTermDeposit", null, "https"));
         return Ok(resultDTO);
     }
 
