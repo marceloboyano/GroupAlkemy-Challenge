@@ -4,11 +4,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using AlkemyWallet.Entities;
-using AlkemyWallet.Core.Services;
-using AlkemyWallet.Entities.Paged;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json;
 using AlkemyWallet.Core.Helper;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Controllers;
 
@@ -54,7 +51,7 @@ public class TransactionsController : ControllerBase
     {
         int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
         var transaction = await _transactionService.GetTransactionById(id, userId);
-        if (transaction is null) return NotFound(Constants.TRAN_NOT_EXISTS);
+        if (transaction is null) return NotFound(TRAN_NOT_EXISTS);
         var transactionForShow = _mapper.Map<TransactionDTO>(transaction);
         return Ok(transactionForShow);
     }
@@ -69,8 +66,8 @@ public class TransactionsController : ControllerBase
     public async Task<ActionResult> DeleteTransaction(int id)
     {
         var result = await _transactionService.DeleteTransaction(id);
-        if (!result) return NotFound(Constants.TRAN_NOT_FOUND);
-        return Ok(Constants.TRAN_DELETED);
+        if (!result) return NotFound(TRAN_NOT_FOUND);
+        return Ok(TRAN_DELETED);
     }
 
     /// <summary>
@@ -85,8 +82,8 @@ public class TransactionsController : ControllerBase
     {
         Transaction tran = _mapper.Map<Transaction>(transaction);
         var result = await _transactionService.UpdateTransaction(id, tran);
-        if (!result) return NotFound(Constants.TRAN_NOT_FOUND);
-        return Ok(Constants.TRAN_UPDATED);
+        if (!result) return NotFound(TRAN_NOT_FOUND);
+        return Ok(TRAN_UPDATED);
     }
 
     /// <summary>
@@ -101,7 +98,7 @@ public class TransactionsController : ControllerBase
         transaction.Transaction_id = null;
         Transaction tran = _mapper.Map<Transaction>(transaction);
         var result = await _transactionService.InsertTransaction(tran);
-        if (!result) return NotFound(Constants.TRAN_NOT_CREATED);
-        return Ok(Constants.TRAN_CREATED);
+        if (!result) return NotFound(TRAN_NOT_CREATED);
+        return Ok(TRAN_CREATED);
     }
 }

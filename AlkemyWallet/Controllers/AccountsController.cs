@@ -1,14 +1,10 @@
 ﻿using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
-using AlkemyWallet.Core.Services;
-using AlkemyWallet.Entities.Paged;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore.Infrastructure;
-using Newtonsoft.Json;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Controllers;
 
@@ -52,7 +48,7 @@ public class AccountsController : ControllerBase
     {
         var account = await _accountsService.GetAccountById(id);
 
-        if (account is null) return NotFound("No existe ninguna cuenta con el id especificado");
+        if (account is null) return NotFound(ACC_NOT_FOUND_MESSAGE);
 
         return Ok(account);
     }
@@ -66,7 +62,7 @@ public class AccountsController : ControllerBase
     public async Task<ActionResult> PostAccount(AccountForCreationDTO accountDTO)
     {
         await _accountsService.InsertAccounts(accountDTO);
-        return Ok("Se ha creado la cuenta exitosamente");
+        return Ok(ACC_SUCCESSFUL_ACCOUNT_MESSAGE);
     }
     /// <summary>
     /// Updates the Accounts with the id received in the request.
@@ -79,8 +75,8 @@ public class AccountsController : ControllerBase
     public async Task<ActionResult> PutCatalogue(int id, AccountForUpdateDTO accountDTO)
     {
         var result = await _accountsService.UpdateAccount(id, accountDTO);
-        if (!result) return NotFound("Cuenta No Encontrado");
-        return Ok("Cuenta Modificada con exito");
+        if (!result) return NotFound(ACC_NOT_FOUND_MESSAGE);
+        return Ok(ACC_SUCCESSFUL_ACCOUNT_MODIFIED_MESSAGE);
     }
     /// <summary>
     /// Delete an account only if it has no pending investments or loans.
@@ -110,7 +106,7 @@ public class AccountsController : ControllerBase
     {
         var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
         if (Int32.Parse(userIdFromToken) != id)
-            return BadRequest("El id de cuenta ingresado no coincide con el id de usuario registrado en el sistema");
+            return BadRequest(ACC_NOT_MATCHED_MESSAGE);
 
         var result = await _accountsService.Deposit(id, amount);
         if (result.Success)
@@ -133,7 +129,7 @@ public class AccountsController : ControllerBase
     {
         var userIdFromToken = HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value;
         if (Int32.Parse(userIdFromToken) != id)
-            return BadRequest("El id de cuenta ingresado no coincide con el id de usuario registrado en el sistema");
+            return BadRequest(ACC_NOT_MATCHED_MESSAGE);
 
         var result = await _accountsService.Transfer(id, amount, toAccountId);
         if (result.Success)

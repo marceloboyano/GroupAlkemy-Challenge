@@ -1,11 +1,8 @@
-﻿using AlkemyWallet.Core.Helper;
-using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
-using AlkemyWallet.Entities.Paged;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
-using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
 
 namespace AlkemyWallet.Core.Services;

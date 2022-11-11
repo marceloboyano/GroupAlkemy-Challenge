@@ -24,6 +24,7 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> AuthenticateAsync( AuthenticationRequestDTO request)
     {
+       
         return Ok(await _iAccountsServiceJwt.AuthenticateAsync(new AuthenticationRequestDTO
         {
             Email = request.Email,

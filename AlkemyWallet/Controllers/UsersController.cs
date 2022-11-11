@@ -1,13 +1,10 @@
 using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
-using AlkemyWallet.Core.Services;
-using AlkemyWallet.Entities.Paged;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Newtonsoft.Json;
+
 
 namespace AlkemyWallet.Controllers;
 
