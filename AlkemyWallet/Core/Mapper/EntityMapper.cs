@@ -10,6 +10,8 @@ public class AutomapperProfile : Profile
     {
         CreateMap<Catalogue, CatalogueDTO>().ReverseMap();
         CreateMap<Catalogue, CatalogueForCreationDTO>().ReverseMap();
+        CreateMap<Catalogue, CatalogueForShowDTO>().ReverseMap();
+        CreateMap<Account, AccountForShowDTO>().ReverseMap();
         CreateMap<Account, AccountForCreationDTO>().ReverseMap();
         CreateMap<User, UserDTO>().ReverseMap();
         CreateMap<User, UserByIdDTO>().ReverseMap();
@@ -19,5 +21,9 @@ public class AutomapperProfile : Profile
         CreateMap<Role, RoleDTO>().ReverseMap();
         CreateMap<Transaction, TransactionDTO>().ReverseMap();
         CreateMap<FixedTermDeposit, FixedTermDepositDTO>().ReverseMap();
+        CreateMap<FixedTermDeposit, FixedTermDepositForShowDTO>().ReverseMap();
+        CreateMap<FixedTermDeposit, DepositForShowDTO>().ReverseMap();
+        CreateMap<FixedTermDeposit, DepositForUpdateDTO>().ReverseMap();
+        CreateMap<FixedTermDeposit, DepositForCreationDTO>().ReverseMap();
     }
 }

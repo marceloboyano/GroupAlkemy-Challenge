@@ -28,9 +28,9 @@ public class UserService : IUserService
         return users;
     }
 
-    public async Task<User> GetById(int id)
+    public async Task<User?> GetById(int id)
     {
-        var user = await _unitOfWork.UserDetailsRepository!.GetById(id);
+        var user = await _unitOfWork.UserDetailsRepository!.GetUserWithDetails(id);
         return user;
     }
 
@@ -58,29 +58,34 @@ public class UserService : IUserService
 
     public async Task<bool> UpdateUser(int id, UserForUpdateDto userDTO)
     {
-        User userEntity = await _unitOfWork.UserRepository!.GetById(id);
-        if (userEntity is not null)
-        {
-            userEntity.First_name = string.IsNullOrEmpty(userDTO.First_name) ? userEntity.First_name : userDTO.First_name;
-            userEntity.Last_name = string.IsNullOrEmpty(userDTO.Last_name) ? userEntity.Last_name : userDTO.Last_name;
-            userEntity.Rol_id = userDTO.Rol_id.Equals(0) ? userEntity.Rol_id : userDTO.Rol_id;
 
-            userEntity.Password = string.IsNullOrEmpty(userDTO.Password) ? userEntity.Password : BCrypt.Net.BCrypt.HashPassword(userDTO.Password); 
 
-            userEntity.Points = userDTO.Points;
+        User? userEntity = await _unitOfWork.UserRepository.GetById(id);
 
-            await _unitOfWork.SaveChangesAsync();
-            return true;
-        }
-        else
+        if (userEntity is null)
+                return false;
 
-            return false;   
+            if (userDTO.First_name is not null) 
+                userEntity.First_name = userDTO.First_name;
+       
+            if (userDTO.Last_name is not null)
+                 userEntity.Last_name = userDTO.Last_name; 
+
+            if (userDTO.Password is not null)
+                 userEntity.Password = userDTO.Password;
+        
+            if (userDTO.Points is not null)
+                 userEntity.Points = userDTO.Points.Value;       
+          
+            await _unitOfWork.UserRepository!.Update(userEntity);
+            return await _unitOfWork.SaveChangesAsync() > 0;     
+      
 
     }
 
     public async Task<bool> DeleteUser(int id)
     {
-        User deleteUser = await _unitOfWork.UserRepository!.GetById(id);
+        User? deleteUser = await _unitOfWork.UserRepository.GetById(id);
         if (deleteUser is null)
             return false;
 
@@ -106,7 +111,7 @@ public class UserService : IUserService
         if (userEntity is null)
             return (false, "Usuario no encontrado.");
 
-        if (userEntity.Points < catalogueEntity.Points)
+        if (userEntity.Points < catalogueEntity!.Points)
             return (false, "No tiene los puntos suficientes para adquirir este producto.");
 
 
@@ -118,9 +123,8 @@ public class UserService : IUserService
         else return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
     }
 
-    public PagedList<User> GetPagedUser(PageResourceParameters pRp)
+    public async Task<(int totalPages, IEnumerable<User> recordList)> GetUsersPaging(int pageNumber, int pageSize)
     {
-        var x = _unitOfWork.UserRepository.FindAll().Result.OrderBy(x => x.Id);
-        return PagedList<User>.PagedIQueryObj(x, pRp.Page, pRp.PageSize);
+        return await _unitOfWork.UserRepository!.GetAllPaging(pageNumber, pageSize);
     }
 }

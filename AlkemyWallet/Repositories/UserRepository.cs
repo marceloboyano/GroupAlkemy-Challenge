@@ -29,10 +29,12 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
         return false;
     }
 
-    public async Task<IEnumerable<User>> GetUserWithDetails(int id)
+    public async Task<User?> GetUserWithDetails(int id)
     {
-        return await Task.FromResult(_context.Set<User>().Where(t => t.Id == id)
+        return await Task.FromResult(_context.Set<User>()
             .Include(a => a.Account)
-            .AsEnumerable());
+            .Include(r => r.Role)
+            .Include(f => f.FixedTermDeposit)
+            .FirstOrDefault(x => x.Id == id));
     }
 }

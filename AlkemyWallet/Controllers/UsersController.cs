@@ -1,9 +1,12 @@
+using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
+using AlkemyWallet.Core.Services;
 using AlkemyWallet.Entities.Paged;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
 
 namespace AlkemyWallet.Controllers;
@@ -22,34 +25,19 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    ///     Retrieve all users
+    /// Retrieve all users
     /// </summary>
+    /// <param name="page">Page number starting in 1</param>
     /// <returns>User list</returns>
-    [HttpGet(Name = "GetUsers")]
+    [HttpGet(Name = "")]
     [Authorize(Roles = "Administrador")]
-    public async Task<ActionResult<UserDTO>> GetUsers(int Page)
+    public async Task<ActionResult<UserDTO>> GetUsers(int page)
     {
-        var ID = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        if (Page == 0 || ID == null) Page = 1;
-        var pagesiz = 1;
-
-        PageResourceParameters pRp = new() { UserID = ID, Page = Page, PageSize = pagesiz };
-        var getPage = _userService.GetPagedUser(pRp);
-
-        var HasPrev =
-            getPage.HasPrevious ? Url.Link("GetUsers", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
-
-        var HasNext = getPage.HasNext
-            ? Url.Link("GetUsers", new { Page = pRp.Page + 1, pRp.PageSize })
-            : null;
-
-        var metadata = new
-            { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
-
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
-        return Ok(getPage.Select(x => new UserDTO
-            { Id = x.Id, Email = x.Email, First_name = x.First_name, Last_name = x.Last_name, Rol_id = x.Rol_id }));
+        var result = await _userService.GetUsersPaging(page, PageListed.PAGESIZE);
+        IEnumerable<UserDTO> resultDTO = _mapper.Map<IEnumerable<UserDTO>>(result.recordList);
+        PageListed pagedTransactions = new PageListed(page, result.totalPages);
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Users", null, protocol: "https"));
+        return Ok(resultDTO);
     }
 
     /// <summary>
@@ -72,7 +60,7 @@ public class UsersController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPost]
     [Authorize(Roles = "Standard")]
-    public async Task<ActionResult> InsertUser([FromForm] UserForCreatoionDto userDTO)
+    public async Task<ActionResult> InsertUser(UserForCreatoionDto userDTO)
     {
         return Ok(await _userService.AddUser(userDTO));
     }
@@ -85,9 +73,13 @@ public class UsersController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPut("{id}")]
     [Authorize(Roles = "Standard")]
-    public async Task<ActionResult> UpdateUser(int id, [FromForm] UserForUpdateDto userDTO)
+    public async Task<ActionResult> UpdateUser(int id, UserForUpdateDto userDTO)
     {
-        return await _userService.UpdateUser(id, userDTO) ? Ok("Successfully Modified User") : NotFound("User not found");
+
+        var result = await _userService.UpdateUser(id, userDTO);
+        if (!result) return NotFound("Usuario No Encontrado");
+        return Ok("Usuario Modificado con exito");
+       
     }
 
     /// <summary>
@@ -103,9 +95,9 @@ public class UsersController : ControllerBase
     }
 
     /// <summary>
-    ///     Exchange the user's points for a product from the catalog.
+    ///  Exchange the user's points for a product from the catalog.
     /// </summary>
-    /// <param name="id">Catalog Id</param>
+    /// <param name="id"></param>
     /// <returns></returns>
     [HttpPut("product/{id}")]
     [Authorize(Roles = "Standard")]

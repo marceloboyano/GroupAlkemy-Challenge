@@ -8,6 +8,7 @@ using AlkemyWallet.Core.Services;
 using AlkemyWallet.Entities.Paged;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Newtonsoft.Json;
+using AlkemyWallet.Core.Helper;
 
 namespace AlkemyWallet.Controllers;
 
@@ -28,7 +29,7 @@ public class TransactionsController : ControllerBase
 
     private readonly IMapper _mapper;
     private readonly ITransactionService _transactionService;
-    
+
     public TransactionsController(ITransactionService transactionService, IMapper mapper)
     {
         _transactionService = transactionService;
@@ -36,42 +37,20 @@ public class TransactionsController : ControllerBase
     }
 
     /// <summary>
-    /// Lists transactions made by the user making the request ordered by date
+    /// Lists transactions made by the user making the request ordered by date over page
     /// </summary>
-    /// <returns>Transactions list ordered by date</returns>
-
-    [HttpGet(Name = "GetTransactions")]
+    /// <param name="page">Page number starting in 1</param>
+    /// <returns>Transactions page list ordered by date</returns>
+    [HttpGet]
     [Authorize(Roles = "Standard")]
-    public async Task<IActionResult> GetTransactions(int Page)
+    public async Task<IActionResult> GetTransactionsPaging(int page)
     {
-        var ID = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        if (Page == 0 || ID == null) Page = 1;
-        var pagesiz = 1;
-
-        PageResourceParameters pRp = new() { UserID = ID, Page = Page, PageSize = pagesiz };
-        var getPage = _transactionService.GetPagedTransactions(pRp);
-
-        var HasPrev =
-            getPage.HasPrevious ? Url.Link("GetTransactions", new { Page = pRp.Page - 1, pRp.PageSize }) : null;
-
-        var HasNext = getPage.HasNext
-            ? Url.Link("GetTransactions", new { Page = pRp.Page + 1, pRp.PageSize })
-            : null;
-
-        var metadata = new
-            { getPage.CurrentPage, HasPrev, HasNext, getPage.TotalPages, getPage.PageSize };
-
-        Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
-        return Ok(getPage.Select(x => new TransactionDTO
-            { Transaction_id = x.Transaction_id, Amount = x.Amount, Concept = x.Concept, Date = x.Date, Type = x.Type , User_id =x.User_id, Account_id=x.Account_id }));
-
-
-
-        // int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
-        // var transactions = await _transactionService.GetTransactions(userId);
-        // var transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions);
-        // return Ok(transactionsForShow);
+        int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
+        var transactions = await _transactionService.GetTransactionsPaging(userId, page, PageListed.PAGESIZE);
+        IEnumerable<TransactionDTO> transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions.recordList);
+        PageListed pagedTransactions = new PageListed(page,transactions.totalPages);
+        pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Transactions",null, protocol: "https"));
+        return Ok(transactionsForShow);
     }
 
     /// <summary>
@@ -100,7 +79,7 @@ public class TransactionsController : ControllerBase
     public async Task<ActionResult> DeleteTransaction(int id)
     {
         var result = await _transactionService.DeleteTransaction(id);
-        if (!result) return BadRequest(TRAN_NOT_FOUND);
+        if (!result) return NotFound(TRAN_NOT_FOUND);
         return Ok(TRAN_DELETED);
     }
 
@@ -112,7 +91,7 @@ public class TransactionsController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateTransaction(int id, [FromForm] TransactionDTO transaction)
+    public async Task<ActionResult> UpdateTransaction(int id, TransactionDTO transaction)
     {
         Transaction tran = _mapper.Map<Transaction>(transaction);
         var result = await _transactionService.UpdateTransaction(id, tran);
@@ -127,7 +106,7 @@ public class TransactionsController : ControllerBase
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [Authorize(Roles = "Administrador")]
     [HttpPost]
-    public async Task<ActionResult> InsertTransaction([FromForm] TransactionDTO transaction)
+    public async Task<ActionResult> InsertTransaction(TransactionDTO transaction)
     {
         transaction.Transaction_id = null;
         Transaction tran = _mapper.Map<Transaction>(transaction);
