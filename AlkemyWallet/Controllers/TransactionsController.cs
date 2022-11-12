@@ -35,6 +35,7 @@ public class TransactionsController : ControllerBase
             Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
         var transactions =
             await _transactionService.GetTransactionsPaging(userId, page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);
+        if (transactions.totalPages < page) return NotFound(CAT_NOT_FOUND_PAGE);
         var transactionsForShow = _mapper.Map<IEnumerable<TransactionDTO>>(transactions.recordList);
         var pagedTransactions = new PageListed(page, transactions.totalPages);
         pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Transactions", null, "https"));

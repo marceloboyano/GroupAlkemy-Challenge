@@ -24,7 +24,7 @@ public class CatalogueController : ControllerBase
 
 
     /// <summary>
-    ///     Lists Catalogues made by the user making the request ordered by points
+    ///     Lists Catalogues made by the user making the request ordered by points 
     /// </summary>
     /// <param name="page">Page number starting in 1</param>
     /// <returns>Catalogues list ordered by points</returns>
@@ -32,7 +32,7 @@ public class CatalogueController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetCatalogue(int page)
     {
-        var result = await _catalogueService.GetCataloguesPaging(page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);    
+        var result = await _catalogueService.GetCataloguesPaging(page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);    if (result.totalPages<page) return NotFound(CAT_NOT_FOUND_PAGE);
         var resultDTO = _mapper.Map<IEnumerable<CatalogueForShowDTO>>(result.recordList);
         var pagedTransactions = new PageListed(page, result.totalPages);
         pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Catalogue", null, "https"));
