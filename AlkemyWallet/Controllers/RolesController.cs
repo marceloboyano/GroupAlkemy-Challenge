@@ -25,7 +25,7 @@ public class RolesController : ControllerBase
     /// </summary>
     /// <returns>Roles list</returns>
     [HttpGet]
-    [Authorize]
+    [Authorize(Roles = "Administrador")]
     public async Task<ActionResult<RolesDTO>> GetRoles()
     {
         var roles = await _roleService.GetAllRoles();
@@ -39,7 +39,7 @@ public class RolesController : ControllerBase
     /// <param name="id">Rol Id</param>
     /// <returns>Role detail</returns>
     [HttpGet("{id}")]
-    [Authorize]
+    [Authorize(Roles = "Administrador")]
     public async Task<IActionResult> GetRoleById(int id)
     {
         var roles = await _roleService.GetRoleById(id);
@@ -52,6 +52,7 @@ public class RolesController : ControllerBase
     /// <param name="roleDTO">Roles information</param>
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPost]
+    [Authorize(Roles = "Administrador")]
     public async Task<ActionResult> InsertRole(RoleDTO roleDTO)
     {
         return Ok(await _roleService.AddRole(roleDTO));
@@ -64,6 +65,7 @@ public class RolesController : ControllerBase
     /// <param name="roleDTO">Roles information</param>
     /// <returns>If executed correctly, it returns a 200 response code.</returns>
     [HttpPut("{id}")]
+    [Authorize(Roles = "Administrador")]
     public async Task<ActionResult> UpdateRole(int id, RoleForUpdateDTO roleDTO)
     {
         var result = await _roleService.UpdateRole(id, roleDTO);
@@ -77,6 +79,7 @@ public class RolesController : ControllerBase
     /// <param name="id">Role Id</param>
     /// <returns></returns>
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Administrador")]
     public async Task<ActionResult> DeleteRole(int id)
     {
         var deleteRole = await _roleService.GetRoleById(id);
