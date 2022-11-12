@@ -89,6 +89,6 @@ public class CatalogueService : ICatalogueService
     public async Task<(int totalPages, IEnumerable<Catalogue> recordList)> GetCataloguesPaging(int pageNumber,
         int pageSize)
     {
-        return await _unitOfWork.CatalogueRepository!.GetAllPaging(pageNumber, pageSize);
+        return await _unitOfWork.CatalogueByPoints!.GetCataloguesPaging(pageNumber, pageSize);
     }
 }

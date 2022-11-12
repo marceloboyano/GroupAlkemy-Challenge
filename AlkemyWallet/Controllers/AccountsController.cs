@@ -22,7 +22,7 @@ public class AccountsController : ControllerBase
     }
 
     /// <summary>
-    ///     Lists of the Accounts
+    ///     lists of the accounts only accessible by an administrator account
     /// </summary>
     /// <param name="page">Page number starting in 1</param>
     /// <returns>Accounts list </returns>
@@ -30,10 +30,10 @@ public class AccountsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetAccounts(int page)
     {
-        var result =
-            await _accountsService.GetAccountsPaging(page == null || page <= 0 ? page =PageListed.PAGE : page, PageListed.PAGESIZE);
-        var resultDTO = _mapper.Map<IEnumerable<AccountForShowDTO>>(result.recordList);
-        var pagedTransactions = new PageListed(page, result.totalPages);
+        var (totalPages, recordList) =
+            await _accountsService.GetAccountsPaging(page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);
+        var resultDTO = _mapper.Map<IEnumerable<AccountForShowDTO>>(recordList);
+        var pagedTransactions = new PageListed(page, totalPages);
         pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Accounts", null, "https"));
         return Ok(resultDTO);
     }

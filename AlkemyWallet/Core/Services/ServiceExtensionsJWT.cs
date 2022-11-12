@@ -1,5 +1,4 @@
-﻿using System.Text;
-using AlkemyWallet.Core.Helper;
+﻿using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.DataAccess;
 using AlkemyWallet.Entities.JWT;
@@ -9,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using System.Text;
 
 namespace AlkemyWallet.Core.Services;
 

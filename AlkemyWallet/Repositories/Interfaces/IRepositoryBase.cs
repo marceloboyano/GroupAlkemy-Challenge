@@ -1,6 +1,4 @@
-﻿using AlkemyWallet.Entities;
-
-namespace AlkemyWallet.Repositories.Interfaces;
+﻿namespace AlkemyWallet.Repositories.Interfaces;
 
 public interface IRepositoryBase<T> where T : class
 {

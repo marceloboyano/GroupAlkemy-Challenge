@@ -5,7 +5,7 @@ namespace AlkemyWallet.Core.Helper;
 public class PageListed
 {
     public const int PAGE = 1;
-    public const int PAGESIZE = 1;
+    public const int PAGESIZE = 10;
 
     public PageListed(int pageNumber, int totalPages)
     {
