@@ -24,7 +24,7 @@ public class UserSeeder
                     Last_name = "Eastwood",
                     Email = "clint@eastwood.com",
                     Password = "$2b$10$DjsYH6P2iczga6DFAAVf/Oulu1f9Qdlw24w0Lfej3aNnQx.eqato2",
-                    Points = 30,
+                    Points = 500,
                     Rol_id = 2
                 },
                 new User

@@ -1,9 +1,9 @@
-﻿using System.Text.RegularExpressions;
-using AlkemyWallet.Core.Interfaces;
+﻿using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
+using System.Text.RegularExpressions;
 
 namespace AlkemyWallet.Core.Services;
 

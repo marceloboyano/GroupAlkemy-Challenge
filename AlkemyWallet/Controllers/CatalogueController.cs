@@ -30,7 +30,7 @@ public class CatalogueController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetCatalogue(int page)
     {
-        var result = await _catalogueService.GetCataloguesPaging(page == null || page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);
+        var result = await _catalogueService.GetCataloguesPaging(page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);
         var resultDTO = _mapper.Map<IEnumerable<CatalogueDTO>>(result.recordList);
         var pagedTransactions = new PageListed(page, result.totalPages);
         pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Catalogue", null, "https"));

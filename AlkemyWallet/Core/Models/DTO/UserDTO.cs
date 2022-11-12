@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AlkemyWallet.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AlkemyWallet.Entities;
 
 namespace AlkemyWallet.Core.Models;
 

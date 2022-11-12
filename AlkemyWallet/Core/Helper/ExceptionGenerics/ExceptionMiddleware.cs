@@ -1,5 +1,5 @@
-﻿using System.Net;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
+using System.Net;
 
 namespace AlkemyWallet.Core.Helper.ExceptionGenerics;
 

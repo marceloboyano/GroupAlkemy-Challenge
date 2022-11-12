@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace AlkemyWallet.Controllers;
 
 [ApiController]
-[Route("FixedDeposit")]
+[Route("FixedTermDeposit")]
 public class FixedTermDepositController : Controller
 {
     private readonly IMapper _mapper;

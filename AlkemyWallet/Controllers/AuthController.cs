@@ -28,7 +28,7 @@ public class AuthController : ControllerBase
             Email = request.Email,
             Password = request.Password
         });
-        return returnToken.Equals("false") ? NotFound("El email o la contraseña no coinciden con lo registrado en la base de datos") : Ok(returnToken);            
+        return returnToken.Equals("false") ? NotFound("El email o la contraseña no coinciden con lo registrado en la base de datos") : Ok(returnToken);
     }
 
     /// <summary>
