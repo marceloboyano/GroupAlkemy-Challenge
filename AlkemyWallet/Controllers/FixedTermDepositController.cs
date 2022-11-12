@@ -4,6 +4,7 @@ using AlkemyWallet.Core.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Controllers;
 
@@ -50,8 +51,7 @@ public class FixedTermDepositController : Controller
             Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
         var fixedTermDeposit = await _fixedTermDepositService.GetFixedTermDepositsById(id, userIdFromToken);
         if (fixedTermDeposit is null)
-            return NotFound(
-                "No existe inversi�n con ese id o esta intentando consultar inversiones de otros usuarios.");
+            return NotFound(FIX_NOT_FOUND_OR_USER_INVALID_MESSAGE);
         var fixedTermDepositForShow = _mapper.Map<FixedTermDepositForShowDTO>(fixedTermDeposit);
         return Ok(fixedTermDepositForShow);
     }
@@ -68,9 +68,9 @@ public class FixedTermDepositController : Controller
         var result = await _fixedTermDepositService.DeleteFixedTermDeposit(id);
 
         if (!result)
-            return NotFound("No se encontro ninguna inversi�n con ese id.");
+            return NotFound(FIX_NOT_FOUND_MESSAGE);
 
-        return Ok("La inversi�n ha sido eliminada");
+        return Ok(FIX_DELETED_MESSAGE);
     }
 
     /// <summary>
@@ -84,8 +84,8 @@ public class FixedTermDepositController : Controller
     public async Task<ActionResult> PutFixedTermDeposit(int id, [FromForm] DepositForUpdateDTO depositDTO)
     {
         var result = await _fixedTermDepositService.UpdateDeposit(id, depositDTO);
-        if (!result) return NotFound("No hay ninguna inversi�n con ese id");
-        return Ok("La inversi�n ha sido Modificada con exito");
+        if (!result) return NotFound(FIX_NOT_FOUND_MESSAGE);
+        return Ok(FIX_SUCCESSFUL_MODIFIED_MESSAGE);
     }
 
     /// <summary>
@@ -98,6 +98,6 @@ public class FixedTermDepositController : Controller
     public async Task<ActionResult> PostFixedTermDeposit([FromForm] DepositForCreationDTO depositDTO)
     {
         await _fixedTermDepositService.InsertFixedTermDeposit(depositDTO);
-        return Ok("Se ha creado la inversi�n exitosamente");
+        return Ok(FIX_SUCCESSFUL_MESSAGE);
     }
 }

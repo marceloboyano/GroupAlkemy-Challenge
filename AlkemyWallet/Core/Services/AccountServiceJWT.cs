@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Core.Services;
 
@@ -62,7 +63,7 @@ public class AccountServiceJWT : IAccountServiceJWT
                 Rol = userdataTokenList[5].Value
             };
 
-            return new Response<AuthenticatedUserDTO>(authenticatedUserDTO, "Datos de usuario loggueado");
+            return new Response<AuthenticatedUserDTO>(authenticatedUserDTO, USER_LOGGED_MESSAGE);
         });
         return await task;
     }

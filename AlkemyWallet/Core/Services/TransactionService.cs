@@ -42,19 +42,6 @@ public class TransactionService : ITransactionService
     {
         if (await ValidateTransaction(transaction))
         {
-            // checkear que cuando la cuenta sea un deposito o una transferencia actualice los balances de las 
-            //cuentas involucradas
-
-            //llamar a estos metodos de account service... las validaciones y la actualizacion del repositorio de transacciones
-            // ya estan incluidas en esos metodos. yo no lo cambie por que no se que logica se aplica para determinar si es
-            // desposito o transferencia
-
-            // var result = await _accountService.Deposit(transaction.Account_Id, transaction.Amount);
-
-            //var result = await _accountService.Transfer(transaction.Account_id, transaction.Amount, transaction.To_Account);
-
-
-            //si se resuelve lo de arriba estan 2 lineas no harian falta porque account service actualiza
             await _unitOfWork.TransactionRepository!.Insert(transaction);
             return await _unitOfWork.SaveChangesAsync() > 0;
         }

@@ -4,6 +4,7 @@ using AlkemyWallet.Core.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Controllers;
 
@@ -72,8 +73,8 @@ public class UsersController : ControllerBase
     public async Task<ActionResult> UpdateUser(int id, UserForUpdateDto userDTO)
     {
         var result = await _userService.UpdateUser(id, userDTO);
-        if (!result) return NotFound("Usuario No Encontrado");
-        return Ok("Usuario Modificado con exito");
+        if (!result) return NotFound(USER_NOT_FOUND_MESSAGE);
+        return Ok(USER_SUCCESSFUL_MODIFIED_MESSAGE);
     }
 
     /// <summary>
@@ -86,8 +87,8 @@ public class UsersController : ControllerBase
     public async Task<ActionResult> DeleteUser(int id)
     {
         return await _userService.DeleteUser(id)
-            ? Ok($"User with Id {id} deleted")
-            : NotFound($"User with Id {id} not found");
+            ? Ok(USER_DELETED_MESSAGE)
+            : NotFound(USER_NOT_FOUND_MESSAGE);
     }
 
     /// <summary>

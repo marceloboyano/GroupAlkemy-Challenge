@@ -3,6 +3,7 @@ using AlkemyWallet.Core.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Controllers;
 
@@ -66,8 +67,8 @@ public class RolesController : ControllerBase
     public async Task<ActionResult> UpdateRole(int id, RoleForUpdateDTO roleDTO)
     {
         var result = await _roleService.UpdateRole(id, roleDTO);
-        if (!result) return NotFound("Role not found");
-        return Ok("Successfully Modified Role");
+        if (!result) return NotFound(ROL_NOT_FOUND_MESSAGE);
+        return Ok(ROL_SUCCESSFUL_MODIFIED_MESSAGE);
     }
 
     /// <summary>
@@ -79,8 +80,8 @@ public class RolesController : ControllerBase
     public async Task<ActionResult> DeleteRole(int id)
     {
         var deleteRole = await _roleService.GetRoleById(id);
-        if (deleteRole == null) return NotFound($"Role with Id = {id} not found");
+        if (deleteRole == null) return NotFound(ROL_NOT_FOUND_MESSAGE);
         await _roleService.DeleteRole(id);
-        return Ok($"Role with Id ={id} deleted");
+        return Ok(ROL_DELETED_MESSAGE);
     }
 }

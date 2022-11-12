@@ -1,6 +1,6 @@
 ﻿using AlkemyWallet.Core.Interfaces;
 using System.Text.RegularExpressions;
-
+using static AlkemyWallet.Core.Helper.Constants;
 namespace challenge.Services;
 
 public class ImageService : IImageService
@@ -16,13 +16,13 @@ public class ImageService : IImageService
 
         if (!regex.IsMatch(imageFile.FileName))
         {
-            var exception = new Exception("El formato de imagen no es admitido");
+            var exception = new Exception(IMG_FORMAT_NOT_SUPPORTED_MESSAGE);
             throw exception;
         }
 
         if (imageFile.Length / 1024.0 / 1024.0 > 10)
         {
-            var exception = new Exception("La imagen debe ser menor a 10MB");
+            var exception = new Exception(IMG_TOO_BIG_MESSAGE);
             throw exception;
         }
 

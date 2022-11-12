@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using System.Text;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Core.Services;
 
@@ -44,7 +45,7 @@ public static class ServiceExtensionsJWT
                 ClockSkew = TimeSpan.Zero,
                 ValidIssuer = configuration["JWTSettings:Issuer"],
                 ValidAudience = configuration["JWTSettings:Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:Key"]))
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWTSettings:Key"]!))
             };
             o.Events = new JwtBearerEvents
             {
@@ -53,7 +54,7 @@ public static class ServiceExtensionsJWT
                     context.HandleResponse();
                     context.Response.StatusCode = 401;
                     context.Response.ContentType = "application/json";
-                    var result = JsonConvert.SerializeObject(new Response<string>("Usted no está autorizado"));
+                    var result = JsonConvert.SerializeObject(new Response<string>(USER_UNAUTHORIZED_MESSAGE));
 
                     return context.Response.WriteAsync(result);
                 },
@@ -62,7 +63,7 @@ public static class ServiceExtensionsJWT
                     context.Response.StatusCode = 400;
                     context.Response.ContentType = "application/json";
                     var result =
-                        JsonConvert.SerializeObject(new Response<string>("Usted no tiene permisos sobre este recurso"));
+                        JsonConvert.SerializeObject(new Response<string>(USER_DONT_HAVE_PERMISSIONS));
 
                     return context.Response.WriteAsync(result);
                 }
