@@ -1,6 +1,7 @@
 ﻿using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.DataAccess;
+using AlkemyWallet.Entities;
 using AlkemyWallet.Entities.JWT;
 using AlkemyWallet.Repositories;
 using AlkemyWallet.Repositories.Interfaces;
