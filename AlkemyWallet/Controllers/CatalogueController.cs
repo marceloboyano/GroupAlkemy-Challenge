@@ -1,6 +1,7 @@
 ﻿using AlkemyWallet.Core.Helper;
 using AlkemyWallet.Core.Interfaces;
 using AlkemyWallet.Core.Models;
+using AlkemyWallet.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,8 +32,8 @@ public class CatalogueController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetCatalogue(int page)
     {
-        var result = await _catalogueService.GetCataloguesPaging(page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);
-        var resultDTO = _mapper.Map<IEnumerable<CatalogueDTO>>(result.recordList);
+        var result = await _catalogueService.GetCataloguesPaging(page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);    
+        var resultDTO = _mapper.Map<IEnumerable<CatalogueForShowDTO>>(result.recordList);
         var pagedTransactions = new PageListed(page, result.totalPages);
         pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Catalogue", null, "https"));
         return Ok(resultDTO);

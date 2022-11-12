@@ -8,7 +8,7 @@ public class AutomapperProfile : Profile
 {
     public AutomapperProfile()
     {
-        CreateMap<Catalogue, CatalogueDTO>().ReverseMap();
+      
         CreateMap<Catalogue, CatalogueForCreationDTO>().ReverseMap();
         CreateMap<Catalogue, CatalogueForShowDTO>().ReverseMap();
         CreateMap<Account, AccountForShowDTO>().ReverseMap();

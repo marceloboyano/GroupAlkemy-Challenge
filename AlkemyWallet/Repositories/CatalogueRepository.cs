@@ -20,8 +20,7 @@ public class CatalogueRepository : RepositoryBase<Catalogue>, ICatalogueReposito
     public async Task<(int totalPages, IEnumerable<Catalogue> recordList)> GetCataloguesPaging(int pageNumber,
         int pageSize)
     {
-        var list = await Task.FromResult(_context.Set<Catalogue>()
-            .AsEnumerable()
+        var list = await Task.FromResult(_context.Set<Catalogue>()           
             .OrderBy(x => x.Points)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
