@@ -53,6 +53,7 @@ public static class Constants
 
     // Catalogue Message
     public const string CAT_NOT_FOUND_MESSAGE = "No existe ningún catalogo con el id especificado";
+    public const string CAT_NOT_FOUND_PAGE = "Esta buscando una pagina mas alla de la la ultima";
     public const string CAT_INSUFFICIENT_POINTS_MESSAGE = "No cuenta con los puntos suficientes para adquirir algun producto.";
     public const string CAT_SUCCESSFUL_MESSAGE  = "Se ha creado el Catalogo exitosamente";
     public const string CAT_DELETED_MESSAGE = "el catalogo ha sido eliminada";

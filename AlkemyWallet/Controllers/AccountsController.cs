@@ -32,6 +32,7 @@ public class AccountsController : ControllerBase
     {
         var (totalPages, recordList) =
             await _accountsService.GetAccountsPaging(page <= 0 ? page = PageListed.PAGE : page, PageListed.PAGESIZE);
+        if (totalPages < page) return NotFound(CAT_NOT_FOUND_PAGE);
         var resultDTO = _mapper.Map<IEnumerable<AccountForShowDTO>>(recordList);
         var pagedTransactions = new PageListed(page, totalPages);
         pagedTransactions.AddHeader(Response, Url.ActionLink(null, "Accounts", null, "https"));
