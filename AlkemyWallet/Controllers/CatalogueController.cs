@@ -4,6 +4,7 @@ using AlkemyWallet.Core.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Controllers;
 
@@ -49,7 +50,7 @@ public class CatalogueController : ControllerBase
     {
         var catalogue = await _catalogueService.GetCatalogueById(id);
 
-        if (catalogue is null) return NotFound("No existe ningún catalogo con el id especificado");
+        if (catalogue is null) return NotFound(CAT_NOT_FOUND_MESSAGE);
 
         var catalogoForShow = _mapper.Map<CatalogueForShowDTO>(catalogue);
         return Ok(catalogoForShow);
@@ -66,7 +67,8 @@ public class CatalogueController : ControllerBase
         var userId =
             Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type.ToString().Equals("uid"))!.Value);
         var catalogue = await _catalogueService.GetCatalogueByPoints(Convert.ToInt32(userId));
-        if (!catalogue.Any()) return Ok("No cuenta con los puntos suficientes para adquirir algun producto.");
+        if (!catalogue.Any()) 
+            return BadRequest(CAT_INSUFFICIENT_POINTS_MESSAGE);
         return Ok(catalogue);
     }
 
@@ -80,7 +82,7 @@ public class CatalogueController : ControllerBase
     public async Task<ActionResult> PostCatalogue(CatalogueForCreationDTO catalogueDTO)
     {
         await _catalogueService.InsertCatalogue(catalogueDTO);
-        return Ok("Se ha creado el Catalogo exitosamente");
+        return Ok(CAT_SUCCESSFUL_MESSAGE);
     }
 
     /// <summary>
@@ -95,9 +97,9 @@ public class CatalogueController : ControllerBase
         var result = await _catalogueService.DeleteCatalogue(id);
 
         if (!result)
-            return NotFound("no se encontro el catalogo");
+            return NotFound(CAT_NOT_FOUND_MESSAGE);
 
-        return Ok("el catalogo ha sido eliminada");
+        return Ok(CAT_DELETED_MESSAGE);
     }
 
     /// <summary>
@@ -111,7 +113,7 @@ public class CatalogueController : ControllerBase
     public async Task<ActionResult> PutCatalogue(int id, CatalogueForUpdateDTO catalogueDTO)
     {
         var result = await _catalogueService.UpdateCatalogues(id, catalogueDTO);
-        if (!result) return NotFound("Catalogo No Encontrado");
-        return Ok("Catalogo Modificado con exito");
+        if (!result) return NotFound(CAT_NOT_FOUND_MESSAGE);
+        return Ok(CAT_SUCCESSFUL_MODIFIED_MESSAGE);
     }
 }

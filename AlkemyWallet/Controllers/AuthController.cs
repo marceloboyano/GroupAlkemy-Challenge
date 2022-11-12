@@ -2,6 +2,7 @@
 using AlkemyWallet.Core.Models.DTO.UserLogin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Controllers;
 
@@ -28,7 +29,7 @@ public class AuthController : ControllerBase
             Email = request.Email,
             Password = request.Password
         });
-        return returnToken.Equals("false") ? NotFound("El email o la contraseña no coinciden con lo registrado en la base de datos") : Ok(returnToken);
+        return returnToken.Equals("false") ? NotFound(USER_EMAIL_OR_PASSWORD_INCORRECT_MESSAGE) : Ok(returnToken);
     }
 
     /// <summary>

@@ -4,6 +4,7 @@ using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
 using System.Text.RegularExpressions;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Core.Services;
 
@@ -39,7 +40,7 @@ public class UserService : IUserService
             var emailExist = _unitOfWork.UserDetailsRepository!.GetUserByEmail(userDTO.Email).Result;
             if (emailExist)
             {
-                return $"Ya se encuentra registrado el email {userDTO.Email} en la base de datos";
+                return USER_REGISTERED_EMAIL_MESSAGE;
             }
 
             var user = _mapper.Map<User>(userDTO);
@@ -47,10 +48,10 @@ public class UserService : IUserService
             user.Password = BCrypt.Net.BCrypt.HashPassword(userDTO.Password);
             await _unitOfWork.UserRepository!.Insert(user);
             await _unitOfWork.SaveChangesAsync();
-            return "Se agregó con exito";
+            return USER_SUCCESSFUL_ADDED_MESSAGE;
         }
 
-        return "El email no cumple con los parámetros requeridos";
+        return USER_EMAIL_INCORRECT_MESSAGE;
     }
 
     public async Task<bool> UpdateUser(int id, UserForUpdateDto userDTO)
@@ -93,18 +94,18 @@ public class UserService : IUserService
         var catalogueEntity = await _unitOfWork.CatalogueRepository!.GetById(id);
 
         if (userEntity is null)
-            return (false, "Usuario no encontrado.");
+            return (false, USER_NOT_FOUND_MESSAGE);
 
         if (userEntity.Points < catalogueEntity!.Points)
-            return (false, "No tiene los puntos suficientes para adquirir este producto.");
+            return (false, USER_INSUFFICIENT_POINTS_MESSAGE);
 
 
         userEntity.Points -= catalogueEntity.Points;
 
 
         await _unitOfWork.UserRepository!.Update(userEntity);
-        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, "La operación ha sido exitosa. Muchas gracias!!.");
-        return (false, "Algo ha salido mal cuando se intento guardar los cambios!!!");
+        if (await _unitOfWork.SaveChangesAsync() > 0) return (true, USER_SUCCESSFUL_OPERATION_MESSAGE);
+        return (false, DB_NOT_EXPECTED_RESULT_MESSAGE);
     }
 
     public async Task<(int totalPages, IEnumerable<User> recordList)> GetUsersPaging(int pageNumber, int pageSize)

@@ -3,6 +3,7 @@ using AlkemyWallet.Core.Models;
 using AlkemyWallet.Entities;
 using AlkemyWallet.Repositories.Interfaces;
 using AutoMapper;
+using static AlkemyWallet.Core.Helper.Constants;
 
 namespace AlkemyWallet.Core.Services;
 
@@ -36,13 +37,13 @@ public class RoleService : IRoleService
         var existEmail = await _roleRepository.ExistRolByName(roleDTO.Name);
         if (existEmail)
         {
-            return $"No es posible registrar el usuario {roleDTO.Name} en la base de datos - Ya existe";
+            return ROL_REGISTERED_MESSAGE;
         }
 
         var role = _mapper.Map<Role>(roleDTO);
         await _unitOfWork.RoleRepository!.Insert(role);
         await _unitOfWork.SaveChangesAsync();
-        return "Se agregó con exito";
+        return ROL_SUCCESSFUL_ADDED_MESSAGE;
     }
 
     public async Task<bool> UpdateRole(int id, RoleForUpdateDTO roleDTO)
