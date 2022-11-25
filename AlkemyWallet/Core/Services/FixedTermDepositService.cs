@@ -34,7 +34,7 @@ public class FixedTermDepositService : IFixedTermDepositService
 
     public async Task<bool> DeleteFixedTermDeposit(int id)
     {
-        await _unitOfWork.FixedTermDepositRepository!.Delete(id);
+        await _unitOfWork.FixedTermDepositRepository.Delete(id);
         return await _unitOfWork.SaveChangesAsync() > 0;
     }
 

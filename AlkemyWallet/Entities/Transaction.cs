@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlkemyWallet.Entities;
 
-[Table("Transaction")]
+
 public class Transaction : SoftDeleteEntity
 {
     [Key] public int Transaction_id { get; set; }

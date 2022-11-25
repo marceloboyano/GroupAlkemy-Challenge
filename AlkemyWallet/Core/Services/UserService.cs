@@ -34,7 +34,7 @@ public class UserService : IUserService
         if (!isValidEmailValid)
             return (Success: false, Message: USER_EMAIL_INCORRECT_MESSAGE);
 
-        var emailExist = _unitOfWork.UserDetailsRepository.GetUserByEmail(userDTO.Email).Result;
+        var emailExist = _unitOfWork.UserRepository.GetUserByEmail(userDTO.Email).Result;
 
         if (emailExist)
             return (Success: false, Message: USER_REGISTERED_EMAIL_MESSAGE);
@@ -67,6 +67,9 @@ public class UserService : IUserService
         if (userDTO.Points is not null)
             userEntity.Points = userDTO.Points.Value;
 
+        if (userDTO.Rol_id is not null)
+            userEntity.Rol_id = userDTO.Rol_id.Value;
+
         if (userDTO.Email is not null)
         {
             var isValidEmailValid = IsEmailValid(userDTO.Email);
@@ -74,7 +77,7 @@ public class UserService : IUserService
             if (!isValidEmailValid)
                 return (Success: false, Message: USER_EMAIL_INCORRECT_MESSAGE);
 
-            var emailExist = _unitOfWork.UserDetailsRepository.GetUserByEmail(userDTO.Email).Result;
+            var emailExist = _unitOfWork.UserRepository.GetUserByEmail(userDTO.Email).Result;
 
             if (emailExist)
                 return (Success: false, Message: USER_REGISTERED_EMAIL_MESSAGE);
@@ -93,7 +96,7 @@ public class UserService : IUserService
     public async Task<(bool Success, string Message)> Exchange(int id, string userIdFromToken)
     {
         var userEntity = await _unitOfWork.UserRepository!.GetById(int.Parse(userIdFromToken));
-        var catalogueEntity = await _unitOfWork.CatalogueRepository!.GetById(id);
+        var catalogueEntity = await _unitOfWork.CatalogueRepository.GetById(id);
 
         if (userEntity is null)
             return (Success: false, Message: USER_NOT_FOUND_MESSAGE);
@@ -105,7 +108,7 @@ public class UserService : IUserService
         userEntity.Points -= catalogueEntity.Points;
 
 
-        await _unitOfWork.UserRepository!.Update(userEntity);
+        await _unitOfWork.UserRepository.Update(userEntity);
 
         if (await _unitOfWork.SaveChangesAsync() > 0) 
             return (Success: true, Message: USER_SUCCESSFUL_OPERATION_MESSAGE);
@@ -115,7 +118,7 @@ public class UserService : IUserService
 
     public async Task<(int totalPages, IEnumerable<User> recordList)> GetUsersPaging(int pageNumber, int pageSize)
     {
-        return await _unitOfWork.UserRepository!.GetAllPaging(pageNumber, pageSize);
+        return await _unitOfWork.UserRepository.GetAllPaging(pageNumber, pageSize);
     }
 
 

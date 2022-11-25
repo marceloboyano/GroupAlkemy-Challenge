@@ -26,7 +26,7 @@ public class CatalogueService : ICatalogueService
     public async Task<IEnumerable<Catalogue>> GetCatalogueByPoints(int userId)
     {
         var userEntity = await _unitOfWork.UserRepository.GetById(userId);
-        var catalogues = await _unitOfWork.CatalogueByPoints.GetByPoints(userEntity!.Points);
+        var catalogues = await _unitOfWork.CatalogueRepository.GetByPoints(userEntity!.Points);
 
         return catalogues;
     }
@@ -86,6 +86,6 @@ public class CatalogueService : ICatalogueService
     public async Task<(int totalPages, IEnumerable<Catalogue> recordList)> GetCataloguesPaging(int pageNumber,
         int pageSize)
     {
-        return await _unitOfWork.CatalogueByPoints.GetCataloguesPaging(pageNumber, pageSize);
+        return await _unitOfWork.CatalogueRepository.GetCataloguesPaging(pageNumber, pageSize);
     }
 }

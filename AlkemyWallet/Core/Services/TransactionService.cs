@@ -19,12 +19,12 @@ public class TransactionService : ITransactionService
 
     public async Task<(int totalPages, IEnumerable<Transaction> recordList)> GetTransactionsPaging(int userId, int pageNumber, int pageSize)
     {
-        return await _unitOfWork.TransactionRepository!.GetByUserPaging(userId, pageNumber, pageSize);
+        return await _unitOfWork.TransactionRepository.GetByUserPaging(userId, pageNumber, pageSize);
     }
 
     public async Task<Transaction?> GetTransactionById(int id, int userId)
     {
-        var tran = await _unitOfWork.TransactionRepository!.GetById(id);
+        var tran = await _unitOfWork.TransactionRepository.GetById(id);
 
         if (tran is null || tran.User_id != userId) 
             return null;
@@ -34,7 +34,7 @@ public class TransactionService : ITransactionService
 
     public async Task<bool> DeleteTransaction(int id)
     {
-        await _unitOfWork.TransactionRepository!.Delete(id);
+        await _unitOfWork.TransactionRepository.Delete(id);
         return await _unitOfWork.SaveChangesAsync() > 0;
     }
 
@@ -44,7 +44,7 @@ public class TransactionService : ITransactionService
         if (!await ValidateTransaction(transaction))        
             return false;
      
-        await _unitOfWork.TransactionRepository!.Insert(transaction);
+        await _unitOfWork.TransactionRepository.Insert(transaction);
         return await _unitOfWork.SaveChangesAsync() > 0;
     }
 
@@ -56,7 +56,7 @@ public class TransactionService : ITransactionService
         if (!await ValidateTransaction(transaction))
             return false;
 
-        await _unitOfWork.TransactionRepository!.Update(transaction);
+        await _unitOfWork.TransactionRepository.Update(transaction);
         return await _unitOfWork.SaveChangesAsync() > 0;
     }
 

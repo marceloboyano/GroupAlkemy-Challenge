@@ -7,7 +7,7 @@ namespace AlkemyWallet.Core.Interfaces;
 public interface IAccountService
 {
     Task<IEnumerable<Account>> GetAccounts();
-    Task<AccountForShowWithDetailsDTO> GetAccountById(int id);
+    Task<AccountForShowWithDetailsDTO?> GetAccountById(int id);
     Task InsertAccounts(AccountForCreationDTO accountDTO);
     Task<bool> UpdateAccount(int id, AccountForUpdateDTO accountDTO);
     Task<(bool Success, string Message)> DeleteAccount(int id);

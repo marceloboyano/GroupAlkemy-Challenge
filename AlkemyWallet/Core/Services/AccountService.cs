@@ -86,7 +86,7 @@ public class AccountService : IAccountService
         if (amount <= 0)
             return (false, Message: ACC_AMOUNT_LESS_THAN_ZERO_MESSAGE);
 
-         var account = await _unitOfWork.AccountWithDetails.GetByIdWithDetail(accountId);
+         var account = await _unitOfWork.AccountRepository.GetByIdWithDetail(accountId);
       
         if (account is null)
             return (false, Message: ACC_NOT_FOUND_MESSAGE);
@@ -129,7 +129,7 @@ public class AccountService : IAccountService
         if (amount <= 0)
             return (false, Message: ACC_AMOUNT_LESS_THAN_ZERO_MESSAGE);
 
-        var account = await _unitOfWork.AccountWithDetails.GetByIdWithDetail(accountId);
+        var account = await _unitOfWork.AccountRepository.GetByIdWithDetail(accountId);
        
 
         if (account is null)
@@ -153,7 +153,7 @@ public class AccountService : IAccountService
             return (Success: false, Message: ACC_SAME_ACCOUNT_MESSAGE);
 
         //traigo el usuario que recibe el dinero
-        var toAccount = await _unitOfWork.AccountWithDetails.GetByIdWithDetail(toAccountId);
+        var toAccount = await _unitOfWork.AccountRepository.GetByIdWithDetail(toAccountId);
         if (toAccount is null)
             return (Success: false, Message: ACC_NOT_FOUND_MESSAGE);
 

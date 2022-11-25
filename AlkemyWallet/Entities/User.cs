@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AlkemyWallet.Entities;
 
-[Table("User")]
+
 public class User : SoftDeleteEntity
 {
     public User()
@@ -38,11 +38,11 @@ public class User : SoftDeleteEntity
 
     [MaxLength(50)]
     [Required(ErrorMessage = "Insert the Value")]
-    public int Points { get; set; } = 0;
+    public int Points { get; set; } 
 
     [MaxLength(100)]
     [Required(ErrorMessage = "A Role id its required")]
-    public int Rol_id { get; set; } = 0;
+    public int Rol_id { get; set; }
 
     [ForeignKey("Rol_id")] public Role? Role { get; set; }
 

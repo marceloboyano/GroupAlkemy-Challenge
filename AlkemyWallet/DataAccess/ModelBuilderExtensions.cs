@@ -85,7 +85,7 @@ public static class ExpressionExtensions
 
     private sealed class ParameterTypeVisitor<TSource, TTarget> : ExpressionVisitor
     {
-        private ReadOnlyCollection<ParameterExpression> _parameters;
+        private ReadOnlyCollection<ParameterExpression>? _parameters;
 
         protected override Expression VisitParameter(ParameterExpression node)
         {

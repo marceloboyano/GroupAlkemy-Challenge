@@ -33,7 +33,7 @@ public class AccountServiceJWT : IAccountServiceJWT
 
     public async Task<string> AuthenticateAsync(AuthenticationRequestDTO request)
     {
-        User user = await _userRepository.GetUserByEmail(request.Email, request.Password);
+        User? user = await _unitOfWork.UserRepository.GetUserByEmail(request.Email, request.Password);
 
         if (user is null)
             return "false";
@@ -72,7 +72,7 @@ public class AccountServiceJWT : IAccountServiceJWT
     {
         IList<Claim> userClaims = await _userManager.GetClaimsAsync(user);
         var rol = await _unitOfWork.RoleRepository.GetById(user.RolId);
-        List<string> roles = new() { rol.Name };
+        List<string> roles = new() { rol!.Name };
 
         List<Claim> roleClaims = new();
 
